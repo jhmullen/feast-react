@@ -16,6 +16,7 @@ export default class App extends Component {
     return (
       <div id="board">
         hi
+        <img src="static/cardback.png" />
       </div>
     );
 
