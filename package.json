@@ -1,0 +1,32 @@
+{
+  "name": "feast-react",
+  "version": "1.0.0",
+  "description": "cards in react",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jhmullen/feast-react.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jhmullen/feast-react/issues"
+  },
+  "homepage": "https://github.com/jhmullen/feast-react#readme",
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.7",
+    "html-webpack-plugin": "^2.30.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "style-loader": "^0.19.0",
+    "webpack": "^3.9.0",
+    "webpack-dev-server": "^2.9.5"
+  }
+}
