@@ -1,8 +1,9 @@
 import React, {Component} from "react";
+import {DragSource} from 'react-dnd';
 
 import "./Card.css";
 
-export default class Card extends Component {
+class Card extends Component {
 
   constructor(props) {
     super(props);
@@ -11,13 +12,11 @@ export default class Card extends Component {
     };
   }
 
-  componentDidMount() {
-
-  }
-
   render() {
 
-    return (
+    const {isDragging, connectDragSource} = this.props;
+
+    return connectDragSource(
       <div id="card">
         <div id="cost">
           {this.props.cost}
@@ -30,4 +29,32 @@ export default class Card extends Component {
 
   }
 }
+
+const cardSource = {
+  beginDrag(props) {
+    return props;
+  },
+
+  endDrag(props, monitor, component) {
+    if (!monitor.didDrop()) {
+      return;
+    }
+
+    const item = monitor.getItem();
+    console.log(item);
+
+    const dropResult = monitor.getDropResult();
+    console.log(dropResult);
+
+  }
+};
+
+function collect(connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+  };
+}
+
+export default DragSource("CARD", cardSource, collect)(Card);
 

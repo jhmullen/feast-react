@@ -7,12 +7,6 @@ body {
   background-color: #D3D3D3;
 }
 
-#deck {
-  position: absolute;
-  left: 20px;
-  bottom: 20px;
-}
-
 #hand-container {
   width: 700px;
   min-width: 700px;

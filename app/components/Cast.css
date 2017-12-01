@@ -1,0 +1,15 @@
+#cast {
+  position:absolute;
+  right: 20px;
+  bottom: 20px;
+}
+
+#cast-bg {
+  background-color:green;
+  width: 80px;
+  height: 118px;
+}
+
+#counter {
+  text-align:center;
+}

@@ -1,3 +1,9 @@
+#deck {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+}
+
 #image-bg {
   background-image: url("../../static/cardback.png");
   width: 80px;
