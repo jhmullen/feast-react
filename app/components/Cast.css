@@ -5,11 +5,15 @@
 }
 
 #cast-bg {
-  background-color:green;
+  background-color:black;
   width: 80px;
   height: 118px;
 }
 
 #counter {
   text-align:center;
+}
+
+.fade {
+  opacity: .2;
 }

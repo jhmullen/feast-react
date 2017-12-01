@@ -18,8 +18,8 @@ class Card extends Component {
 
     return connectDragSource(
       <div id="card">
-        <div id="cost">
-          {this.props.cost}
+        <div id="mana">
+          {this.props.mana}
         </div>
         <div id="name">
           {this.props.name}
@@ -39,13 +39,7 @@ const cardSource = {
     if (!monitor.didDrop()) {
       return;
     }
-
     const item = monitor.getItem();
-    console.log(item);
-
-    const dropResult = monitor.getDropResult();
-    console.log(dropResult);
-
   }
 };
 

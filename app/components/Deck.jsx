@@ -19,7 +19,7 @@ export default class Deck extends Component {
       const card = {
         id: cardID,
         name: "Turkey Leg",
-        cost: Math.floor(Math.random() * 12)
+        mana: Math.floor(Math.random() * 12)
       }
       remaining--;
       cardID++

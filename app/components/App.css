@@ -27,3 +27,7 @@ body {
   display: inline-block;
   padding: 5px;
 }
+
+.fade {
+  opacity: .2;
+}
