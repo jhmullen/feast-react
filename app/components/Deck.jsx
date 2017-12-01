@@ -8,7 +8,7 @@ export default class Deck extends Component {
     super(props);
     this.state = {
       mounted: false,
-      remaining: 5,
+      remaining: 10,
       cardID: 0
     };
   }
@@ -19,7 +19,7 @@ export default class Deck extends Component {
       const card = {
         id: cardID,
         name: "Turkey Leg",
-        mana: Math.floor(Math.random() * 12)
+        mana: Math.floor(Math.random() * 12) + 1
       }
       remaining--;
       cardID++

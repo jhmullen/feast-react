@@ -17,21 +17,27 @@ export default class App extends Component {
     };
   }
 
-  clickDeckHandler(card) {
+  handleDrawCard(card) {
     const {hand} = this.state;
     hand.push(card);
+    this.setState({hand});
+  }
+
+  handlePlayCard(card) {
+    let {hand} = this.state;
+    hand = hand.filter(c => c.id != card.id);
     this.setState({hand});
   }
 
   render() {
 
     const {hand} = this.state;
-    const handList = hand.map(c => <li key={c.id} className="hand-item"><Card {...c} /></li>);
+    const handList = hand.map(c => <li key={c.id} className="hand-item"><Card handlePlayCard={this.handlePlayCard.bind(this)} {...c} /></li>);
 
     return (
       <DragDropContextProvider backend={HTML5Backend}>
         <div id="board">
-          <Deck onClick={this.clickDeckHandler.bind(this)}/>
+          <Deck onClick={this.handleDrawCard.bind(this)}/>
           <div id="hand-container">
             <ul id="hand-list">
               {handList}

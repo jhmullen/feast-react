@@ -29,6 +29,12 @@ class Cast extends Component {
     }
   }
 
+  handleCast(item) {
+    let {mana} = this.state;
+    mana += item.mana;
+    this.setState({mana});
+  }
+
   render() {
 
     const {mana} = this.state;
@@ -54,7 +60,8 @@ const castTarget = {
       return;
     }
     const item = monitor.getItem();
-    console.log("dropped in a ", item);
+    component.handleCast(item);
+    return(item);
   }
 };
 
