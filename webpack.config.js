@@ -20,7 +20,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif)$/,
-        use: ["file-loader"]
+        use: ["file-loader?outputPath=static/"]
       }
     ]
   },

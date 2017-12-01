@@ -35,7 +35,7 @@ export default class Deck extends Component {
     return (
       <div id="deck" onClick={this.onClick.bind(this)} >
         <div id="image-bg">
-          <img src="static/cardback.png" />
+          { /* css background-image */ }
         </div>
         <div id="counter">
           { `${remaining} remaining` }
