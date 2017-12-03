@@ -6,8 +6,10 @@
 }
 
 #buy-bg {
-  background-color:purple;
+  background-color:thistle;
   width: 80px;
   height: 118px;
+  padding: 5px; 
+  text-align: center;
 }
 

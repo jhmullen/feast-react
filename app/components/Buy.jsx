@@ -39,6 +39,7 @@ class Buy extends Component {
     return connectDropTarget(
       <div id="buy" >
         <div id="buy-bg" className={isOver ? "fade" : null}>
+          Buy
         </div>
       </div>
     );

@@ -5,9 +5,11 @@
 }
 
 #cast-bg {
-  background-color:black;
+  background-color:thistle;
   width: 80px;
   height: 118px;
+  padding: 5px;
+  text-align: center;
 }
 
 #counter {

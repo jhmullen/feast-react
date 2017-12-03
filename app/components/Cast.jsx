@@ -44,6 +44,7 @@ class Cast extends Component {
     return connectDropTarget(
       <div id="cast" >
         <div id="cast-bg" className={isOver ? "fade" : null}>
+          Cast
         </div>
         <div id="counter">
           { `${mana} mana` }
