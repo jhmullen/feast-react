@@ -3,6 +3,7 @@ import Deck from "./Deck";
 import Card from "./Card";
 import Cast from "./Cast";
 import Draw from "./Draw";
+import Buy from "./Buy";
 import { DragDropContextProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
@@ -24,7 +25,7 @@ export default class App extends Component {
     this.setState({hand});
   }
 
-  handlePlayCard(card) {
+  dropCard(card) {
     let {hand} = this.state;
     hand = hand.filter(c => c.id != card.id);
     this.setState({hand});
@@ -33,12 +34,13 @@ export default class App extends Component {
   render() {
 
     const {hand} = this.state;
-    const handList = hand.map(c => <li key={c.id} className="hand-item"><Card dragType="handCard" handlePlayCard={this.handlePlayCard.bind(this)} {...c} /></li>);
+    const handList = hand.map(c => <li key={c.id} className="hand-item"><Card dragType="handCard" dropCard={this.dropCard.bind(this)} {...c} /></li>);
 
     return (
       <DragDropContextProvider backend={HTML5Backend}>
         <div id="board">
           <Draw />
+          <Buy dragType="buyCard" />
           <Deck onClick={this.handleDrawCard.bind(this)}/>
           <div id="hand-container">
             <ul id="hand-list">

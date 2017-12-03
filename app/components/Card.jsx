@@ -12,8 +12,8 @@ class Card extends Component {
     };
   }
 
-  playCard(item) {
-    if (this.props.handlePlayCard) this.props.handlePlayCard(item);
+  dropCard(item) {
+    if (this.props.dropCard) this.props.dropCard(item);
   }
 
   render() {
@@ -43,7 +43,7 @@ const cardSource = {
     if (!monitor.didDrop()) {
       return;
     } else {
-      component.playCard(monitor.getItem());
+      component.dropCard(monitor.getItem());
     }
   }
 };

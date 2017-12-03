@@ -30,14 +30,16 @@ export default class FoodDeck extends Component {
     this.setState({faceup});
   }
 
-  handleBuyCard(card) {
-
+  dropCard(card) {
+    let {faceup} = this.state;
+    faceup = faceup.filter(c => c.id != card.id);
+    this.setState({faceup});
   }
 
   render() {
 
     const {faceup} = this.state;
-    const faceupList = faceup.map(c => <li key={c.id} className="hand-item"><Card dragType="deckCard" handleBuyCard={this.handleBuyCard.bind(this)} {...c} /></li>);
+    const faceupList = faceup.map(c => <li key={c.id} className="faceup-item"><Card dragType="buyCard" dropCard={this.dropCard.bind(this)} {...c} /></li>);
 
     return (
       <div id="fooddeck">

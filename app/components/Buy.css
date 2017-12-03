@@ -1,0 +1,13 @@
+#buy {
+  position:absolute;
+  right: 20px;
+  top: 50%;
+  margin-top: -59px;
+}
+
+#buy-bg {
+  background-color:purple;
+  width: 80px;
+  height: 118px;
+}
+
