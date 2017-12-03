@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Deck from "./Deck";
 import Card from "./Card";
 import Cast from "./Cast";
+import Draw from "./Draw";
 import { DragDropContextProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
@@ -37,6 +38,7 @@ export default class App extends Component {
     return (
       <DragDropContextProvider backend={HTML5Backend}>
         <div id="board">
+          <Draw />
           <Deck onClick={this.handleDrawCard.bind(this)}/>
           <div id="hand-container">
             <ul id="hand-list">
@@ -50,5 +52,3 @@ export default class App extends Component {
 
   }
 }
-
-//export default DragDropContext(HTML5Backend)(App);
