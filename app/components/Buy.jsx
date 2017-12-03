@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {findDOMNode} from "react-dom";
 import {DropTarget} from "react-dnd";
 import {applyMana, setFaceupFood} from "../actions";
+import {Toaster, Position, Intent} from "@blueprintjs/core";
 
 import "./Buy.css";
 
@@ -32,10 +33,15 @@ class Buy extends Component {
 
   handleBuy(card) {
     const {mana, faceup_food} = this.props.gameState;
+    const buyToast = Toaster.create({className: "buyToast", position: Position.TOP_CENTER});
     if (card.mana < mana) {
       const pruned = faceup_food.filter(f => f.id !== card.id);
       this.props.applyMana(-card.mana);
       this.props.setFaceupFood(pruned);
+      buyToast.show({message: `You bought ${card.name}!`, intent: Intent.SUCCESS, timeout: 1500});
+    } 
+    else {
+      buyToast.show({message: `Not Enough Mana!`, intent: Intent.DANGER, timeout: 1500});
     }
   }
 

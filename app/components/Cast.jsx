@@ -1,8 +1,9 @@
 import React, {Component} from "react";
-import { connect } from 'react-redux'
-import { findDOMNode } from 'react-dom';
-import { DropTarget } from 'react-dnd';
-import {applyMana, setHand} from '../actions'
+import { connect } from "react-redux"
+import { findDOMNode } from "react-dom";
+import { DropTarget } from "react-dnd";
+import {applyMana, setHand} from "../actions";
+import {Toaster, Position, Intent} from "@blueprintjs/core";
 
 import "./Cast.css";
 
@@ -34,7 +35,9 @@ class Cast extends Component {
     let {hand} = this.props.gameState;
     hand = hand.filter(c => c.id != card.id);
     this.props.applyMana(card.mana);
-    this.props.setHand(hand);
+    this.props.setHand(hand); 
+    const castToast = Toaster.create({className: "castToast", position: Position.TOP_CENTER});
+    castToast.show({message: `You Cast ${card.name}!`, intent: Intent.SUCCESS, timeout: 1500});
   }
 
   render() {
