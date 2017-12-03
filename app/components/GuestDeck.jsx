@@ -15,7 +15,7 @@ export default class GuestDeck extends Component {
 
     return (
       <div id="guestdeck">
-        guestdeck
+        
       </div>
     );
 

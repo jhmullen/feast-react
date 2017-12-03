@@ -55,5 +55,5 @@ function collect(connect, monitor) {
   };
 }
 
-export default DragSource("CARD", cardSource, collect)(Card);
+export default DragSource((props) => {return props.dragType}, cardSource, collect)(Card);
 

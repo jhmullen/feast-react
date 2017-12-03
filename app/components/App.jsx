@@ -33,7 +33,7 @@ export default class App extends Component {
   render() {
 
     const {hand} = this.state;
-    const handList = hand.map(c => <li key={c.id} className="hand-item"><Card handlePlayCard={this.handlePlayCard.bind(this)} {...c} /></li>);
+    const handList = hand.map(c => <li key={c.id} className="hand-item"><Card dragType="handCard" handlePlayCard={this.handlePlayCard.bind(this)} {...c} /></li>);
 
     return (
       <DragDropContextProvider backend={HTML5Backend}>
@@ -45,7 +45,7 @@ export default class App extends Component {
               {handList}
             </ul>
           </div>
-          <Cast />
+          <Cast dragType="handCard"/>
         </div>
       </DragDropContextProvider>
     );

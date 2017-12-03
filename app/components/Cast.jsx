@@ -75,4 +75,4 @@ function collect(connect, monitor) {
   };
 }
 
-export default DropTarget("CARD", castTarget, collect)(Cast);
+export default DropTarget((props) => {return props.dragType}, castTarget, collect)(Cast);
