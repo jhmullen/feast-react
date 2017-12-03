@@ -1,6 +1,8 @@
 import React, {Component} from "react";
+import { connect } from 'react-redux'
 import { findDOMNode } from 'react-dom';
 import { DropTarget } from 'react-dnd';
+import {applyMana} from '../actions'
 
 import "./Cast.css";
 
@@ -28,16 +30,13 @@ class Cast extends Component {
     }
   }
 
-  handleCast(item) {
-    if (this.props.onCast) this.props.onCast(item);
-    /*let {mana} = this.state;
-    mana += item.mana;
-    this.setState({mana});*/
+  handleCast(card) {
+    this.props.applyMana(card.mana);
   }
 
   render() {
 
-    const {mana} = this.props;
+    const {mana} = this.props.gameState;
 
     const {isOver, canDrop, connectDropTarget} = this.props;
 
@@ -61,7 +60,7 @@ const castTarget = {
       return;
     }
     const item = monitor.getItem();
-    component.handleCast(item);
+    component.getWrappedInstance().handleCast(item);
     return(item);
   }
 };
@@ -75,5 +74,22 @@ function collect(connect, monitor) {
     itemType: monitor.getItemType()
   };
 }
+
+
+const mapStateToProps = state => {
+  return { 
+    gameState: state.gameState
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    applyMana: num => {
+      dispatch(applyMana(num))
+    }
+  }
+};
+
+Cast = connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(Cast); 
 
 export default DropTarget((props) => {return props.dragType}, castTarget, collect)(Cast);

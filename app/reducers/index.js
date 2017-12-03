@@ -1,10 +1,8 @@
 import {combineReducers} from 'redux'
-import todos from './todos'
-import visibilityFilter from './visibilityFilter'
+import gameState from './gameState'
 
 const feastApp = combineReducers({
-  todos,
-  visibilityFilter
+  gameState
 })
 
 export default feastApp;

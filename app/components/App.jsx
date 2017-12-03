@@ -1,22 +1,23 @@
 import React, {Component} from "react";
+import { connect } from 'react-redux'
 import Deck from "./Deck";
 import Card from "./Card";
 import Cast from "./Cast";
 import Draw from "./Draw";
 import Buy from "./Buy";
+import {applyMana} from '../actions'
 import { DragDropContextProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 import "./App.css";
 
-export default class App extends Component {
+class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       mounted: false,
-      hand: [],
-      mana: 0
+      hand: []
     };
   }
 
@@ -56,10 +57,25 @@ export default class App extends Component {
               {handList}
             </ul>
           </div>
-          <Cast dragType="handCard" mana={this.state.mana} onCast={this.onCast.bind(this)}/>
+          <Cast dragType="handCard" onCast={this.onCast.bind(this)}/>
         </div>
       </DragDropContextProvider>
     );
-
   }
 }
+
+const mapStateToProps = state => {
+  return { 
+    gameState: state.gameState
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    applyMana: num => {
+      dispatch(applyMana(num))
+    }
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
