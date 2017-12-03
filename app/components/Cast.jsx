@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { connect } from 'react-redux'
 import { findDOMNode } from 'react-dom';
 import { DropTarget } from 'react-dnd';
-import {applyMana} from '../actions'
+import {applyMana, setHand} from '../actions'
 
 import "./Cast.css";
 
@@ -31,7 +31,10 @@ class Cast extends Component {
   }
 
   handleCast(card) {
+    let {hand} = this.props.gameState;
+    hand = hand.filter(c => c.id != card.id);
     this.props.applyMana(card.mana);
+    this.props.setHand(hand);
   }
 
   render() {
@@ -75,7 +78,6 @@ function collect(connect, monitor) {
   };
 }
 
-
 const mapStateToProps = state => {
   return { 
     gameState: state.gameState
@@ -86,6 +88,9 @@ const mapDispatchToProps = dispatch => {
   return {
     applyMana: num => {
       dispatch(applyMana(num))
+    },
+    setHand: hand => {
+      dispatch(setHand(hand))
     }
   }
 };

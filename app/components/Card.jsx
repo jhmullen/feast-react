@@ -12,10 +12,6 @@ class Card extends Component {
     };
   }
 
-  dropCard(item) {
-    if (this.props.dropCard) this.props.dropCard(item);
-  }
-
   render() {
 
     const {isDragging, connectDragSource} = this.props;
@@ -37,14 +33,6 @@ class Card extends Component {
 const cardSource = {
   beginDrag(props) {
     return props;
-  },
-
-  endDrag(props, monitor, component) {
-    if (!monitor.didDrop()) {
-      return;
-    } else {
-      component.dropCard(monitor.getItem());
-    }
   }
 };
 

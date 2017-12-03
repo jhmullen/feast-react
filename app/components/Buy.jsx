@@ -1,6 +1,8 @@
 import React, {Component} from "react";
-import { findDOMNode } from 'react-dom';
-import { DropTarget } from 'react-dnd';
+import {connect} from "react-redux";
+import {findDOMNode} from "react-dom";
+import {DropTarget} from "react-dnd";
+import {applyMana, setFaceupFood} from "../actions";
 
 import "./Buy.css";
 
@@ -28,8 +30,13 @@ class Buy extends Component {
     }
   }
 
-  handleBuy(item) {
-    console.log("bought", item);
+  handleBuy(card) {
+    const {mana, faceup_food} = this.props.gameState;
+    if (card.mana < mana) {
+      const pruned = faceup_food.filter(f => f.id !== card.id);
+      this.props.applyMana(-card.mana);
+      this.props.setFaceupFood(pruned);
+    }
   }
 
   render() {
@@ -53,7 +60,7 @@ const buyTarget = {
       return;
     }
     const item = monitor.getItem();
-    component.handleBuy(item);
+    component.getWrappedInstance().handleBuy(item);
     return(item);
   }
 };
@@ -67,5 +74,24 @@ function collect(connect, monitor) {
     itemType: monitor.getItemType()
   };
 }
+
+const mapStateToProps = state => {
+  return { 
+    gameState: state.gameState
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    applyMana: num => {
+      dispatch(applyMana(num))
+    },
+    setFaceupFood: faceup_food => {
+      dispatch(setFaceupFood(faceup_food))
+    }
+  }
+};
+
+Buy = connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(Buy); 
 
 export default DropTarget((props) => {return props.dragType}, buyTarget, collect)(Buy);
