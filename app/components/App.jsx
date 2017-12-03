@@ -15,7 +15,8 @@ export default class App extends Component {
     super(props);
     this.state = {
       mounted: false,
-      hand: []
+      hand: [],
+      mana: 0
     };
   }
 
@@ -31,6 +32,14 @@ export default class App extends Component {
     this.setState({hand});
   }
 
+  buyCard(card) {
+
+  }
+
+  onCast(card) {
+    console.log(card);
+  }
+
   render() {
 
     const {hand} = this.state;
@@ -40,14 +49,14 @@ export default class App extends Component {
       <DragDropContextProvider backend={HTML5Backend}>
         <div id="board">
           <Draw />
-          <Buy dragType="buyCard" />
+          <Buy dragType="buyCard" buyCard={this.buyCard.bind(this)}/>
           <Deck onClick={this.handleDrawCard.bind(this)}/>
           <div id="hand-container">
             <ul id="hand-list">
               {handList}
             </ul>
           </div>
-          <Cast dragType="handCard"/>
+          <Cast dragType="handCard" mana={this.state.mana} onCast={this.onCast.bind(this)}/>
         </div>
       </DragDropContextProvider>
     );

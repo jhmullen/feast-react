@@ -9,8 +9,7 @@ class Cast extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mounted: false,
-      mana: 0
+      mounted: false
     };
   }
 
@@ -30,14 +29,15 @@ class Cast extends Component {
   }
 
   handleCast(item) {
-    let {mana} = this.state;
+    if (this.props.onCast) this.props.onCast(item);
+    /*let {mana} = this.state;
     mana += item.mana;
-    this.setState({mana});
+    this.setState({mana});*/
   }
 
   render() {
 
-    const {mana} = this.state;
+    const {mana} = this.props;
 
     const {isOver, canDrop, connectDropTarget} = this.props;
 

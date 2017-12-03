@@ -12,7 +12,11 @@ module.exports = {
       {
         test: /\.js$|\.jsx$/,
         loader: "babel-loader",
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        options: {
+          presets: ["es2015", "react"],
+          plugins: ["transform-object-rest-spread"]
+        }
       },
       {
         test: /\.css$/,
