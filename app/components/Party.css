@@ -1,0 +1,15 @@
+#party {
+  width: 880px;
+  height: 175px;
+  margin: 5px auto;
+  background-color: grey;
+  text-align: center;
+  display: block;
+  position: absolute;
+  bottom: 250px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 5px;
+}

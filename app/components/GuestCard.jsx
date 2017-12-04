@@ -19,7 +19,7 @@ class GuestCard extends Component {
     return connectDragSource(
       <div id="guestcard">
         <div id="cost">
-          {this.props.cost}
+          {`${this.props.cost}c/${this.props.appetite}a/${this.props.prestige}p`}
         </div>
         <div id="name">
           {this.props.name}

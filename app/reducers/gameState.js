@@ -5,7 +5,7 @@ const baseState = {
   guestDeck: [],
   myDeck: [],
   discard: [],
-  party: []
+  party: [null, null, null, null, null, null]
 }
 
 const gameState = (state = baseState, action) => {

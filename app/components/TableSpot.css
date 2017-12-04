@@ -1,0 +1,11 @@
+#tablespot {
+  width: 100px;
+  height: 140px;
+  overflow:auto;
+  background-color:green;
+  text-align: left;
+  padding: 5px;
+  border: 1px solid black;
+  font-size:100px;
+  text-align:center;
+}

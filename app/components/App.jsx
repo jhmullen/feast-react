@@ -6,6 +6,7 @@ import Cast from "./Cast";
 import Draw from "./Draw";
 import Buy from "./Buy";
 import Hand from "./Hand";
+import Party from "./Party";
 import {DragDropContextProvider} from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import {Toaster, Position, Intent, Button} from "@blueprintjs/core";
@@ -30,6 +31,7 @@ class App extends Component {
           <Buy dragType="buyCard" />
           <MyDeck />
           <Discard />
+          <Party />
           <Hand />
           <Cast dragType="handCard" />
         </div>
