@@ -12,6 +12,14 @@ export const buyFood = id => {
   }
 }
 
+export const addGuest = (id, spot) => {
+  return {
+    type: "ADD_GUEST",
+    id: id,
+    spot: spot
+  }
+}
+
 export const drawCard = () => {
   return {
     type: "DRAW_CARD"

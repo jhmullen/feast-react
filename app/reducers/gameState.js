@@ -9,7 +9,7 @@ const baseState = {
 }
 
 const gameState = (state = baseState, action) => {
-  let card, hand, foodDeck, myDeck, discard;
+  let card, hand, foodDeck, guestDeck, party, myDeck, discard;
   switch (action.type) {
     case "APPLY_MANA":
       return Object.assign({}, state, {mana: state.mana + action.num});
@@ -18,6 +18,12 @@ const gameState = (state = baseState, action) => {
       foodDeck = state.foodDeck.filter(c => c.id != action.id);
       discard = state.discard.concat(card);
       return Object.assign({}, state, {foodDeck, discard});
+    case "ADD_GUEST": 
+      party = state.party;
+      card = state.guestDeck.find(c => c && c.id == action.id);
+      guestDeck = state.guestDeck.filter(c => c.id != action.id);
+      party[action.spot] = card;
+      return Object.assign({}, state, {party, guestDeck});
     case "DRAW_CARD":
       myDeck = state.myDeck;
       discard = state.discard;
