@@ -48,6 +48,7 @@ class FoodDeck extends Component {
 
     return (
       <div id="fooddeck">
+        <div style={{float: "left"}}>{`${foodDeck.length - FACEUP_COUNT} remaining`}</div>
         <ul>
           {faceupList}
         </ul>
@@ -65,9 +66,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setFaceupFood: faceup_food => {
-      dispatch(setFaceupFood(faceup_food))
-    },
     setFoodDeck: foodDeck => {
       dispatch(setFoodDeck(foodDeck))
     }
