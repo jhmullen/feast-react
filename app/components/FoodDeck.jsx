@@ -23,7 +23,7 @@ class FoodDeck extends Component {
     for (let i = 0; i < 4; i++) {
       const obj = {
         id: i,
-        mana: Math.floor(Math.random() * 12) + 1,
+        cost: Math.floor(Math.random() * 12) + 1,
         name: "Buy Me"
       }
       faceup.push(obj);

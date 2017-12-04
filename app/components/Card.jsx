@@ -18,11 +18,14 @@ class Card extends Component {
 
     return connectDragSource(
       <div id="card">
-        <div id="mana">
-          {this.props.mana}
+        <div id="cost">
+          {this.props.cost}
         </div>
         <div id="name">
           {this.props.name}
+        </div>
+        <div id="desc" style={{marginTop: "10px"}}>
+          {this.props.desc}
         </div>
       </div>
     );

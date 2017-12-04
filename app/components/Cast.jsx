@@ -34,7 +34,7 @@ class Cast extends Component {
   handleCast(card) {
     let {hand} = this.props.gameState;
     hand = hand.filter(c => c.id != card.id);
-    this.props.applyMana(card.mana);
+    this.props.applyMana(card.food_mod);
     this.props.setHand(hand); 
     const castToast = Toaster.create({className: "castToast", position: Position.TOP_CENTER});
     castToast.show({message: `You Cast ${card.name}!`, intent: Intent.SUCCESS, timeout: 1500});

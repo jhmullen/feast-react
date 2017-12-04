@@ -34,9 +34,9 @@ class Buy extends Component {
   handleBuy(card) {
     const {mana, faceup_food} = this.props.gameState;
     const buyToast = Toaster.create({className: "buyToast", position: Position.TOP_CENTER});
-    if (card.mana < mana) {
+    if (card.cost < mana) {
       const pruned = faceup_food.filter(f => f.id !== card.id);
-      this.props.applyMana(-card.mana);
+      this.props.applyMana(-card.cost);
       this.props.setFaceupFood(pruned);
       buyToast.show({message: `You bought ${card.name}!`, intent: Intent.SUCCESS, timeout: 1500});
     } 
