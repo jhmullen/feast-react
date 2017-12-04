@@ -6,12 +6,13 @@ const baseState = {
   myDeck: [],
   discard: [],
   party: [[], [], [], [], [], []],
-  partyPool: []
+  partyPool: [],
+  guestDiscard: []
 }
 
 const gameState = (state = baseState, action) => {
   let card;
-  let {hand, foodDeck, partyPool, guestDeck, party, myDeck, discard} = state;
+  let {hand, foodDeck, partyPool, guestDeck, guestDiscard, party, myDeck, discard} = state;
   switch (action.type) {
     case "APPLY_MANA":
       return Object.assign({}, state, {mana: state.mana + action.num});
@@ -38,6 +39,12 @@ const gameState = (state = baseState, action) => {
       } else {
         return state;
       }
+    case "END_TURN": 
+      const leaving = party.shift();
+      guestDiscard = state.guestDiscard.concat(leaving);
+      party[5] = [];
+      partyPool.filter(c => !leaving.includes(c));
+      return Object.assign({}, state, {party, guestDiscard, partyPool});
     case "MOVE_GUEST": 
       card = state.party.find(c => c && c.id == action.id);
       party[action.spot].push(card);

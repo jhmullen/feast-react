@@ -28,6 +28,12 @@ export const moveGuest = (id, spot) => {
   }
 }
 
+export const endTurn = () => {
+  return {
+    type: "END_TURN"
+  }
+}
+
 export const drawCard = () => {
   return {
     type: "DRAW_CARD"

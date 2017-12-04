@@ -40,7 +40,7 @@ class GuestDeck extends Component {
 
   render() {
 
-    const {guestDeck} = this.props.gameState;
+    const {guestDeck, guestDiscard} = this.props.gameState;
     const FACEUP_COUNT = 4;
     const faceup = guestDeck.slice(-FACEUP_COUNT);
     let remaining = guestDeck.length - FACEUP_COUNT;
@@ -50,10 +50,12 @@ class GuestDeck extends Component {
 
     return (
       <div id="guestdeck">
-        <div style={{float: "left"}}>{`${remaining} remaining`}</div>
+        <div style={{float: "left"}}>{`${remaining} in deck`}</div>
+        <div style={{float: "right"}}>{`${guestDiscard.length} in discard`}</div>
         <ul>
           {faceupList}
         </ul>
+        
       </div>
     );
 

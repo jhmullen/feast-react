@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {applyMana} from "../actions";
+import {applyMana, endTurn} from "../actions";
 import GuestCard from "./GuestCard.jsx";
-import TableSpot from "./TableSpot.jsx"
+import TableSpot from "./TableSpot.jsx";
+import {Button} from "@blueprintjs/core";
 
 import "./Party.css";
 
@@ -13,6 +14,10 @@ class Party extends Component {
     this.state = {
       mounted: false
     };
+  }
+
+  endTurn() {
+    this.props.endTurn();
   }
 
   render() {
@@ -30,6 +35,11 @@ class Party extends Component {
 
     return (
       <div id="party">
+        <div style={{float:"left"}}>
+          <Button className="pt-button pt-small" onClick={this.endTurn.bind(this)}>
+            End Turn
+          </Button>
+        </div>
         <ul>
           {partyList}
         </ul>
@@ -49,6 +59,9 @@ const mapDispatchToProps = dispatch => {
   return {
     applyMana: num => {
       dispatch(applyMana(num))
+    },
+    endTurn: () => {
+      dispatch(endTurn())
     }
   }
 };
