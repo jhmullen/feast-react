@@ -1,5 +1,7 @@
 import React, {Component} from "react";
 import {DragSource} from 'react-dnd';
+import {connect} from "react-redux";
+import {applyMana, moveGuest} from "../actions";
 
 import "./GuestCard.css";
 
@@ -45,6 +47,25 @@ function collect(connect, monitor) {
     isDragging: monitor.isDragging()
   };
 }
+
+const mapStateToProps = state => {
+  return { 
+    gameState: state.gameState
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    applyMana: num => {
+      dispatch(applyMana(num))
+    },
+    moveGuest: (id, spot) => {
+      dispatch(moveGuest(id, spot))
+    }
+  }
+};
+
+GuestCard = connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(GuestCard); 
 
 export default DragSource((props) => {return props.dragType}, cardSource, collect)(GuestCard);
 

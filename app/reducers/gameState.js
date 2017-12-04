@@ -5,11 +5,13 @@ const baseState = {
   guestDeck: [],
   myDeck: [],
   discard: [],
-  party: [null, null, null, null, null, null]
+  party: [[], [], [], [], [], []],
+  partyPool: []
 }
 
 const gameState = (state = baseState, action) => {
-  let card, hand, foodDeck, guestDeck, party, myDeck, discard;
+  let card;
+  let {hand, foodDeck, partyPool, guestDeck, party, myDeck, discard} = state;
   switch (action.type) {
     case "APPLY_MANA":
       return Object.assign({}, state, {mana: state.mana + action.num});
@@ -19,11 +21,27 @@ const gameState = (state = baseState, action) => {
       discard = state.discard.concat(card);
       return Object.assign({}, state, {foodDeck, discard});
     case "ADD_GUEST": 
-      party = state.party;
-      card = state.guestDeck.find(c => c && c.id == action.id);
-      guestDeck = state.guestDeck.filter(c => c.id != action.id);
-      party[action.spot] = card;
-      return Object.assign({}, state, {party, guestDeck});
+      const newCard = state.guestDeck.find(c => c && c.id == action.id);
+      const oldCard = state.partyPool.find(c => c && c.id == action.id);
+      if (newCard) {
+        guestDeck = state.guestDeck.filter(c => c.id != action.id);
+        party[action.spot].push(newCard);
+        partyPool.push(newCard);
+        return Object.assign({}, state, {party, guestDeck, partyPool});
+      } 
+      else if (oldCard) {
+        for (let i = 0; i <= 6; i++) {
+          if (party[i]) party[i] = state.party[i].filter(c => c && c.id != action.id);
+        }
+        party[action.spot].push(oldCard);
+        return Object.assign({}, state, {party, guestDeck, partyPool});
+      } else {
+        return state;
+      }
+    case "MOVE_GUEST": 
+      card = state.party.find(c => c && c.id == action.id);
+      party[action.spot].push(card);
+      return Object.assign({}, state, {party});
     case "DRAW_CARD":
       myDeck = state.myDeck;
       discard = state.discard;

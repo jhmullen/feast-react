@@ -20,8 +20,8 @@ class Party extends Component {
     const {party} = this.props.gameState;
     const partyList = [];
     for (let p = 0; p < party.length; p++) {
-      if (party[p]) {
-        partyList.push(<li key={party[p].id} className="hand-item"><GuestCard dragType="guestCard" {...party[p]} /></li>);
+      if (party[p].length > 0) {
+        partyList.push(<li key={party[p][0].id} className="hand-item"><GuestCard dragType="guestCard" {...party[p][0]} /></li>);
       }
       else {
         partyList.push(<li key={`table-${p}`} className="hand-item"><TableSpot dragType="guestCard" spotNum={p} /></li>);

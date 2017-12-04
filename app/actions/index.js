@@ -20,6 +20,14 @@ export const addGuest = (id, spot) => {
   }
 }
 
+export const moveGuest = (id, spot) => {
+  return {
+    type: "MOVE_GUEST",
+    id: id,
+    spot: spot
+  }
+}
+
 export const drawCard = () => {
   return {
     type: "DRAW_CARD"
