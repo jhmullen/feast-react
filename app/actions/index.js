@@ -39,6 +39,13 @@ export const setFoodDeck = foodDeck => {
   }
 }
 
+export const setGuestDeck = guestDeck => {
+  return {
+    type: "SET_GUEST_DECK",
+    guestDeck: guestDeck
+  }
+}
+
 export const setMyDeck = myDeck => {
   return {
     type: "SET_MY_DECK",

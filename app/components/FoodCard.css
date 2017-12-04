@@ -1,0 +1,9 @@
+#foodcard {
+  width: 100px;
+  height: 140px;
+  overflow:auto;
+  background-color:wheat;
+  text-align: left;
+  padding: 5px;
+  border: 1px solid black;
+}

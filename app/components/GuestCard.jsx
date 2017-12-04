@@ -1,9 +1,9 @@
 import React, {Component} from "react";
 import {DragSource} from 'react-dnd';
 
-import "./Card.css";
+import "./GuestCard.css";
 
-class Card extends Component {
+class GuestCard extends Component {
 
   constructor(props) {
     super(props);
@@ -17,7 +17,7 @@ class Card extends Component {
     const {isDragging, connectDragSource} = this.props;
 
     return connectDragSource(
-      <div id="card">
+      <div id="guestcard">
         <div id="cost">
           {this.props.cost}
         </div>
@@ -46,5 +46,5 @@ function collect(connect, monitor) {
   };
 }
 
-export default DragSource((props) => {return props.dragType}, cardSource, collect)(Card);
+export default DragSource((props) => {return props.dragType}, cardSource, collect)(GuestCard);
 

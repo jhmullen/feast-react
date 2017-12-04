@@ -18,7 +18,7 @@ class MyDeck extends Component {
     for (let i = 0; i < 5; i++) {
       var obj = {
         id: `starter-${i}`,
-        name: "Stater Spell",
+        name: "Starter Spell",
         cost: 1,
         desc: "food +1",
         food_mod: 1,

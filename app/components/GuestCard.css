@@ -1,7 +1,8 @@
-#card {
+#guestcard {
   width: 100px;
   height: 140px;
-  background-color:wheat;
+  overflow:auto;
+  background-color:silver;
   text-align: left;
   padding: 5px;
   border: 1px solid black;
