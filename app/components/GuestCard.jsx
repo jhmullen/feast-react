@@ -19,7 +19,7 @@ class GuestCard extends Component {
     const {isDragging, connectDragSource} = this.props;
 
     return connectDragSource(
-      <div id="guestcard">
+      <div id={this.props.compactMode ? "compactmode" : "guestcard"}>
         <div id="cost">
           {`${this.props.cost}c/${this.props.appetite}a/${this.props.prestige}p`}
         </div>

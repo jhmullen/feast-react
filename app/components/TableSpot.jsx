@@ -25,7 +25,7 @@ class TableSpot extends Component {
 
     return connectDropTarget(
       <div id="tablespot">
-        {spotNum+1}
+        Join {spotNum+1}
       </div>
     );
 

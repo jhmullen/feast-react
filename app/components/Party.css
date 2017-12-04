@@ -6,10 +6,30 @@
   text-align: center;
   display: block;
   position: absolute;
-  bottom: 250px;
+  bottom: 270px;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
   padding: 5px;
+}
+
+.placeholder {
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  background-color:pink;
+}
+
+.party-container {
+  display: flex;
+  text-align: center;
+  width: 750px;
+  margin: auto; 
+  justify-content: space-evenly;
+}
+
+.stacker {
+  position:absolute;
+  text-align:left;
 }
