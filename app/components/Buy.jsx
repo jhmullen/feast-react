@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import {findDOMNode} from "react-dom";
 import {DropTarget} from "react-dnd";
-import {applyMana, setFaceupFood} from "../actions";
+import {applyMana, buyFood} from "../actions";
 import {Toaster, Position, Intent} from "@blueprintjs/core";
 
 import "./Buy.css";
@@ -16,33 +16,8 @@ class Buy extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.isOver && nextProps.isOver) {
-      // You can use this as enter handler
-    }
-
-    if (this.props.isOver && !nextProps.isOver) {
-      // You can use this as leave handler
-    }
-
-    if (this.props.isOverCurrent && !nextProps.isOverCurrent) {
-      // You can be more specific and track enter/leave
-      // shallowly, not including nested targets
-    }
-  }
-
   handleBuy(card) {
-    const {mana, faceup_food} = this.props.gameState;
-    const buyToast = Toaster.create({className: "buyToast", position: Position.TOP_CENTER});
-    if (card.cost < mana) {
-      const pruned = faceup_food.filter(f => f.id !== card.id);
-      this.props.applyMana(-card.cost);
-      this.props.setFaceupFood(pruned);
-      buyToast.show({message: `You bought ${card.name}!`, intent: Intent.SUCCESS, timeout: 1500});
-    } 
-    else {
-      buyToast.show({message: `Not Enough Mana!`, intent: Intent.DANGER, timeout: 1500});
-    }
+    this.props.buyFood(card.id);
   }
 
   render() {
@@ -92,8 +67,8 @@ const mapDispatchToProps = dispatch => {
     applyMana: num => {
       dispatch(applyMana(num))
     },
-    setFaceupFood: faceup_food => {
-      dispatch(setFaceupFood(faceup_food))
+    buyFood: id => {
+      dispatch(buyFood(id))
     }
   }
 };

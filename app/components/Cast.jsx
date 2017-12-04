@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { connect } from "react-redux"
 import { findDOMNode } from "react-dom";
 import { DropTarget } from "react-dnd";
-import {applyMana, setHand} from "../actions";
+import {applyMana, setHand, playCard} from "../actions";
 import {Toaster, Position, Intent} from "@blueprintjs/core";
 
 import "./Cast.css";
@@ -32,10 +32,8 @@ class Cast extends Component {
   }
 
   handleCast(card) {
-    let {hand} = this.props.gameState;
-    hand = hand.filter(c => c.id != card.id);
     this.props.applyMana(card.food_mod);
-    this.props.setHand(hand); 
+    this.props.playCard(card.id); 
     const castToast = Toaster.create({className: "castToast", position: Position.TOP_CENTER});
     castToast.show({message: `You Cast ${card.name}!`, intent: Intent.SUCCESS, timeout: 1500});
   }
@@ -92,8 +90,8 @@ const mapDispatchToProps = dispatch => {
     applyMana: num => {
       dispatch(applyMana(num))
     },
-    setHand: hand => {
-      dispatch(setHand(hand))
+    playCard: id => {
+      dispatch(playCard(id))
     }
   }
 };

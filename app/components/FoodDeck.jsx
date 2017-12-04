@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import Card from "./Card";
-import {setFaceupFood} from "../actions";
+import {setFaceupFood, setFoodDeck} from "../actions";
+import Papa from "papaparse";
 
 import "./FoodDeck.css";
 
@@ -10,32 +11,40 @@ class FoodDeck extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mounted: false
+      mounted: false,
+      faceup: []
     };
   }
 
   componentDidMount() {
-    this.populate();
+    const foodCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRFtDoZRo1q_et75CgtM3GHHXlIHiuip-GJ9wdx5iZVjI05KvhWI5fQCbxQVoBIvEy0kTASL151dJyS/pub?output=csv";
+    //const guestCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRFtDoZRo1q_et75CgtM3GHHXlIHiuip-GJ9wdx5iZVjI05KvhWI5fQCbxQVoBIvEy0kTASL151dJyS/pub?output=csv&gid=1152907192";
+    Papa.parse(foodCSV, {
+      download: true,
+      header: true,
+      complete: data => this.fillDeck(data.data)
+    });
   }
 
-  populate() {
-    const faceup = [];
-    for (let i = 0; i < 4; i++) {
-      const obj = {
-        id: i,
-        cost: Math.floor(Math.random() * 12) + 1,
-        name: "Buy Me"
+  fillDeck(data) {
+    const deck = data.sort(() => Math.random() - .5);
+    for (const d of deck) {
+      for (const key in d) {
+        if (d.hasOwnProperty(key)) {
+          if (!isNaN(parseInt(d[key]))) d[key] = parseInt(d[key]);
+        }
       }
-      faceup.push(obj);
     }
-    this.props.setFaceupFood(faceup);
+    this.props.setFoodDeck(deck);
   }
 
   render() {
 
-    const {faceup_food} = this.props.gameState;
+    const {foodDeck} = this.props.gameState;
+    const FACEUP_COUNT = 4;
+    const faceup = foodDeck.slice(-FACEUP_COUNT);
 
-    const faceupList = faceup_food.map(c => <li key={c.id} className="faceup-item"><Card dragType="buyCard" {...c} /></li>);
+    const faceupList = faceup.map(c => <li key={c.id} className="faceup-item"><Card dragType="buyCard" {...c} /></li>);
 
     return (
       <div id="fooddeck">
@@ -58,6 +67,9 @@ const mapDispatchToProps = dispatch => {
   return {
     setFaceupFood: faceup_food => {
       dispatch(setFaceupFood(faceup_food))
+    },
+    setFoodDeck: foodDeck => {
+      dispatch(setFoodDeck(foodDeck))
     }
   }
 };

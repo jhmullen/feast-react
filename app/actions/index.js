@@ -5,10 +5,23 @@ export const applyMana = num => {
   }
 }
 
-export const setFaceupFood = faceup_food => {
+export const buyFood = id => {
   return {
-    type: "SET_FACEUP_FOOD",
-    faceup_food: faceup_food
+    type: "BUY_FOOD",
+    id: id
+  }
+}
+
+export const drawCard = () => {
+  return {
+    type: "DRAW_CARD"
+  }
+}
+
+export const playCard = id => {
+  return {
+    type: "PLAY_CARD",
+    id: id
   }
 }
 
@@ -16,5 +29,19 @@ export const setHand = hand => {
   return {
     type: "SET_HAND",
     hand: hand
+  }
+}
+
+export const setFoodDeck = foodDeck => {
+  return {
+    type: "SET_FOOD_DECK",
+    foodDeck: foodDeck
+  }
+}
+
+export const setMyDeck = myDeck => {
+  return {
+    type: "SET_MY_DECK",
+    myDeck: myDeck
   }
 }
