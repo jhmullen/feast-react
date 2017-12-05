@@ -79,22 +79,12 @@ function collect(connect, monitor) {
   };
 }
 
-const mapStateToProps = state => {
-  return { 
-    gameState: state.gameState
-  }
-};
+const mapStateToProps = state => ({gameState: state.gameState});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    applyMana: num => {
-      dispatch(applyMana(num))
-    },
-    playCard: id => {
-      dispatch(playCard(id))
-    }
-  }
-};
+const mapDispatchToProps = dispatch => ({
+  applyMana: num => dispatch(applyMana(num)),
+  playCard: id => dispatch(playCard(id))
+});
 
 Cast = connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(Cast); 
 

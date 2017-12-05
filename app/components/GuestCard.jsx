@@ -48,22 +48,12 @@ function collect(connect, monitor) {
   };
 }
 
-const mapStateToProps = state => {
-  return { 
-    gameState: state.gameState
-  }
-};
+const mapStateToProps = state => ({gameState: state.gameState});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    applyMana: num => {
-      dispatch(applyMana(num))
-    },
-    moveGuest: (id, spot) => {
-      dispatch(moveGuest(id, spot))
-    }
-  }
-};
+const mapDispatchToProps = dispatch => ({
+  applyMana: num => dispatch(applyMana(num)),
+  moveGuest: (id, spot) => dispatch(moveGuest(id, spot))
+});
 
 GuestCard = connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(GuestCard); 
 

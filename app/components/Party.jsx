@@ -63,22 +63,12 @@ class Party extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { 
-    gameState: state.gameState
-  }
-};
+const mapStateToProps = state => ({gameState: state.gameState});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    applyMana: num => {
-      dispatch(applyMana(num))
-    },
-    endTurn: () => {
-      dispatch(endTurn())
-    }
-  }
-};
+const mapDispatchToProps = dispatch => ({
+  applyMana: num => dispatch(applyMana(num)),
+  endTurn: () => dispatch(endTurn())
+});
 
 export default connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(Party); 
 

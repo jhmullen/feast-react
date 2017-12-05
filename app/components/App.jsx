@@ -40,10 +40,6 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { 
-    gameState: state.gameState
-  }
-};
+const mapStateToProps = state => ({gameState: state.gameState});
 
 export default connect(mapStateToProps)(App);

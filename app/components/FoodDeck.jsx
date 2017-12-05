@@ -18,7 +18,6 @@ class FoodDeck extends Component {
 
   componentDidMount() {
     const foodCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRFtDoZRo1q_et75CgtM3GHHXlIHiuip-GJ9wdx5iZVjI05KvhWI5fQCbxQVoBIvEy0kTASL151dJyS/pub?output=csv";
-    //const guestCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRFtDoZRo1q_et75CgtM3GHHXlIHiuip-GJ9wdx5iZVjI05KvhWI5fQCbxQVoBIvEy0kTASL151dJyS/pub?output=csv&gid=1152907192";
     Papa.parse(foodCSV, {
       download: true,
       header: true,
@@ -60,19 +59,11 @@ class FoodDeck extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { 
-    gameState: state.gameState
-  }
-};
+const mapStateToProps = state => ({gameState: state.gameState});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setFoodDeck: foodDeck => {
-      dispatch(setFoodDeck(foodDeck))
-    }
-  }
-};
+const mapDispatchToProps = dispatch => ({
+  setFoodDeck: foodDeck => dispatch(setFoodDeck(foodDeck))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(FoodDeck); 
 

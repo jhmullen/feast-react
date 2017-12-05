@@ -17,7 +17,6 @@ class GuestDeck extends Component {
   }
 
   componentDidMount() {
-    //const foodCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRFtDoZRo1q_et75CgtM3GHHXlIHiuip-GJ9wdx5iZVjI05KvhWI5fQCbxQVoBIvEy0kTASL151dJyS/pub?output=csv";
     const guestCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRFtDoZRo1q_et75CgtM3GHHXlIHiuip-GJ9wdx5iZVjI05KvhWI5fQCbxQVoBIvEy0kTASL151dJyS/pub?output=csv&gid=1152907192";
     Papa.parse(guestCSV, {
       download: true,
@@ -62,19 +61,11 @@ class GuestDeck extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { 
-    gameState: state.gameState
-  }
-};
+const mapStateToProps = state => ({gameState: state.gameState});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setGuestDeck: guestDeck => {
-      dispatch(setGuestDeck(guestDeck))
-    }
-  }
-};
+const mapDispatchToProps = dispatch => ({
+  setGuestDeck: guestDeck => dispatch(setGuestDeck(guestDeck))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(GuestDeck); 
 

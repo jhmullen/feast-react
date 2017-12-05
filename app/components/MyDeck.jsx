@@ -54,25 +54,13 @@ class MyDeck extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { 
-    gameState: state.gameState
-  }
-};
+const mapStateToProps = state => ({gameState: state.gameState});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    applyMana: num => {
-      dispatch(applyMana(num))
-    },
-    setMyDeck: deck => {
-      dispatch(setMyDeck(deck))
-    },
-    drawCard: () => {
-      dispatch(drawCard())
-    }
-  }
-};
+const mapDispatchToProps = dispatch => ({
+  applyMana: num => dispatch(applyMana(num)),
+  setMyDeck: deck => dispatch(setMyDeck(deck)),
+  drawCard: () => dispatch(drawCard())
+}); 
 
 export default connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(MyDeck); 
 
