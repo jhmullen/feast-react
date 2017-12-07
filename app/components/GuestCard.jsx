@@ -1,12 +1,11 @@
-import React, {Component} from "react";
-import {DragSource} from 'react-dnd';
-import {connect} from "react-redux";
-import {applyMana, moveGuest} from "../actions";
+import React, { Component } from "react";
+import { DragSource } from "react-dnd";
+import { connect } from "react-redux";
+import { applyMana, moveGuest } from "../actions";
 
 import "./GuestCard.css";
 
 class GuestCard extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -15,23 +14,21 @@ class GuestCard extends Component {
   }
 
   render() {
-
-    const {isDragging, connectDragSource} = this.props;
+    const { isDragging, connectDragSource } = this.props;
 
     return connectDragSource(
       <div id={this.props.compactMode ? "compactmode" : "guestcard"}>
         <div id="cost">
-          {`${this.props.cost}c/${this.props.appetite}a/${this.props.prestige}p`}
+          {`${this.props.cost}c/${this.props.appetite}a/${
+            this.props.prestige
+          }p`}
         </div>
-        <div id="name">
-          {this.props.name}
-        </div>
-        <div id="desc" style={{marginTop: "10px"}}>
+        <div id="name">{this.props.name}</div>
+        <div id="desc" style={{ marginTop: "10px" }}>
           {this.props.desc}
         </div>
       </div>
     );
-
   }
 }
 
@@ -48,14 +45,21 @@ function collect(connect, monitor) {
   };
 }
 
-const mapStateToProps = state => ({gameState: state.gameState});
+const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
   applyMana: num => dispatch(applyMana(num)),
   moveGuest: (id, spot) => dispatch(moveGuest(id, spot))
 });
 
-GuestCard = connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(GuestCard); 
+GuestCard = connect(mapStateToProps, mapDispatchToProps, null, {
+  withRef: true
+})(GuestCard);
 
-export default DragSource((props) => {return props.dragType}, cardSource, collect)(GuestCard);
-
+export default DragSource(
+  props => {
+    return props.dragType;
+  },
+  cardSource,
+  collect
+)(GuestCard);
