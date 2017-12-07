@@ -1,11 +1,10 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
-import {applyMana} from "../actions";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { applyMana } from "../actions";
 
 import "./Discard.css";
 
 class Discard extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -14,29 +13,23 @@ class Discard extends Component {
   }
 
   render() {
-
-    const {discard} = this.props.gameState;
+    const { discard } = this.props.gameState;
 
     return (
-      <div id="discard" >
-        <div id="image-bg">
-          { /* css background-image */ }
-        </div>
-        <div id="counter">
-          { `${discard.length} in discard` }
-        </div>
+      <div id="discard">
+        <div id="image-bg">{/* css background-image */}</div>
+        <div id="counter">{`${discard.length} in discard`}</div>
       </div>
     );
-
   }
 }
 
-const mapStateToProps = state => ({gameState: state.gameState});
+const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
   applyMana: num => dispatch(applyMana(num))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(Discard); 
-
-
+export default connect(mapStateToProps, mapDispatchToProps, null, {
+  withRef: true
+})(Discard);

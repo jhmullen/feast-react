@@ -1,12 +1,11 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
-import {applyMana, addGuest} from "../actions";
-import {DropTarget} from "react-dnd";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { applyMana, addGuest } from "../actions";
+import { DropTarget } from "react-dnd";
 
 import "./TableSpot.css";
 
 class TableSpot extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -19,27 +18,21 @@ class TableSpot extends Component {
   }
 
   render() {
+    const { spotNum } = this.props;
+    const { isOver, canDrop, connectDropTarget } = this.props;
 
-    const {spotNum} = this.props;
-    const {isOver, canDrop, connectDropTarget} = this.props;
-
-    return connectDropTarget(
-      <div id="tablespot">
-        Join {spotNum+1}
-      </div>
-    );
-
+    return connectDropTarget(<div id="tablespot">Join {spotNum + 1}</div>);
   }
 }
 
 const tableTarget = {
-  drop(props, monitor, component) {    
+  drop(props, monitor, component) {
     if (monitor.didDrop()) {
       return;
     }
     const item = monitor.getItem();
     component.getWrappedInstance().handleInvite(item);
-    return(item);
+    return item;
   }
 };
 
@@ -53,13 +46,21 @@ function collect(connect, monitor) {
   };
 }
 
-const mapStateToProps = state => ({gameState: state.gameState});
+const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
   applyMana: num => dispatch(applyMana(num)),
   addGuest: (id, spot) => dispatch(addGuest(id, spot))
 });
 
-TableSpot = connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(TableSpot); 
+TableSpot = connect(mapStateToProps, mapDispatchToProps, null, {
+  withRef: true
+})(TableSpot);
 
-export default DropTarget((props) => {return props.dragType}, tableTarget, collect)(TableSpot);
+export default DropTarget(
+  props => {
+    return props.dragType;
+  },
+  tableTarget,
+  collect
+)(TableSpot);

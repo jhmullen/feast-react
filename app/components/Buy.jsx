@@ -1,14 +1,13 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
-import {findDOMNode} from "react-dom";
-import {DropTarget} from "react-dnd";
-import {applyMana, buyFood} from "../actions";
-import {Toaster, Position, Intent} from "@blueprintjs/core";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { findDOMNode } from "react-dom";
+import { DropTarget } from "react-dnd";
+import { applyMana, buyFood } from "../actions";
+import { Toaster, Position, Intent } from "@blueprintjs/core";
 
 import "./Buy.css";
 
 class Buy extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -21,17 +20,15 @@ class Buy extends Component {
   }
 
   render() {
-
-    const {isOver, canDrop, connectDropTarget} = this.props;
+    const { isOver, canDrop, connectDropTarget } = this.props;
 
     return connectDropTarget(
-      <div id="buy" >
+      <div id="buy">
         <div id="buy-bg" className={isOver ? "fade" : null}>
           Buy
         </div>
       </div>
     );
-
   }
 }
 
@@ -42,7 +39,7 @@ const buyTarget = {
     }
     const item = monitor.getItem();
     component.getWrappedInstance().handleBuy(item);
-    return(item);
+    return item;
   }
 };
 
@@ -56,13 +53,21 @@ function collect(connect, monitor) {
   };
 }
 
-const mapStateToProps = state => ({gameState: state.gameState});
+const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
   applyMana: num => dispatch(applyMana(num)),
   buyFood: id => dispatch(buyFood(id))
 });
 
-Buy = connect(mapStateToProps, mapDispatchToProps, null, {withRef: true})(Buy); 
+Buy = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
+  Buy
+);
 
-export default DropTarget((props) => {return props.dragType}, buyTarget, collect)(Buy);
+export default DropTarget(
+  props => {
+    return props.dragType;
+  },
+  buyTarget,
+  collect
+)(Buy);
