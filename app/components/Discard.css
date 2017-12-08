@@ -1,5 +1,6 @@
 #discard {
-  position: absolute;
-  left: 120px;
-  bottom: 20px;
+  display: inline-block;
+  width: 80px;
+  height: 118px;
+  margin: 5px;
 }

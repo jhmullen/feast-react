@@ -28,11 +28,15 @@ class App extends Component {
           Prestige: {this.props.gameState.prestige}
           <Draw />
           <Buy dragType="buyCard" />
-          <MyDeck />
-          <Discard />
-          <Party />
-          <Hand />
-          <Cast dragType="handCard" />
+          <div className="party-row">
+            <Party />
+          </div>
+          <div className="hand-row">
+            <MyDeck />
+            <Discard />
+            <Hand />
+            <Cast dragType="handCard" />
+          </div>
         </div>
       </DragDropContextProvider>
     );

@@ -1,7 +1,8 @@
 #deck {
-  position: absolute;
-  left: 20px;
-  bottom: 20px;
+  width: 80px;
+  height: 118px;
+  display: inline-block;
+  margin: 5px;
 }
 
 #image-bg {

@@ -1,12 +1,13 @@
 #foodcard {
-  width: 100px;
-  height: 140px;
+  width: 80px;
+  height: 118px;
   overflow:auto;
   background-color:wheat;
   text-align: left;
   padding: 5px;
   border: 1px solid black;
   border-radius: 5px;
+  margin: 0px 5px;
 }
 
 .cost {

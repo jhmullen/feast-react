@@ -14,10 +14,11 @@ class MyDeck extends Component {
 
   componentDidMount() {
     const deck = [];
-    for (let i = 0; i < 5; i++) {
+    const OPENING_HAND_COUNT = 10;
+    for (let i = 0; i < 10; i++) {
       var obj = {
         id: `starter-${i}`,
-        name: "Starter Spell",
+        name: `Starter ${i}`,
         cost: 1,
         desc: "food +1",
         food_mod: 1,
@@ -25,7 +26,7 @@ class MyDeck extends Component {
       };
       deck.push(obj);
     }
-    this.props.setMyDeck(deck);
+    this.props.setMyDeck(deck.sort(d => Math.random() > .5));
   }
 
   onClick(e) {
