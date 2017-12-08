@@ -45,18 +45,14 @@ class GuestDeck extends Component {
     if (remaining < 0) remaining = 0;
 
     const faceupList = faceup.map(c => (
-      <li key={c.id} className="faceup-item">
-        <GuestCard dragType="guestCard" {...c} />
-      </li>
+      <GuestCard key={c.id} dragType="guestCard" className="faceup-item"{...c} />
     ));
 
     return (
       <div id="guestdeck">
-        <div style={{ float: "left" }}>{`${remaining} in deck`}</div>
-        <div style={{ float: "right" }}>{`${
-          guestDiscard.length
-        } in discard`}</div>
-        <ul>{faceupList}</ul>
+        <div>{`${remaining} in deck`}</div>
+        {faceupList}
+        <div>{`${guestDiscard.length} in discard`}</div>
       </div>
     );
   }

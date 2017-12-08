@@ -1,12 +1,13 @@
 #fooddeck {
   width: 880px;
-  height: 165px;
+  height: 128px;
   margin: 5px auto;
-  background-color: antiquewhite;
-  text-align: center;
+  padding: 5px;
+  background-color: lightblue;
+  display:flex;
+  justify-content: space-between;
 }
 
 .faceup-item {
   display: inline-block;
-  padding: 5px;
 }
