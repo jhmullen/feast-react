@@ -73,7 +73,6 @@ export const gameState = (state = baseState, action) => {
       return Object.assign({}, state, {
         party,
         guestDiscard,
-        partyPool,
         prestige: Math.max(0, prestigeEarned + state.prestige),
       });
     case 'MOVE_GUEST':
