@@ -70,7 +70,6 @@ export const gameState = (state = baseState, action) => {
       const leaving = party.shift();
       guestDiscard = state.guestDiscard.concat(leaving);
       party[5] = [];
-      partyPool.filter(c => !leaving.includes(c));
       return Object.assign({}, state, {
         party,
         guestDiscard,
