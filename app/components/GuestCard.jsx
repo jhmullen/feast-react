@@ -18,10 +18,11 @@ class GuestCard extends Component {
 
     return connectDragSource(
       <div id={this.props.compactMode ? "compactmode" : "guestcard"}>
-        <div id="cost">
-          {`${this.props.cost}c/${this.props.appetite}a/${
+        <div className="cost">
+          <span>{`${this.props.cost}c/${this.props.appetite}a/${
             this.props.prestige
-          }p`}
+          }p`}</span>
+          <span>{this.props.gameState.mana < this.props.cost ? "X" : ""}</span>
         </div>
         <div id="name">{this.props.name}</div>
         <div id="desc" style={{ marginTop: "10px" }}>
