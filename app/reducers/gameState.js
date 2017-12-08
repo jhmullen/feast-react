@@ -10,6 +10,7 @@ export const baseState = {
   party: [[], [], [], [], [], []],
   partyPool: [],
   guestDiscard: [],
+  prestige: 0,
 };
 
 export const discardHand = state => ({
@@ -113,11 +114,27 @@ export const gameState = (state = baseState, action) => {
         return state;
       }
     case 'END_TURN':
+      const prestigeEarned = party.reduce(
+        (acc, table) =>
+          acc +
+          table.reduce((tableTotal, { prestige }) => tableTotal + prestige, 0),
+        0,
+      );
       const leaving = party.shift();
       guestDiscard = state.guestDiscard.concat(leaving);
       party[5] = [];
-      partyPool.filter(c => !leaving.includes(c));
-      return drawCards(5, discardHand(Object.assign({}, state, { party, guestDiscard, partyPool })));
+      partyPool = partyPool.filter(c => !leaving.includes(c));
+      return drawCards(
+        5,
+        discardHand(
+          Object.assign({}, state, {
+            party,
+            guestDiscard,
+            partyPool,
+            prestige: Math.max(0, prestigeEarned + state.prestige),
+          }),
+        ),
+      );
     case 'MOVE_GUEST':
       card = state.party.find(c => c && c.id == action.id);
       party[action.spot].push(card);

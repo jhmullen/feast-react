@@ -137,43 +137,117 @@ describe('BUY_FOOD', () => {
   });
 });
 
-
 describe('END_TURN', () => {
-  describe('replenishes hand', () => {
-    test('draw five', () =>
+  describe('prestige', () => {
+    test('none', () => expect(reduce(baseState, endTurn())).toEqual(baseState));
+    test('one table', () =>
       expect(
         reduce(
           {
             ...baseState,
-            myDeck: idRange(0, 11),
+            party: [
+              [
+                {
+                  prestige: 1,
+                },
+              ],
+            ],
           },
           endTurn(),
         ),
-      ).toMatchObject({
-        hand: idRange(6, 11).reverse(),
-        myDeck: idRange(0, 6),
-      }));
-    test('card travels hand -> discard -> deck -> hand if necessary, maintaining order', () => {
-      const state = reduce(
-        {
-          ...baseState,
-          myDeck: idRange(0, 2),
-          discard: idRange(2, 4),
-          hand: idRange(4, 5),
-        },
-        endTurn(),
-      );
-
-      expect(state.myDeck).toHaveLength(0);
-      expect(state.discard).toHaveLength(0);
-      // shuffling makes the test assertion slightly delicate :)
-      // deck drawn first, from top
-      expect(state.hand.slice(0, 2)).toEqual([{ id: 1 }, { id: 0 }]);
-      // discard drawn in _some_ order,
-      // _with_ what was in hand
+      ).toMatchObject({ prestige: 1 }));
+    test('accumulates', () =>
       expect(
-        state.hand.slice(2, 5).sort((a, b) => (a.id < b.id ? -1 : 1)),
-      ).toEqual([{ id: 2 }, { id: 3 }, { id: 4 }]);
+        reduce(
+          {
+            ...baseState,
+            prestige: 1,
+            party: [
+              [
+                {
+                  prestige: 1,
+                },
+              ],
+            ],
+          },
+          endTurn(),
+        ),
+      ).toMatchObject({ prestige: 2 }));
+
+    test('min prestige is zero', () =>
+      expect(
+        reduce(
+          {
+            ...baseState,
+            prestige: 1,
+            party: [
+              [
+                {
+                  prestige: 1,
+                },
+              ],
+              [],
+              [{ prestige: -3 }],
+            ],
+          },
+          endTurn(),
+        ),
+      ).toMatchObject({ prestige: 0 }));
+    test('two tables', () =>
+      expect(
+        reduce(
+          {
+            ...baseState,
+            party: [
+              [
+                {
+                  prestige: 1,
+                },
+              ],
+              [],
+              [{ prestige: 2 }],
+            ],
+          },
+          endTurn(),
+        ),
+      ).toMatchObject({ prestige: 3 }));
+
+    describe('replenishes hand', () => {
+      test('draw five', () =>
+        expect(
+          reduce(
+            {
+              ...baseState,
+              myDeck: idRange(0, 11),
+            },
+            endTurn(),
+          ),
+        ).toMatchObject({
+          hand: idRange(6, 11).reverse(),
+          myDeck: idRange(0, 6),
+        }));
+      test('card travels hand -> discard -> deck -> hand if necessary, maintaining order', () => {
+        const state = reduce(
+          {
+            ...baseState,
+            myDeck: idRange(0, 2),
+            discard: idRange(2, 4),
+            hand: idRange(4, 5),
+          },
+          endTurn(),
+        );
+
+        expect(state.myDeck).toHaveLength(0);
+        expect(state.discard).toHaveLength(0);
+        // shuffling makes the test assertion slightly delicate :)
+        // deck drawn first, from top
+        expect(state.hand.slice(0, 2)).toEqual([{ id: 1 }, { id: 0 }]);
+        // discard drawn in _some_ order,
+        // _with_ what was in hand
+        expect(
+          state.hand.slice(2, 5).sort((a, b) => (a.id < b.id ? -1 : 1)),
+        ).toEqual([{ id: 2 }, { id: 3 }, { id: 4 }]);
+      });
     });
   });
 });

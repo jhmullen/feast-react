@@ -25,6 +25,7 @@ class App extends Component {
     return (
       <DragDropContextProvider backend={HTML5Backend}>
         <div id="board">
+          Prestige: {this.props.gameState.prestige}
           <Draw />
           <Buy dragType="buyCard" />
           <MyDeck />
