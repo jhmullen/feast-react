@@ -1,4 +1,4 @@
-import { buyFood, endTurn } from '../actions';
+import { addGuest, buyFood, endTurn } from '../actions';
 import {
   gameState as reduce,
   baseState,
@@ -137,6 +137,7 @@ describe('BUY_FOOD', () => {
   });
 });
 
+
 describe('END_TURN', () => {
   describe('replenishes hand', () => {
     test('draw five', () =>
@@ -173,6 +174,30 @@ describe('END_TURN', () => {
       expect(
         state.hand.slice(2, 5).sort((a, b) => (a.id < b.id ? -1 : 1)),
       ).toEqual([{ id: 2 }, { id: 3 }, { id: 4 }]);
+    });
+  });
+});
+
+describe('ADD_GUEST', () => {
+  test('insufficient mana is no-op', () => {
+    const state = {
+      ...baseState,
+      mana: 1,
+      guestDeck: [card],
+    };
+    expect(reduce(state, addGuest(0, 1))).toEqual(state);
+  });
+
+  test('buy deducts mana', () => {
+    const state = {
+      ...baseState,
+      mana: 2,
+      guestDeck: [card],
+    };
+
+    expect(reduce(state, addGuest(0, 1))).toMatchObject({
+      mana: 0,
+      guestDeck: [],
     });
   });
 });

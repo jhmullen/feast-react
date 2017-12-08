@@ -1,3 +1,5 @@
+import { setAt } from '../array';
+
 export const baseState = {
   mana: 0,
   hand: [],
@@ -90,10 +92,16 @@ export const gameState = (state = baseState, action) => {
       const newCard = state.guestDeck.find(c => c && c.id == action.id);
       const oldCard = state.partyPool.find(c => c && c.id == action.id);
       if (newCard) {
+        if (state.mana < newCard.cost) {
+          return state;
+        }
         guestDeck = state.guestDeck.filter(c => c.id != action.id);
-        party[action.spot].push(newCard);
-        partyPool.push(newCard);
-        return Object.assign({}, state, { party, guestDeck, partyPool });
+        return Object.assign({}, state, {
+          party: setAt(action.spot, [...party[action.spot], newCard], party),
+          guestDeck,
+          partyPool: [...state.partyPool, newCard],
+          mana: state.mana - newCard.cost,
+        });
       } else if (oldCard) {
         for (let i = 0; i <= 6; i++) {
           if (party[i])
