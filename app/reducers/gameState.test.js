@@ -250,28 +250,28 @@ describe('END_TURN', () => {
       });
     });
   });
+});
 
-  describe('ADD_GUEST', () => {
-    test('insufficient mana is no-op', () => {
-      const state = {
-        ...baseState,
-        mana: 1,
-        guestDeck: [card],
-      };
-      expect(reduce(state, addGuest(0, 1))).toEqual(state);
-    });
+describe('ADD_GUEST', () => {
+  test('insufficient mana is no-op', () => {
+    const state = {
+      ...baseState,
+      mana: 1,
+      guestDeck: [card],
+    };
+    expect(reduce(state, addGuest(0, 1))).toEqual(state);
+  });
 
-    test('buy deducts mana', () => {
-      const state = {
-        ...baseState,
-        mana: 2,
-        guestDeck: [card],
-      };
+  test('buy deducts mana', () => {
+    const state = {
+      ...baseState,
+      mana: 2,
+      guestDeck: [card],
+    };
 
-      expect(reduce(state, addGuest(0, 1))).toMatchObject({
-        mana: 0,
-        guestDeck: [],
-      });
+    expect(reduce(state, addGuest(0, 1))).toMatchObject({
+      mana: 0,
+      guestDeck: [],
     });
   });
 });
