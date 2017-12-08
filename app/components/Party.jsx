@@ -45,7 +45,7 @@ class Party extends Component {
           <div
             key={`table-${p}`}
             className="hand-item"
-            style={{ width: "100px" }}
+            style={{ width: "80px" }}
           >
             {guestList}
           </div>

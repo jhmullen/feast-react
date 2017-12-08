@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import FoodCard from './FoodCard';
 import { setFaceupFood, setFoodDeck } from '../actions';
 import Papa from 'papaparse';
+import Buy from "./Buy";
 
 import './FoodDeck.css';
 
@@ -45,15 +46,14 @@ class FoodDeck extends Component {
     if (remaining < 0) remaining = 0;
 
     const faceupList = faceup.map(c => (
-      <li key={c.id} className="faceup-item">
-        <FoodCard dragType="buyCard" mana={this.props.gameState.mana} {...c} />
-      </li>
+      <FoodCard key={c.id} dragType="buyCard" mana={this.props.gameState.mana} {...c} />
     ));
 
     return (
       <div id="fooddeck">
         <div style={{ float: 'left' }}>{`${remaining} remaining`}</div>
-        <ul>{faceupList}</ul>
+        {faceupList}
+        <Buy dragType="buyCard" />
       </div>
     );
   }

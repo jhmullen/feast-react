@@ -18,7 +18,7 @@ class FoodCard extends Component {
 
     return connectDragSource(
       <div id="foodcard">
-        <div class="cost">
+        <div className="cost">
           <span>{this.props.cost}</span>
           <span>{canAfford ? '' : 'X'}</span>
         </div>

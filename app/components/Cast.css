@@ -1,7 +1,7 @@
 #cast {
-  position:absolute;
-  right: 20px;
-  bottom: 20px;
+  width: 80px;
+  display: inline-block;
+  margin: 5px;
 }
 
 #cast-bg {

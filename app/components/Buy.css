@@ -1,8 +1,7 @@
 #buy {
-  position:absolute;
-  right: 20px;
-  top: 25%;
-  margin-top: -59px;
+  width:80px;
+  height: 118px;
+  display: inline-block;
 }
 
 #buy-bg {

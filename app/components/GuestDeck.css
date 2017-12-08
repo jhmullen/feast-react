@@ -1,7 +1,9 @@
 #guestdeck {
   width: 880px;
-  height: 165px;
+  height: 128px;
   margin: 5px auto;
+  padding: 5px;
   background-color: lightgreen;
-  text-align: center;
+  display:flex; 
+  justify-content: space-between;
 }

@@ -1,7 +1,7 @@
 import { setAt } from '../array';
 
 export const baseState = {
-  mana: 0,
+  mana: 100,
   hand: [],
   foodDeck: [],
   guestDeck: [],

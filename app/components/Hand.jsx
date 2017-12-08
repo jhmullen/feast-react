@@ -16,14 +16,12 @@ class Hand extends Component {
   render() {
     const { hand } = this.props.gameState;
     const handList = hand.map(c => (
-      <li key={c.id} className="hand-item">
-        <FoodCard dragType="handCard" {...c} />
-      </li>
+      <FoodCard key={c.id} className="hand-item" dragType="handCard" {...c} />
     ));
 
     return (
       <div id="hand-container">
-        <ul id="hand-list">{handList}</ul>
+        {handList}
       </div>
     );
   }
