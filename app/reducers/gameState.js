@@ -124,10 +124,18 @@ export const gameState = (state = baseState, action) => {
       guestDiscard = state.guestDiscard.concat(leaving);
       party[5] = [];
       partyPool = partyPool.filter(c => !leaving.includes(c));
-      return drawCards(5, discardHand(Object.assign({}, state, { party, guestDiscard, partyPool,
-      
-        prestige: Math.max(0, prestigeEarned + state.prestige),
-      })));
+      return drawCards(
+        5,
+        discardHand(
+          Object.assign({}, state, {
+            party,
+            guestDiscard,
+            partyPool,
+
+            prestige: Math.max(0, prestigeEarned + state.prestige),
+          }),
+        ),
+      );
     case 'MOVE_GUEST':
       card = state.party.find(c => c && c.id == action.id);
       party[action.spot].push(card);
