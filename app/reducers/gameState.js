@@ -10,6 +10,51 @@ export const baseState = {
   guestDiscard: [],
 };
 
+export const discardHand = state => ({
+  ...state,
+  hand: [],
+  discard: [...state.discard, ...state.hand],
+});
+
+/**
+ * move discard to deck if deck is empty
+ */
+const replenish = state =>
+  state.myDeck.length
+    ? state
+    : {
+        ...state,
+        myDeck: state.discard.sort(() => Math.random() - 0.5),
+        discard: [],
+      };
+
+export const drawCard = state => {
+  state = replenish(state);
+  const deck = state.myDeck;
+
+  let card = deck[deck.length - 1];
+  let deckLeft = deck.slice(0, deck.length - 1);
+
+  const hand = card ? state.hand.concat(card) : state.hand;
+
+  return replenish(Object.assign({}, state, { hand, myDeck: deckLeft }));
+};
+
+/**
+ * try to draw X cards, stopping if there aren't enough in discard
+ * or deck.
+ * naively recursive; like, how many cards are you drawing?
+ */
+export const drawCards = (howMany, state) => {
+  const available = state.discard.length + state.myDeck.length;
+
+  if (available < 1 || howMany < 1) {
+    return state;
+  }
+
+  return drawCards(howMany - 1, drawCard(state));
+};
+
 export const gameState = (state = baseState, action) => {
   let card;
   let {
@@ -64,21 +109,13 @@ export const gameState = (state = baseState, action) => {
       guestDiscard = state.guestDiscard.concat(leaving);
       party[5] = [];
       partyPool.filter(c => !leaving.includes(c));
-      return Object.assign({}, state, { party, guestDiscard, partyPool });
+      return drawCards(5, discardHand(Object.assign({}, state, { party, guestDiscard, partyPool })));
     case 'MOVE_GUEST':
       card = state.party.find(c => c && c.id == action.id);
       party[action.spot].push(card);
       return Object.assign({}, state, { party });
     case 'DRAW_CARD':
-      myDeck = state.myDeck;
-      discard = state.discard;
-      card = state.myDeck.splice(-1);
-      hand = state.hand.concat(card);
-      if (myDeck.length == 0) {
-        myDeck = state.discard.sort(() => Math.random() - 0.5);
-        discard = [];
-      }
-      return Object.assign({}, state, { hand, myDeck, discard });
+      return drawCard(state);
     case 'PLAY_CARD':
       myDeck = state.myDeck;
       card = state.hand.find(c => c.id == action.id);
