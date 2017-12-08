@@ -1,3 +1,5 @@
+import { setAt } from '../array';
+
 export const baseState = {
   mana: 0,
   hand: [],
@@ -9,6 +11,51 @@ export const baseState = {
   partyPool: [],
   guestDiscard: [],
   prestige: 0,
+};
+
+export const discardHand = state => ({
+  ...state,
+  hand: [],
+  discard: [...state.discard, ...state.hand],
+});
+
+/**
+ * move discard to deck if deck is empty
+ */
+const replenish = state =>
+  state.myDeck.length
+    ? state
+    : {
+        ...state,
+        myDeck: state.discard.sort(() => Math.random() - 0.5),
+        discard: [],
+      };
+
+export const drawCard = state => {
+  state = replenish(state);
+  const deck = state.myDeck;
+
+  let card = deck[deck.length - 1];
+  let deckLeft = deck.slice(0, deck.length - 1);
+
+  const hand = card ? state.hand.concat(card) : state.hand;
+
+  return replenish(Object.assign({}, state, { hand, myDeck: deckLeft }));
+};
+
+/**
+ * try to draw X cards, stopping if there aren't enough in discard
+ * or deck.
+ * naively recursive; like, how many cards are you drawing?
+ */
+export const drawCards = (howMany, state) => {
+  const available = state.discard.length + state.myDeck.length;
+
+  if (available < 1 || howMany < 1) {
+    return state;
+  }
+
+  return drawCards(howMany - 1, drawCard(state));
 };
 
 export const gameState = (state = baseState, action) => {
@@ -46,10 +93,16 @@ export const gameState = (state = baseState, action) => {
       const newCard = state.guestDeck.find(c => c && c.id == action.id);
       const oldCard = state.partyPool.find(c => c && c.id == action.id);
       if (newCard) {
+        if (state.mana < newCard.cost) {
+          return state;
+        }
         guestDeck = state.guestDeck.filter(c => c.id != action.id);
-        party[action.spot].push(newCard);
-        partyPool.push(newCard);
-        return Object.assign({}, state, { party, guestDeck, partyPool });
+        return Object.assign({}, state, {
+          party: setAt(action.spot, [...party[action.spot], newCard], party),
+          guestDeck,
+          partyPool: [...state.partyPool, newCard],
+          mana: state.mana - newCard.cost,
+        });
       } else if (oldCard) {
         for (let i = 0; i <= 6; i++) {
           if (party[i])
@@ -70,25 +123,17 @@ export const gameState = (state = baseState, action) => {
       const leaving = party.shift();
       guestDiscard = state.guestDiscard.concat(leaving);
       party[5] = [];
-      return Object.assign({}, state, {
-        party,
-        guestDiscard,
+      partyPool = partyPool.filter(c => !leaving.includes(c));
+      return drawCards(5, discardHand(Object.assign({}, state, { party, guestDiscard, partyPool,
+      
         prestige: Math.max(0, prestigeEarned + state.prestige),
-      });
+      })));
     case 'MOVE_GUEST':
       card = state.party.find(c => c && c.id == action.id);
       party[action.spot].push(card);
       return Object.assign({}, state, { party });
     case 'DRAW_CARD':
-      myDeck = state.myDeck;
-      discard = state.discard;
-      card = state.myDeck.splice(-1);
-      hand = state.hand.concat(card);
-      if (myDeck.length == 0) {
-        myDeck = state.discard.sort(() => Math.random() - 0.5);
-        discard = [];
-      }
-      return Object.assign({}, state, { hand, myDeck, discard });
+      return drawCard(state);
     case 'PLAY_CARD':
       myDeck = state.myDeck;
       card = state.hand.find(c => c.id == action.id);
