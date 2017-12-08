@@ -131,7 +131,6 @@ export const gameState = (state = baseState, action) => {
             party,
             guestDiscard,
             partyPool,
-
             prestige: Math.max(0, prestigeEarned + state.prestige),
           }),
         ),
