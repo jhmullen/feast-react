@@ -25,7 +25,6 @@ class App extends Component {
     return (
       <DragDropContextProvider backend={HTML5Backend}>
         <div id="board">
-          Prestige: {this.props.gameState.prestige}
           <div id="buy-row">
             <Draw />
           </div>
@@ -33,6 +32,7 @@ class App extends Component {
             <Party />
           </div>
           <div id="hand-row">
+            <div style={{position:"absolute", top: "-20px", left: "5px", fontSize: "16px"}}>Prestige: {this.props.gameState.prestige}</div>
             <MyDeck />
             <Discard />
             <Hand />

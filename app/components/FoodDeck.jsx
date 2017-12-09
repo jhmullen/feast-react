@@ -51,7 +51,10 @@ class FoodDeck extends Component {
 
     return (
       <div id="fooddeck">
-        <div style={{ float: 'left' }}>{`${remaining} remaining`}</div>
+         <div>
+          <div id="image-bg">{/* css background-image */}</div>
+          <div id="counter">{`${remaining} in deck`}</div>        
+        </div>
         {faceupList}
         <Buy dragType="buyCard" />
       </div>

@@ -50,9 +50,15 @@ class GuestDeck extends Component {
 
     return (
       <div id="guestdeck">
-        <div>{`${remaining} in deck`}</div>
+        <div>
+          <div id="image-bg">{/* css background-image */}</div>
+          <div id="counter">{`${remaining} in deck`}</div>        
+        </div>
         {faceupList}
-        <div>{`${guestDiscard.length} in discard`}</div>
+        <div>
+          <div id="image-bg">{/* css background-image */}</div>
+          <div id="counter">{`${guestDiscard.length} in discard`}</div>        
+        </div>
       </div>
     );
   }
