@@ -7,7 +7,7 @@ export const baseState = {
   guestDeck: [],
   myDeck: [],
   discard: [],
-  party: [[], [], [], [], [], []],
+  party: [[], [], [], [], [], [], []],
   partyPool: [],
   guestDiscard: [],
   prestige: 0,
@@ -104,7 +104,7 @@ export const gameState = (state = baseState, action) => {
           mana: state.mana - newCard.cost,
         });
       } else if (oldCard) {
-        for (let i = 0; i <= 6; i++) {
+        for (let i = 0; i <= 7; i++) {
           if (party[i])
             party[i] = state.party[i].filter(c => c && c.id != action.id);
         }
@@ -122,10 +122,10 @@ export const gameState = (state = baseState, action) => {
       );
       const leaving = party.shift();
       guestDiscard = state.guestDiscard.concat(leaving);
-      party[5] = [];
+      party[6] = [];
       partyPool = partyPool.filter(c => !leaving.includes(c));
       return drawCards(
-        5,
+        4,
         discardHand(
           Object.assign({}, state, {
             party,

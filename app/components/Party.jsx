@@ -60,7 +60,7 @@ class Party extends Component {
     }
 
     const tableSpots = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < party.length; i++) {
       tableSpots[i] = (
         <div key={`table-${i}`} className="hand-item">
           <TableSpot dragType="guestCard" spotNum={i} />
