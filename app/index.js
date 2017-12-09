@@ -8,11 +8,8 @@ import io from 'socket.io-client'
 import socketLogger from './middleware/socketLogger'
 
 const socket = io()
-socket.on('connect', function(){console.log('conn')});
-socket.on('connect_error', function(e){console.log("conn error", e)});
-socket.on('event', function(data){});
-socket.on('disconnect', function(){});
-socket.open()
+socket.on('connect', function(){console.log('connected')});
+socket.open();
 
 let store = createStore(feastApp,
   applyMiddleware(socketLogger(socket))
