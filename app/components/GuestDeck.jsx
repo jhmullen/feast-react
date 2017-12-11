@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import GuestCard from "./GuestCard";
 import { setGuestDeck } from "../actions";
+import { Position } from "@blueprintjs/core";
 import Papa from "papaparse";
 
 import "./GuestDeck.css";
@@ -45,7 +46,12 @@ class GuestDeck extends Component {
     if (remaining < 0) remaining = 0;
 
     const faceupList = faceup.map(c => (
-      <GuestCard key={c.id} dragType="guestCard" className="faceup-item"{...c} />
+      <GuestCard 
+        key={c.id} 
+        dragType="guestCard" 
+        className="faceup-item"
+        position={Position.LEFT_BOTTOM}
+        {...c} />
     ));
 
     return (

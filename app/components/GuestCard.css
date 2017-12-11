@@ -9,6 +9,17 @@
   border-radius: 5px;
 }
 
+#guestcard-big {
+  width: 160px;
+  height: 236px;
+  overflow:auto;
+  background-color:silver;
+  text-align: left;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
 #compactmode {
   width: 100px;
   height: 30px;

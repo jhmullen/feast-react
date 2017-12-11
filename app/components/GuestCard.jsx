@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { DragSource } from "react-dnd";
 import { connect } from "react-redux";
 import { applyMana, moveGuest } from "../actions";
+import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 
 import "./GuestCard.css";
 
@@ -14,20 +15,42 @@ class GuestCard extends Component {
   }
 
   render() {
-    const { isDragging, connectDragSource } = this.props;
+    const { isDragging, connectDragSource, position } = this.props;
 
     return connectDragSource(
-      <div id={this.props.compactMode ? "compactmode" : "guestcard"}>
-        <div className="cost">
-          <span>{`${this.props.cost}c/${this.props.appetite}a/${
-            this.props.prestige
-          }p`}</span>
-          <span>{this.props.gameState.mana < this.props.cost ? "X" : ""}</span>
-        </div>
-        <div id="name">{this.props.name}</div>
-        <div id="desc" style={{ marginTop: "10px" }}>
-          {this.props.desc}
-        </div>
+      <div>
+        <Popover
+            interactionKind={PopoverInteractionKind.HOVER}
+            popoverClassName="pt-popover-content-sizing"
+            position={position}
+            hoverOpenDelay={800}
+            hoverCloseDelay={100}
+        >
+          <div id={this.props.compactMode ? "compactmode" : "guestcard"}>
+            <div className="cost">
+              <span>{`${this.props.cost}c/${this.props.appetite}a/${
+                this.props.prestige
+              }p`}</span>
+              <span>{this.props.gameState.mana < this.props.cost ? "X" : ""}</span>
+            </div>
+            <div id="name">{this.props.name}</div>
+            <div id="desc" style={{ marginTop: "10px" }}>
+              {this.props.desc}
+            </div>
+          </div>
+          <div id="guestcard-big">
+            <div className="cost">
+              <span>{`${this.props.cost}c/${this.props.appetite}a/${
+                this.props.prestige
+              }p`}</span>
+              <span>{this.props.gameState.mana < this.props.cost ? "X" : ""}</span>
+            </div>
+            <div id="name">{this.props.name}</div>
+            <div id="desc" style={{ marginTop: "10px" }}>
+              {this.props.desc}
+            </div>
+          </div>
+        </Popover>
       </div>
     );
   }

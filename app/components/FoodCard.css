@@ -10,6 +10,18 @@
   margin: 0px 5px;
 }
 
+#foodcard-big {
+  width: 160px;
+  height: 236px;
+  overflow:auto;
+  background-color:wheat;
+  text-align: left;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 0px 5px;
+}
+
 .cost {
   display: flex;
   justify-content: space-between;

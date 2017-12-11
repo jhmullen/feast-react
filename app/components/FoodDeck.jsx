@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import FoodCard from './FoodCard';
 import { setFaceupFood, setFoodDeck } from '../actions';
+import { Position } from "@blueprintjs/core";
 import Papa from 'papaparse';
 import Buy from "./Buy";
 
@@ -46,7 +47,12 @@ class FoodDeck extends Component {
     if (remaining < 0) remaining = 0;
 
     const faceupList = faceup.map(c => (
-      <FoodCard key={c.id} dragType="buyCard" mana={this.props.gameState.mana} {...c} />
+      <FoodCard 
+        key={c.id} 
+        dragType="buyCard" 
+        mana={this.props.gameState.mana} 
+        position={Position.LEFT_TOP}
+        {...c} />
     ));
 
     return (

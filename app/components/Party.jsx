@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { applyMana, endTurn } from "../actions";
 import GuestCard from "./GuestCard.jsx";
 import TableSpot from "./TableSpot.jsx";
-import { Button } from "@blueprintjs/core";
+import { Button, Position } from "@blueprintjs/core";
 
 import "./Party.css";
 
@@ -29,7 +29,11 @@ class Party extends Component {
         for (let g = 0; g < guests.length; g++) {
           guestList.push(
             <div key={guests[g].id} className="stacker">
-              <GuestCard key={g.id} dragType="guestCard" {...guests[g]} />
+              <GuestCard 
+                key={g.id} 
+                dragType="guestCard" 
+                position={Position.TOP}
+                {...guests[g]} />
             </div>
           );
           guestList.push(
