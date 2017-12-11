@@ -94,6 +94,7 @@ export const gameState = (state = baseState, action) => {
     case 'ADD_GUEST':
       const newCard = state.guestDeck.find(c => c && c.id == action.id);
       const oldCard = state.partyPool.find(c => c && c.id == action.id);
+      const disCard = state.guestDiscard.find(c => c && c.id == action.id);
       if (newCard) {
         if (state.mana < newCard.cost) {
           return state;
@@ -112,7 +113,15 @@ export const gameState = (state = baseState, action) => {
         }
         party[action.spot].push(oldCard);
         return Object.assign({}, state, { party, guestDeck, partyPool });
-      } else {
+      } else if (disCard) {
+        guestDiscard = state.guestDiscard.filter(c => c.id != action.id);
+        return Object.assign({}, state, {
+          party: setAt(action.spot, [...party[action.spot], disCard], party),
+          guestDiscard,
+          partyPool: [...state.partyPool, disCard]
+        });
+      }
+      else {
         return state;
       }
     case 'END_TURN':
@@ -164,15 +173,15 @@ export const gameState = (state = baseState, action) => {
       shuffleobj[action.deckname] = state[action.deckname].sort(() => Math.random() - 0.5);
       return Object.assign({}, state, shuffleobj);
     case 'PLAY_CARD':
-      myDeck = state.myDeck;
-      card = state.hand.find(c => c.id == action.id);
-      hand = state.hand.filter(c => c.id != action.id);
-      discard = state.discard.concat(card);
-      if (state.myDeck.length == 0) {
-        myDeck = discard;
-        discard = [];
+      const playObj = {};
+      for (let loc of ["hand", "myDeck", "foodDeck"]) {
+        let pCard = state[loc].find(c => c.id == action.id);
+        if (pCard) {
+          playObj[loc] = state[loc].filter(c => c.id != action.id)
+          playObj.discard = state.discard.concat(pCard);
+        }
       }
-      return Object.assign({}, state, { hand, myDeck, discard });
+      return Object.assign({}, state, playObj);
     case 'SET_HAND':
       return Object.assign({}, state, { hand: action.hand });
     case 'SET_MY_DECK':

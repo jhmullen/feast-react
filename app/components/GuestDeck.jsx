@@ -59,13 +59,15 @@ class GuestDeck extends Component {
       <div id="guestdeck">
         <div>
           <div id="image-bg">
-          <DeckOps deck={guestDeck} position={Position.LEFT_TOP} deckname="guestDeck" dragType="guestCard"/>
+            <DeckOps deck={guestDeck} position={Position.LEFT_TOP} deckname="guestDeck" dragType="guestCard"/>
           </div>
           <div id="counter">{`${remaining} in deck`}</div>        
         </div>
         {faceupList}
         <div>
-          <div id="image-bg">{/* css background-image */}</div>
+          <div id="image-bg">
+            <DeckOps deck={guestDiscard} position={Position.RIGHT_TOP} deckname="guestDiscard" dragType="guestCard"/>
+          </div>
           <div id="counter">{`${guestDiscard.length} in discard`}</div>        
         </div>
       </div>
