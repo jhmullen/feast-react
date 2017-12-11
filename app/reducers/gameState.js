@@ -268,6 +268,10 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
         }
       }
       return Object.assign({}, state, playObj);
+    case 'SET_PRESTIGE':
+      return Object.assign({}, state, { prestige: action.num });
+    case 'SET_MANA':
+      return Object.assign({}, state, { mana: action.num });
     case 'SET_HAND':
       return Object.assign({}, state, { hand: action.hand });
     case 'SET_MY_DECK':

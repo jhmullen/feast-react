@@ -14,6 +14,7 @@ class Party extends Component {
   }
 
   moveRight() {
+
     this.props.moveParty(1);
   }
 
@@ -77,24 +78,18 @@ class Party extends Component {
     return (
       <div id="party">
         <div style={{ position: "absolute", left: "5px", bottom: "5px" }}>
-          <Button
-            className="pt-button pt-small"
+          <Button 
+            iconName="cross"
             onClick={this.endTurn.bind(this)}
-          >
-            <span className="pt-icon-cross" />
-          </Button>
-          <Button
-            className="pt-button pt-small"
+          />
+          <Button 
+            iconName="arrow-left"
             onClick={this.moveLeft.bind(this)}
-          >
-            <span className="pt-icon-arrow-left" />
-          </Button>
-          <Button
-            className="pt-button pt-small"
+          />
+          <Button 
+            iconName="arrow-right"
             onClick={this.moveRight.bind(this)}
-          >
-            <span className="pt-icon-arrow-right" />
-          </Button>
+          />
         </div>
         <div className="party-container">{tableSpots}</div>
         <div className="party-container">{partyList}</div>

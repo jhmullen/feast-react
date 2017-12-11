@@ -10,11 +10,20 @@ import Party from "./Party";
 import Trash from "./Trash";
 import { DragDropContextProvider } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { Toaster, Position, Intent, Button } from "@blueprintjs/core";
+import { setPrestige, setMana } from "../actions";
+import { Toaster, Position, Intent, NumericInput } from "@blueprintjs/core";
 
 import "./App.css";
 
 class App extends Component {
+
+  setPrestige(num) {
+    this.props.setPrestige(num);
+  }
+
+  setMana(num) {
+    this.props.setMana(num);
+  }
 
   render() {
     return (
@@ -27,7 +36,18 @@ class App extends Component {
             <Party />
           </div>
           <div id="hand-row">
-            <div style={{position:"absolute", top: "-20px", right: "5px", fontSize: "16px"}}>Prestige: {this.props.gameState.prestige}</div>
+            <div style={{display: "flex", width: "540px", justifyContent: "space-between", position:"absolute", top: "-40px", right: "20px", fontSize: "16px"}}>
+              <div>Mana: </div>
+              <NumericInput 
+                value={this.props.gameState.mana} 
+                onValueChange={this.setMana.bind(this)}
+              />
+              <div>Prestige: </div>
+              <NumericInput 
+                value={this.props.gameState.prestige} 
+                onValueChange={this.setPrestige.bind(this)}
+              />
+            </div>
             <MyDeck />
             <Discard />
             <Hand />
@@ -42,4 +62,9 @@ class App extends Component {
 
 const mapStateToProps = state => ({ gameState: state.gameState });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  setMana: num => dispatch(setMana(num)),
+  setPrestige: num => dispatch(setPrestige(num))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

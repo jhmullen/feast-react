@@ -75,6 +75,20 @@ export const playCard = id => {
   };
 };
 
+export const setPrestige = num => {
+  return {
+    type: "SET_PRESTIGE",
+    num: num
+  };
+};
+
+export const setMana = num => {
+  return {
+    type: "SET_MANA",
+    num: num
+  };
+};
+
 export const setHand = hand => {
   return {
     type: "SET_HAND",

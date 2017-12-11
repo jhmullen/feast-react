@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { applyMana, addGuest } from "../actions";
 import { DropTarget } from "react-dnd";
+import { Icon } from "@blueprintjs/core";
 
 import "./TableSpot.css";
 
@@ -15,7 +16,7 @@ class TableSpot extends Component {
     const { spotNum } = this.props;
     const { isOver, canDrop, connectDropTarget } = this.props;
 
-    return connectDropTarget(<div id="tablespot">Join {spotNum + 1}</div>);
+    return connectDropTarget(<div id="tablespot"><Icon style={{color: "black"}} iconName="add" /> {spotNum + 1}</div>);
   }
 }
 
