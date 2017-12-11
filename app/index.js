@@ -9,12 +9,20 @@ import socketLogger from './middleware/socketLogger';
 
 const socket = io();
 socket.on('connect', () => console.log('connected'));
-socket.on('action', action => {
-  console.log('got action', action);
-});
-socket.open();
 
 let store = createStore(feastApp, applyMiddleware(socketLogger(socket)));
+
+socket.on('action', action => {
+  console.log('got action', action);
+  store.dispatch(
+    {
+      ...action,
+      otherPlayer: true
+    }
+  )
+});
+
+socket.open();
 
 ReactDOM.render(
   <Provider store={store}>

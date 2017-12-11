@@ -1,4 +1,5 @@
 import { setAt } from '../array';
+import { pick } from '../object';
 
 export const baseState = {
   mana: 100,
@@ -59,7 +60,50 @@ export const drawCards = (howMany, state) => {
   return drawCards(howMany - 1, drawCard(state));
 };
 
-export const gameState = (state = baseState, action) => {
+/**
+ * elements of state shared by both players
+ */
+const commonStateKeys = [
+  'foodDeck',
+  'guestDeck',
+  'party',
+  'partyPool',
+  'guestDiscard',
+  'trash',
+];
+
+/**
+ * defining both self- and other- state keys
+ * so that omitting a key from this logic will be more
+ * obvious. Safer refactoring absent a type system.
+ */
+const playerStateKeys = [
+  'mana',
+  'hand',
+  'myDeck',
+  'discard',
+  'prestige'
+]
+
+/**
+ * if incoming action isn't me,
+ * discard anything that isn't shared.
+ * so, eg, ignore .hand if the other player drew a card.
+ */
+export const routeForOtherPlayer = reducer => (state = baseState, action) => {
+  const newState = reducer(state, action);
+
+  const selfView = action.otherPlayer
+    ? {
+        ...pick(playerStateKeys, state),
+        ...pick(commonStateKeys, newState),
+      }
+    : newState;
+
+  return selfView;
+};
+
+export const gameState = routeForOtherPlayer((state = baseState, action) => {
   let card;
   let {
     hand,
@@ -118,10 +162,9 @@ export const gameState = (state = baseState, action) => {
         return Object.assign({}, state, {
           party: setAt(action.spot, [...party[action.spot], disCard], party),
           guestDiscard,
-          partyPool: [...state.partyPool, disCard]
+          partyPool: [...state.partyPool, disCard],
         });
-      }
-      else {
+      } else {
         return state;
       }
     case 'END_TURN':
@@ -150,19 +193,28 @@ export const gameState = (state = baseState, action) => {
       card = state.party.find(c => c && c.id == action.id);
       party[action.spot].push(card);
       return Object.assign({}, state, { party });
-    case 'TRASH_CARD': 
+    case 'TRASH_CARD':
       const obj = {};
-      for (let loc of ["hand", "myDeck", "discard", "foodDeck", "guestDeck", "guestDiscard", "partyPool"]) {
+      for (let loc of [
+        'hand',
+        'myDeck',
+        'discard',
+        'foodDeck',
+        'guestDeck',
+        'guestDiscard',
+        'partyPool',
+      ]) {
         let tCard = state[loc].find(c => c.id == action.id);
         if (tCard) {
           obj[loc] = state[loc].filter(c => c.id != action.id);
-          if (loc == "partyPool") {
+          if (loc == 'partyPool') {
             obj.party = [];
             for (let i = 0; i < 7; i++) {
               obj.party[i] = state.party[i].filter(c => c.id != action.id);
             }
-          }       
-          if (!state.trash.find(c => c.id == action.id)) obj.trash = state.trash.concat(tCard);
+          }
+          if (!state.trash.find(c => c.id == action.id))
+            obj.trash = state.trash.concat(tCard);
         }
       }
       return Object.assign({}, state, obj);
@@ -170,14 +222,16 @@ export const gameState = (state = baseState, action) => {
       return drawCard(state);
     case 'SHUFFLE':
       const shuffleobj = {};
-      shuffleobj[action.deckname] = state[action.deckname].sort(() => Math.random() - 0.5);
+      shuffleobj[action.deckname] = state[action.deckname].sort(
+        () => Math.random() - 0.5,
+      );
       return Object.assign({}, state, shuffleobj);
     case 'PLAY_CARD':
       const playObj = {};
-      for (let loc of ["hand", "myDeck", "foodDeck"]) {
+      for (let loc of ['hand', 'myDeck', 'foodDeck']) {
         let pCard = state[loc].find(c => c.id == action.id);
         if (pCard) {
-          playObj[loc] = state[loc].filter(c => c.id != action.id)
+          playObj[loc] = state[loc].filter(c => c.id != action.id);
           playObj.discard = state.discard.concat(pCard);
         }
       }
@@ -193,6 +247,6 @@ export const gameState = (state = baseState, action) => {
     default:
       return state;
   }
-};
+});
 
 export default gameState;

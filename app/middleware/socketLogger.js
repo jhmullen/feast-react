@@ -1,6 +1,8 @@
 export const socketLogger = socket => store => next => action => {
-  socket.emit('action', JSON.stringify(action))
-  next(action)
-}
+  if (!action.otherPlayer) {
+    socket.emit('action', action);
+  }
+  next(action);
+};
 
-export default socketLogger
+export default socketLogger;
