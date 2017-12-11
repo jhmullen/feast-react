@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { setMyDeck, drawCard } from "../actions";
+import DeckOps from "./DeckOps";
+import { Button, Position } from "@blueprintjs/core";
 
 import "./MyDeck.css";
 
@@ -44,8 +46,11 @@ class MyDeck extends Component {
     const { myDeck } = this.props.gameState;
 
     return (
-      <div id="deck" onClick={this.onClick.bind(this)}>
-        <div id="image-bg">{/* css background-image */}</div>
+      <div id="deck">
+        <div id="image-bg">
+          <DeckOps position={Position.TOP_LEFT}/>
+          <Button onClick={this.onClick.bind(this)} style={{marginTop: "40px"}}>Draw</Button>
+        </div>
         <div id="counter">{`${myDeck.length} in deck`}</div>
       </div>
     );

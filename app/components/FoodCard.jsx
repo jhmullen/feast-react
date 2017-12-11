@@ -13,7 +13,7 @@ class FoodCard extends Component {
   }
 
   render() {
-    const { isDragging, connectDragSource, mana, cost, position } = this.props;
+    const { isDragging, connectDragSource, mana, cost, position, compact} = this.props;
 
     const canAfford = mana >= cost;
 
@@ -26,16 +26,23 @@ class FoodCard extends Component {
           hoverOpenDelay={800}
           hoverCloseDelay={100}
         >
-          <div id="foodcard">
-            <div className="cost">
-              <span>{this.props.cost}</span>
-              <span>{canAfford ? '' : 'X'}</span>
+          { compact 
+            ?
+            <div id="food-compact">
+              <div id="name">{this.props.name}</div>
             </div>
-            <div id="name">{this.props.name}</div>
-            <div id="desc" style={{ marginTop: '10px' }}>
-              {this.props.desc}
+            :
+            <div id="foodcard">
+              <div className="cost">
+                <span>{this.props.cost}</span>
+                <span>{canAfford ? '' : 'X'}</span>
+              </div>
+              <div id="name">{this.props.name}</div>
+              <div id="desc" style={{ marginTop: '10px' }}>
+                {this.props.desc}
+              </div>
             </div>
-          </div>
+          }
           <div id="foodcard-big">
             <div className="cost">
               <span>{this.props.cost}</span>
