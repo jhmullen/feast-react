@@ -96,6 +96,13 @@ export const setHand = hand => {
   };
 };
 
+export const discardFromHand = id => {
+  return {
+    type: "DISCARD_FROM_HAND",
+    id: id
+  };
+};
+
 export const setFoodDeck = foodDeck => {
   return {
     type: "SET_FOOD_DECK",

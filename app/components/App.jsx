@@ -49,7 +49,7 @@ class App extends Component {
               />
             </div>
             <MyDeck />
-            <Discard />
+            <Discard dragType="handCard" />
             <Hand />
             <Cast dragType="handCard" />
             <Trash dragType={["handCard", "guestCard", "buyCard"]} />
