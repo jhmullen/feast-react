@@ -213,17 +213,17 @@ describe('END_TURN', () => {
       ).toMatchObject({ prestige: 3 }));
 
     describe('replenishes hand', () => {
-      test('draw five', () =>
+      test('draw a full hand', () =>
         expect(
           reduce(
             {
               ...baseState,
-              myDeck: idRange(0, 11),
+              myDeck: idRange(0, 10),
             },
             endTurn(),
           ),
         ).toMatchObject({
-          hand: idRange(6, 11).reverse(),
+          hand: idRange(6, 10).reverse(),
           myDeck: idRange(0, 6),
         }));
       test('card travels hand -> discard -> deck -> hand if necessary, maintaining order', () => {
@@ -231,8 +231,8 @@ describe('END_TURN', () => {
           {
             ...baseState,
             myDeck: idRange(0, 2),
-            discard: idRange(2, 4),
-            hand: idRange(4, 5),
+            discard: idRange(2, 3),
+            hand: idRange(3, 4),
           },
           endTurn(),
         );
@@ -246,7 +246,7 @@ describe('END_TURN', () => {
         // _with_ what was in hand
         expect(
           state.hand.slice(2, 5).sort((a, b) => (a.id < b.id ? -1 : 1)),
-        ).toEqual([{ id: 2 }, { id: 3 }, { id: 4 }]);
+        ).toEqual([{ id: 2 }, { id: 3 }]);
       });
     });
   });
