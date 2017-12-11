@@ -7,6 +7,7 @@ import Draw from "./Draw";
 import Buy from "./Buy";
 import Hand from "./Hand";
 import Party from "./Party";
+import Trash from "./Trash";
 import { DragDropContextProvider } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { Toaster, Position, Intent, Button } from "@blueprintjs/core";
@@ -32,11 +33,12 @@ class App extends Component {
             <Party />
           </div>
           <div id="hand-row">
-            <div style={{position:"absolute", top: "-20px", left: "5px", fontSize: "16px"}}>Prestige: {this.props.gameState.prestige}</div>
+            <div style={{position:"absolute", top: "-20px", right: "5px", fontSize: "16px"}}>Prestige: {this.props.gameState.prestige}</div>
             <MyDeck />
             <Discard />
             <Hand />
             <Cast dragType="handCard" />
+            <Trash dragType={["handCard", "guestCard", "buyCard"]} />
           </div>
         </div>
       </DragDropContextProvider>

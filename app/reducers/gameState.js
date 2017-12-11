@@ -10,6 +10,7 @@ export const baseState = {
   party: [[], [], [], [], [], [], []],
   partyPool: [],
   guestDiscard: [],
+  trash: [],
   prestige: 0,
 };
 
@@ -68,6 +69,7 @@ export const gameState = (state = baseState, action) => {
     guestDiscard,
     party,
     myDeck,
+    trash,
     discard,
   } = state;
   switch (action.type) {
@@ -139,6 +141,22 @@ export const gameState = (state = baseState, action) => {
       card = state.party.find(c => c && c.id == action.id);
       party[action.spot].push(card);
       return Object.assign({}, state, { party });
+    case 'TRASH_CARD': 
+      const obj = {};
+      for (let loc of ["hand", "myDeck", "discard", "foodDeck", "guestDeck", "guestDiscard", "partyPool"]) {
+        let tCard = state[loc].find(c => c.id == action.id);
+        if (tCard) {
+          obj[loc] = state[loc].filter(c => c.id != action.id);
+          if (loc == "partyPool") {
+            obj.party = [];
+            for (let i = 0; i < 7; i++) {
+              obj.party[i] = state.party[i].filter(c => c.id != action.id);
+            }
+          }       
+          if (!state.trash.find(c => c.id == action.id)) obj.trash = state.trash.concat(tCard);
+        }
+      }
+      return Object.assign({}, state, obj);
     case 'DRAW_CARD':
       return drawCard(state);
     case 'PLAY_CARD':

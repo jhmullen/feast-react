@@ -15,6 +15,7 @@ class MyDeck extends Component {
   componentDidMount() {
     const deck = [];
     const OPENING_HAND_COUNT = 10;
+    const OPENING_HAND_SIZE = 4;
     for (let i = 0; i < 10; i++) {
       var obj = {
         id: `starter-${i}`,
@@ -27,6 +28,9 @@ class MyDeck extends Component {
       deck.push(obj);
     }
     this.props.setMyDeck(deck.sort(d => Math.random() > .5));
+    for (let c = 0; c < OPENING_HAND_SIZE; c++) {
+      this.props.drawCard();
+    }
   }
 
   onClick(e) {

@@ -12,6 +12,13 @@ export const buyFood = id => {
   };
 };
 
+export const trashCard = id => {
+  return {
+    type: "TRASH_CARD",
+    id: id
+  };
+};
+
 export const addGuest = (id, spot) => {
   return {
     type: "ADD_GUEST",

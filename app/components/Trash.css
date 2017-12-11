@@ -1,0 +1,19 @@
+#trash {
+  width: 80px;
+  display: inline-block;
+  margin: 5px;
+}
+
+#trash-bg {
+  background-color:lightseagreen;
+  width: 80px;
+  height: 118px;
+  padding: 5px;
+  text-align: center;
+  font-size: 20px;
+}
+
+#counter {
+  text-align:center;
+}
+

@@ -79,7 +79,7 @@ class Party extends Component {
             className="pt-button pt-small"
             onClick={this.endTurn.bind(this)}
           >
-            {"<="}
+            {<span className="pt-icon-arrow-left" />}
           </Button>
         </div>
         <div className="party-container">{tableSpots}</div>
