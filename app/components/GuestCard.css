@@ -20,7 +20,7 @@
   border-radius: 5px;
 }
 
-#compactmode {
+#guest-compact {
   width: 100px;
   height: 30px;
   overflow:auto;
@@ -29,7 +29,6 @@
   padding: 5px;
   border: 1px solid black;
   border-radius: 5px;
-  position:relative;
 }
 
 .cost {

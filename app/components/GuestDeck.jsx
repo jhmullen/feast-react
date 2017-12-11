@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import GuestCard from "./GuestCard";
 import { setGuestDeck } from "../actions";
+import DeckOps from "./DeckOps";
 import { Position } from "@blueprintjs/core";
 import Papa from "papaparse";
 
@@ -57,7 +58,9 @@ class GuestDeck extends Component {
     return (
       <div id="guestdeck">
         <div>
-          <div id="image-bg">{/* css background-image */}</div>
+          <div id="image-bg">
+          <DeckOps deck={guestDeck} position={Position.LEFT_TOP} deckname="guestDeck" dragType="guestCard"/>
+          </div>
           <div id="counter">{`${remaining} in deck`}</div>        
         </div>
         {faceupList}

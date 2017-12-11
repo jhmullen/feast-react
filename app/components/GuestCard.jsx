@@ -15,7 +15,7 @@ class GuestCard extends Component {
   }
 
   render() {
-    const { isDragging, connectDragSource, position } = this.props;
+    const { isDragging, connectDragSource, position, compact } = this.props;
 
     return connectDragSource(
       <div>
@@ -26,7 +26,13 @@ class GuestCard extends Component {
             hoverOpenDelay={800}
             hoverCloseDelay={100}
         >
-          <div id={this.props.compactMode ? "compactmode" : "guestcard"}>
+        { compact 
+          ?
+          <div id="guest-compact">
+              <div id="name">{this.props.name}</div>
+          </div>
+          :
+          <div id="guestcard">
             <div className="cost">
               <span>{`${this.props.cost}c/${this.props.appetite}a/${
                 this.props.prestige
@@ -38,6 +44,7 @@ class GuestCard extends Component {
               {this.props.desc}
             </div>
           </div>
+        }
           <div id="guestcard-big">
             <div className="cost">
               <span>{`${this.props.cost}c/${this.props.appetite}a/${

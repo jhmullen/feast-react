@@ -12,6 +12,13 @@ export const buyFood = id => {
   };
 };
 
+export const shuffle = deckname => {
+  return {
+    type: "SHUFFLE",
+    deckname: deckname
+  }
+}
+
 export const trashCard = id => {
   return {
     type: "TRASH_CARD",

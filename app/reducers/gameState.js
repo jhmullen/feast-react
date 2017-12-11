@@ -159,6 +159,10 @@ export const gameState = (state = baseState, action) => {
       return Object.assign({}, state, obj);
     case 'DRAW_CARD':
       return drawCard(state);
+    case 'SHUFFLE':
+      const shuffleobj = {};
+      shuffleobj[action.deckname] = state[action.deckname].sort(() => Math.random() - 0.5);
+      return Object.assign({}, state, shuffleobj);
     case 'PLAY_CARD':
       myDeck = state.myDeck;
       card = state.hand.find(c => c.id == action.id);

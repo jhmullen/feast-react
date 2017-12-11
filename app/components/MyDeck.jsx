@@ -48,8 +48,8 @@ class MyDeck extends Component {
     return (
       <div id="deck">
         <div id="image-bg">
-          <DeckOps position={Position.TOP_LEFT}/>
-          <Button onClick={this.onClick.bind(this)} style={{marginTop: "40px"}}>Draw</Button>
+          <DeckOps deck={myDeck} position={Position.TOP_LEFT} deckname="myDeck" dragType="handCard"/>
+          <Button onClick={this.onClick.bind(this)} style={{marginTop: "10px"}}>Draw</Button>
         </div>
         <div id="counter">{`${myDeck.length} in deck`}</div>
       </div>

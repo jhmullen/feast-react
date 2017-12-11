@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import FoodCard from './FoodCard';
 import { setFaceupFood, setFoodDeck } from '../actions';
-import { Position } from "@blueprintjs/core";
+import { Position, Button } from "@blueprintjs/core";
 import Papa from 'papaparse';
 import Buy from "./Buy";
+import DeckOps from "./DeckOps";
 
 import './FoodDeck.css';
 
@@ -58,7 +59,9 @@ class FoodDeck extends Component {
     return (
       <div id="fooddeck">
          <div>
-          <div id="image-bg">{/* css background-image */}</div>
+          <div id="image-bg">
+            <DeckOps deck={foodDeck} position={Position.LEFT_TOP} deckname="foodDeck" dragType="buyCard"/>
+          </div>
           <div id="counter">{`${remaining} in deck`}</div>        
         </div>
         {faceupList}

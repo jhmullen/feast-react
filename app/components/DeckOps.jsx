@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { applyMana } from "../actions";
-import { Icon, Button, Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
+import { applyMana, shuffle } from "../actions";
+import { Button, Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 import FoodCard from "./FoodCard.jsx";
+import GuestCard from "./GuestCard.jsx";
 
 import "./DeckOps.css";
 
@@ -14,19 +15,39 @@ class DeckOps extends Component {
     };
   }
 
-  render() {
-    const { position } = this.props;
-    const { myDeck } = this.props.gameState;
+  shuffleDeck() {
+    const {deckname} = this.props;
+    this.props.shuffle(deckname);
+  }
 
-    const cardList = myDeck.map(c => 
-      <FoodCard 
-        key={c.id} 
-        compact={true}
-        className="hand-item" 
-        dragType="handCard" 
-        position={Position.RIGHT}
-        {...c} 
-      />);
+  render() {
+    const { position, deck, deckname, dragType } = this.props;
+
+    let cardList = [];
+    if (["myDeck", "foodDeck"].includes(deckname)) {
+      cardList = deck.map(c => 
+        <FoodCard 
+          key={c.id} 
+          compact={true}
+          className="hand-item" 
+          dragType={dragType} 
+          position={Position.RIGHT}
+          {...c} 
+        />
+      );
+    }
+    else {
+      cardList = deck.map(c => 
+        <GuestCard 
+          key={c.id} 
+          compact={true}
+          className="hand-item" 
+          dragType={dragType} 
+          position={Position.RIGHT}
+          {...c} 
+        />
+      );
+    }
 
     return (
       <div id="deckops">
@@ -34,15 +55,13 @@ class DeckOps extends Component {
           interactionKind={PopoverInteractionKind.CLICK}
           popoverClassName="pt-popover-content-sizing"
           position={position}
-          hoverOpenDelay={800}
-          hoverCloseDelay={100}
         >
-          <Button><Icon iconName="layers" /></Button>
-          <div>
+          <Button iconName="layers"></Button>
+          <div id="deckops-popover">
             {cardList}
-            
           </div>
-        </Popover>
+        </Popover><br/>
+        <Button iconName="refresh" onClick={this.shuffleDeck.bind(this)} />
       </div>
     );
   }
@@ -51,7 +70,8 @@ class DeckOps extends Component {
 const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
-  applyMana: num => dispatch(applyMana(num))
+  applyMana: num => dispatch(applyMana(num)),
+  shuffle: deckname => dispatch(shuffle(deckname))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps, null, {
