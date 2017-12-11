@@ -11,6 +11,15 @@ class Buy extends Component {
 
   handleBuy(card) {
     this.props.buyFood(card.id);
+    const buyToast = Toaster.create({
+      className: "buyToast",
+      position: Position.TOP_CENTER
+    });
+    buyToast.show({
+      message: `You Bought ${card.name}!`,
+      intent: Intent.SUCCESS,
+      timeout: 1500
+    });
   }
 
   render() {

@@ -51,20 +51,20 @@ class GuestDeck extends Component {
         key={c.id} 
         dragType="guestCard" 
         className="faceup-item"
-        position={Position.LEFT_BOTTOM}
+        position={Position.LEFT_TOP}
         {...c} />
     ));
 
     return (
       <div id="guestdeck">
         <div>
-          <div id="image-bg">
+          <div id="image-bg" style={{display:"block", marginRight:"10px"}} >
             <DeckOps deck={guestDeck} position={Position.LEFT_TOP} deckname="guestDeck" dragType="guestCard"/>
           </div>
           <div id="counter">{`${remaining} in deck`}</div>        
         </div>
-        {faceupList}
         <GuestDiscard dragType="guestCard"/>
+        {faceupList}
       </div>
     );
   }

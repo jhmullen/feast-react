@@ -29,8 +29,8 @@ class GuestDiscard extends Component {
 
     return connectDropTarget(
       <div>
-        <div id="image-bg">
-          <DeckOps deck={guestDiscard} position={Position.RIGHT_TOP} deckname="guestDiscard" dragType="guestCard"/>
+        <div id="image-bg" style={{display:"block"}} >
+          <DeckOps deck={guestDiscard} position={Position.LEFT_TOP} deckname="guestDiscard" dragType="guestCard"/>
         </div>
         <div id="counter">{`${guestDiscard.length} in discard`}</div>        
       </div>

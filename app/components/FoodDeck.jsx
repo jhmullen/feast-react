@@ -51,20 +51,21 @@ class FoodDeck extends Component {
         key={c.id} 
         dragType="buyCard" 
         mana={this.props.gameState.mana} 
-        position={Position.LEFT_TOP}
+        position={Position.RIGHT_TOP}
         {...c} />
     ));
 
     return (
       <div id="fooddeck">
-         <div>
-          <div id="image-bg">
-            <DeckOps deck={foodDeck} position={Position.LEFT_TOP} deckname="foodDeck" dragType="buyCard"/>
+        <div>
+          <div style={{display:"block", marginRight:"10px"}} id="image-bg">
+            <DeckOps deck={foodDeck} position={Position.RIGHT} deckname="foodDeck" dragType="buyCard"/>
           </div>
-          <div id="counter">{`${remaining} in deck`}</div>        
+          <div id="counter">{`${remaining} in deck`}</div>
         </div>
-        {faceupList}
         <Buy dragType="buyCard" />
+        {faceupList}
+        
       </div>
     );
   }

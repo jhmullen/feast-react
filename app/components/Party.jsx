@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { applyMana, endTurn, moveParty } from "../actions";
 import GuestCard from "./GuestCard.jsx";
 import TableSpot from "./TableSpot.jsx";
-import { Button, Position } from "@blueprintjs/core";
+import { Toaster, Button, Position, Intent } from "@blueprintjs/core";
 
 import "./Party.css";
 
@@ -14,7 +14,6 @@ class Party extends Component {
   }
 
   moveRight() {
-
     this.props.moveParty(1);
   }
 
@@ -77,7 +76,7 @@ class Party extends Component {
 
     return (
       <div id="party">
-        <div style={{ position: "absolute", left: "5px", bottom: "5px" }}>
+        <div style={{ position: "absolute", left: "5px", top: "-35px" }}>
           <Button 
             iconName="cross"
             onClick={this.endTurn.bind(this)}

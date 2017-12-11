@@ -11,11 +11,11 @@ class Discard extends Component {
 
   handleDiscard(card) {
     this.props.discardFromHand(card.id);
-    const castToast = Toaster.create({
-      className: "castToast",
+    const discardToast = Toaster.create({
+      className: "discardToast",
       position: Position.TOP_CENTER
     });
-    castToast.show({
+    discardToast.show({
       message: `You Discarded ${card.name}!`,
       intent: Intent.WARNING,
       timeout: 1500
