@@ -6,12 +6,6 @@ import { DropTarget } from "react-dnd";
 import "./TableSpot.css";
 
 class TableSpot extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mounted: false
-    };
-  }
 
   handleInvite(guest) {
     this.props.addGuest(guest.id, this.props.spotNum);

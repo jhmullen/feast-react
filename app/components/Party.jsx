@@ -8,12 +8,6 @@ import { Button, Position } from "@blueprintjs/core";
 import "./Party.css";
 
 class Party extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mounted: false
-    };
-  }
 
   endTurn() {
     this.props.endTurn();

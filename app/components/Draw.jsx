@@ -5,12 +5,6 @@ import GuestDeck from "./GuestDeck";
 import "./Draw.css";
 
 export default class Draw extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mounted: false
-    };
-  }
 
   render() {
     return (

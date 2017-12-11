@@ -8,12 +8,6 @@ import { Toaster, Position, Intent } from "@blueprintjs/core";
 import "./Cast.css";
 
 class Cast extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mounted: false
-    };
-  }
 
   handleCast(card) {
     this.props.applyMana(card.food_mod);

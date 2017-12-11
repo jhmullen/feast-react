@@ -7,12 +7,6 @@ import DeckOps from "./DeckOps";
 import "./Discard.css";
 
 class Discard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mounted: false
-    };
-  }
 
   render() {
     const { discard } = this.props.gameState;

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import GuestCard from "./GuestCard";
 import { setGuestDeck } from "../actions";
 import DeckOps from "./DeckOps";
+import GuestDiscard from "./GuestDiscard";
 import { Position } from "@blueprintjs/core";
 import Papa from "papaparse";
 
@@ -12,7 +13,6 @@ class GuestDeck extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mounted: false,
       faceup: []
     };
   }
@@ -64,12 +64,7 @@ class GuestDeck extends Component {
           <div id="counter">{`${remaining} in deck`}</div>        
         </div>
         {faceupList}
-        <div>
-          <div id="image-bg">
-            <DeckOps deck={guestDiscard} position={Position.RIGHT_TOP} deckname="guestDiscard" dragType="guestCard"/>
-          </div>
-          <div id="counter">{`${guestDiscard.length} in discard`}</div>        
-        </div>
+        <GuestDiscard dragType="guestCard"/>
       </div>
     );
   }

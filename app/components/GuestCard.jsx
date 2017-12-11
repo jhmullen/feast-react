@@ -7,12 +7,6 @@ import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 import "./GuestCard.css";
 
 class GuestCard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mounted: false
-    };
-  }
 
   render() {
     const { isDragging, connectDragSource, position, compact } = this.props;

@@ -7,12 +7,6 @@ import { Button, Position } from "@blueprintjs/core";
 import "./MyDeck.css";
 
 class MyDeck extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mounted: false
-    };
-  }
 
   componentDidMount() {
     const deck = [];

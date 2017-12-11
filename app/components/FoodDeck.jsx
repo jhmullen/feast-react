@@ -13,8 +13,7 @@ class FoodDeck extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mounted: false,
-      faceup: [],
+      faceup: []
     };
   }
 

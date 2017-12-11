@@ -2,49 +2,50 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { findDOMNode } from "react-dom";
 import { DropTarget } from "react-dnd";
-import { applyMana, setHand, trashCard } from "../actions";
+import { applyMana, discardGuest } from "../actions";
 import { Toaster, Position, Intent } from "@blueprintjs/core";
+import DeckOps from "./DeckOps";
 
-import "./Trash.css";
+import "./GuestDiscard.css";
 
-class Trash extends Component {
+class GuestDiscard extends Component {
 
-  handleTrash(card) {
-    this.props.trashCard(card.id);
+  handleDiscard(card) {
+    this.props.discardGuest(card.id);
     const castToast = Toaster.create({
       className: "castToast",
       position: Position.TOP_CENTER
     });
     castToast.show({
-      message: `You Trashed ${card.name}!`,
+      message: `You Discarded ${card.name}!`,
       intent: Intent.WARNING,
       timeout: 1500
     });
   }
 
   render() {
-    const { trash } = this.props.gameState;
+    const { guestDiscard } = this.props.gameState;
 
     const { isOver, canDrop, connectDropTarget } = this.props;
 
     return connectDropTarget(
-      <div id="trash">
-        <div id="trash-bg" className={isOver ? "fade" : null}>
-          Trash
+      <div>
+        <div id="image-bg">
+          <DeckOps deck={guestDiscard} position={Position.RIGHT_TOP} deckname="guestDiscard" dragType="guestCard"/>
         </div>
-        <div id="counter">{`${trash.length} in trash`}</div>
+        <div id="counter">{`${guestDiscard.length} in discard`}</div>        
       </div>
     );
   }
 }
 
-const trashTarget = {
+const guestDiscardTarget = {
   drop(props, monitor, component) {
     if (monitor.didDrop()) {
       return;
     }
     const item = monitor.getItem();
-    component.getWrappedInstance().handleTrash(item);
+    component.getWrappedInstance().handleDiscard(item);
     return item;
   }
 };
@@ -63,17 +64,17 @@ const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
   applyMana: num => dispatch(applyMana(num)),
-  trashCard: id => dispatch(trashCard(id))
+  discardGuest: id => dispatch(discardGuest(id))
 });
 
-Trash = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
-  Trash
+GuestDiscard = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
+  GuestDiscard
 );
 
 export default DropTarget(
   props => {
     return props.dragType;
   },
-  trashTarget,
+  guestDiscardTarget,
   collect
-)(Trash);
+)(GuestDiscard);

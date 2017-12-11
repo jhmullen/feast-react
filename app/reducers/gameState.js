@@ -208,6 +208,23 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
       card = state.party.find(c => c && c.id == action.id);
       party[action.spot].push(card);
       return Object.assign({}, state, { party });
+    case 'DISCARD_GUEST':
+      const dgObj = {};
+      for (let loc of ['guestDeck', 'partyPool']) {
+        let dCard = state[loc].find(c => c.id == action.id);
+        if (dCard) {
+          dgObj[loc] = state[loc].filter(c => c.id != action.id);
+          if (loc =='partyPool') {
+            dgObj.party = [];
+            for (let i = 0; i < 7; i++) {
+              dgObj.party[i] = state.party[i].filter(c => c.id != action.id);
+            }
+          }
+          if (!state.guestDiscard.find(c => c.id == action.id))
+            dgObj.guestDiscard = state.guestDiscard.concat(dCard);
+        }
+      }
+      return Object.assign({}, state, dgObj);
     case 'TRASH_CARD':
       const obj = {};
       for (let loc of [

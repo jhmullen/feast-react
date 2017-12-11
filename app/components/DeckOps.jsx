@@ -8,12 +8,6 @@ import GuestCard from "./GuestCard.jsx";
 import "./DeckOps.css";
 
 class DeckOps extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mounted: false
-    };
-  }
 
   shuffleDeck() {
     const {deckname} = this.props;

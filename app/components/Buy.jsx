@@ -8,12 +8,6 @@ import { Toaster, Position, Intent } from "@blueprintjs/core";
 import "./Buy.css";
 
 class Buy extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mounted: false
-    };
-  }
 
   handleBuy(card) {
     this.props.buyFood(card.id);

@@ -5,12 +5,6 @@ import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 import './FoodCard.css';
 
 class FoodCard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mounted: false,
-    };
-  }
 
   render() {
     const { isDragging, connectDragSource, mana, cost, position, compact} = this.props;

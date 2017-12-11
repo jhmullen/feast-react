@@ -34,6 +34,13 @@ export const addGuest = (id, spot) => {
   };
 };
 
+export const discardGuest = (id) => {
+  return {
+    type: "DISCARD_GUEST",
+    id: id
+  };
+};
+
 export const moveGuest = (id, spot) => {
   return {
     type: "MOVE_GUEST",

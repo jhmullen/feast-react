@@ -7,12 +7,6 @@ import FoodCard from "./FoodCard.jsx";
 import "./Hand.css";
 
 class Hand extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mounted: false
-    };
-  }
 
   render() {
     const { hand } = this.props.gameState;
