@@ -8,6 +8,7 @@ import Buy from "./Buy";
 import Hand from "./Hand";
 import Party from "./Party";
 import Trash from "./Trash";
+import Aura from "./Aura";
 import FoodDeck from "./FoodDeck";
 import GuestDeck from "./GuestDeck";
 import { DragDropContextProvider } from "react-dnd";
@@ -72,6 +73,7 @@ class App extends Component {
             <Hand />
             <Cast dragType="handCard" />
             <Trash dragType={["handCard", "guestCard", "buyCard"]} />
+            { /* <Aura dragType="guestCard" /> */ }
           </div>
         </div>
       </DragDropContextProvider>

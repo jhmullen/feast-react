@@ -96,6 +96,13 @@ export const setHand = hand => {
   };
 };
 
+export const setAura = id => {
+  return {
+    type: "SET_AURA",
+    id: id
+  };
+};
+
 export const discardFromHand = id => {
   return {
     type: "DISCARD_FROM_HAND",

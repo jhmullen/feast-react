@@ -12,6 +12,7 @@ export const baseState = {
   partyPool: [],
   guestDiscard: [],
   trash: [],
+  aura: [],
   prestige: 0,
 };
 
@@ -70,6 +71,7 @@ const commonStateKeys = [
   'partyPool',
   'guestDiscard',
   'trash',
+  'aura',
 ];
 
 /**
@@ -256,6 +258,31 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
         }
       }
       return Object.assign({}, state, obj);
+    case 'SET_AURA':
+      const aObj = {};
+      for (let loc of [
+        'hand',
+        'myDeck',
+        'discard',
+        'foodDeck',
+        'guestDeck',
+        'guestDiscard',
+        'partyPool',
+      ]) {
+        let aCard = state[loc].find(c => c.id == action.id);
+        if (aCard) {
+          aObj[loc] = state[loc].filter(c => c.id != action.id);
+          if (loc == 'partyPool') {
+            aObj.party = [];
+            for (let i = 0; i < 7; i++) {
+              aObj.party[i] = state.party[i].filter(c => c.id != action.id);
+            }
+          }
+          if (!state.aura.find(c => c.id == action.id))
+            aObj.aura = state.aura.concat(aCard);
+        }
+      }
+      return Object.assign({}, state, aObj);
     case 'DRAW_CARD':
       return drawCard(state);
     case 'SHUFFLE':
