@@ -42,6 +42,13 @@ export const moveGuest = (id, spot) => {
   };
 };
 
+export const moveParty = (num) => {
+  return {
+    type: "MOVE_PARTY",
+    num: num
+  }
+}
+
 export const endTurn = () => {
   return {
     type: "END_TURN"

@@ -151,7 +151,7 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
           mana: state.mana - newCard.cost,
         });
       } else if (oldCard) {
-        for (let i = 0; i <= 7; i++) {
+        for (let i = 0; i < 7; i++) {
           if (party[i])
             party[i] = state.party[i].filter(c => c && c.id != action.id);
         }
@@ -174,10 +174,6 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
           table.reduce((tableTotal, { prestige }) => tableTotal + prestige, 0),
         0,
       );
-      const leaving = party.shift();
-      guestDiscard = state.guestDiscard.concat(leaving);
-      party[6] = [];
-      partyPool = partyPool.filter(c => !leaving.includes(c));
       return drawCards(
         4,
         discardHand(
@@ -189,6 +185,25 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
           }),
         ),
       );
+    case 'MOVE_PARTY':
+      const partyObj = {};
+      partyObj.party = [[], [], [], [], [], [], []];
+      partyObj.guestDiscard = state.guestDiscard.slice(0);
+      partyObj.partyPool = state.partyPool.slice(0);
+      for (let i = 0; i < 7; i++) {
+        const newSpot = i + action.num;
+        if (newSpot < 0) {
+          partyObj.guestDiscard = partyObj.guestDiscard.concat(state.party[i]);
+          partyObj.partyPool = partyObj.partyPool.filter(c => !state.party[i].includes(c));
+        }
+        else if (newSpot >= 7) {
+          partyObj.party[6] = partyObj.party[6].concat(state.party[i]);
+        }
+        else {
+          partyObj.party[newSpot] = state.party[i];
+        }
+      }
+      return Object.assign({}, state, partyObj);
     case 'MOVE_GUEST':
       card = state.party.find(c => c && c.id == action.id);
       party[action.spot].push(card);

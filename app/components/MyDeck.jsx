@@ -16,9 +16,9 @@ class MyDeck extends Component {
 
   componentDidMount() {
     const deck = [];
-    const OPENING_HAND_COUNT = 10;
+    const OPENING_HAND_COUNT = 7;
     const OPENING_HAND_SIZE = 4;
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < OPENING_HAND_COUNT; i++) {
       var obj = {
         id: `starter-${i}`,
         name: `Starter ${i}`,

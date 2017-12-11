@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { applyMana, endTurn } from "../actions";
+import { applyMana, endTurn, moveParty } from "../actions";
 import GuestCard from "./GuestCard.jsx";
 import TableSpot from "./TableSpot.jsx";
 import { Button, Position } from "@blueprintjs/core";
@@ -17,6 +17,14 @@ class Party extends Component {
 
   endTurn() {
     this.props.endTurn();
+  }
+
+  moveRight() {
+    this.props.moveParty(1);
+  }
+
+  moveLeft() {
+    this.props.moveParty(-1);
   }
 
   render() {
@@ -79,7 +87,19 @@ class Party extends Component {
             className="pt-button pt-small"
             onClick={this.endTurn.bind(this)}
           >
+            <span className="pt-icon-cross" />
+          </Button>
+          <Button
+            className="pt-button pt-small"
+            onClick={this.moveLeft.bind(this)}
+          >
             <span className="pt-icon-arrow-left" />
+          </Button>
+          <Button
+            className="pt-button pt-small"
+            onClick={this.moveRight.bind(this)}
+          >
+            <span className="pt-icon-arrow-right" />
           </Button>
         </div>
         <div className="party-container">{tableSpots}</div>
@@ -93,7 +113,8 @@ const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
   applyMana: num => dispatch(applyMana(num)),
-  endTurn: () => dispatch(endTurn())
+  endTurn: () => dispatch(endTurn()),
+  moveParty: num => dispatch(moveParty(num))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps, null, {
