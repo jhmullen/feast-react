@@ -18,7 +18,9 @@ class FoodDeck extends Component {
   }
 
   componentDidMount() {
-    food.then(this.props.setFoodDeck);
+    food.then(cards =>
+      this.props.setFoodDeck(cards.sort(() => Math.random() - 0.5)),
+    );
   }
 
   render() {

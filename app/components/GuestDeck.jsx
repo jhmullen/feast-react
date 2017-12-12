@@ -18,7 +18,9 @@ class GuestDeck extends Component {
   }
 
   componentDidMount() {
-    guests.then(this.props.setGuestDeck);
+    guests.then(cards =>
+      this.props.setGuestDeck(cards.sort(() => Math.random() - 0.5)),
+    );
   }
 
   render() {
