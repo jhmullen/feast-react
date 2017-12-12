@@ -1,42 +1,24 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import GuestCard from "./GuestCard";
-import { setGuestDeck } from "../actions";
-import DeckOps from "./DeckOps";
-import GuestDiscard from "./GuestDiscard";
-import { Position } from "@blueprintjs/core";
-import Papa from "papaparse";
-
-import "./GuestDeck.css";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import GuestCard from './GuestCard';
+import { setGuestDeck } from '../actions';
+import DeckOps from './DeckOps';
+import GuestDiscard from './GuestDiscard';
+import { Position } from '@blueprintjs/core';
+import Papa from 'papaparse';
+import { guests } from '../cardData';
+import './GuestDeck.css';
 
 class GuestDeck extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      faceup: []
+      faceup: [],
     };
   }
 
   componentDidMount() {
-    const guestCSV =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vRFtDoZRo1q_et75CgtM3GHHXlIHiuip-GJ9wdx5iZVjI05KvhWI5fQCbxQVoBIvEy0kTASL151dJyS/pub?output=csv&gid=1152907192";
-    Papa.parse(guestCSV, {
-      download: true,
-      header: true,
-      complete: data => this.fillDeck(data.data)
-    });
-  }
-
-  fillDeck(data) {
-    const deck = data.sort(() => Math.random() - 0.5);
-    for (const d of deck) {
-      for (const key in d) {
-        if (d.hasOwnProperty(key)) {
-          if (!isNaN(parseInt(d[key]))) d[key] = parseInt(d[key]);
-        }
-      }
-    }
-    this.props.setGuestDeck(deck);
+    guests.then(this.props.setGuestDeck);
   }
 
   render() {
@@ -47,23 +29,29 @@ class GuestDeck extends Component {
     if (remaining < 0) remaining = 0;
 
     const faceupList = faceup.map(c => (
-      <GuestCard 
-        key={c.id} 
-        dragType="guestCard" 
+      <GuestCard
+        key={c.id}
+        dragType="guestCard"
         className="faceup-item"
         position={Position.LEFT_TOP}
-        {...c} />
+        {...c}
+      />
     ));
 
     return (
       <div id="guestdeck">
         <div>
-          <div id="image-bg" style={{display:"block", marginRight:"10px"}} >
-            <DeckOps deck={guestDeck} position={Position.LEFT_TOP} deckname="guestDeck" dragType="guestCard"/>
+          <div id="image-bg" style={{ display: 'block', marginRight: '10px' }}>
+            <DeckOps
+              deck={guestDeck}
+              position={Position.LEFT_TOP}
+              deckname="guestDeck"
+              dragType="guestCard"
+            />
           </div>
-          <div id="counter">{`${remaining} in deck`}</div>        
+          <div id="counter">{`${remaining} in deck`}</div>
         </div>
-        <GuestDiscard dragType="guestCard"/>
+        <GuestDiscard dragType="guestCard" />
         {faceupList}
       </div>
     );
@@ -73,9 +61,9 @@ class GuestDeck extends Component {
 const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
-  setGuestDeck: guestDeck => dispatch(setGuestDeck(guestDeck))
+  setGuestDeck: guestDeck => dispatch(setGuestDeck(guestDeck)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps, null, {
-  withRef: true
+  withRef: true,
 })(GuestDeck);
