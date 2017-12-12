@@ -20,12 +20,7 @@ export const food = new Promise(ok =>
     header: true,
     complete: ok,
   }),
-)
-  .then(parseData)
-  .then(d => {
-    console.log('data', d);
-    return d;
-  });
+).then(parseData);
 
 const guestCSV =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRFtDoZRo1q_et75CgtM3GHHXlIHiuip-GJ9wdx5iZVjI05KvhWI5fQCbxQVoBIvEy0kTASL151dJyS/pub?output=csv&gid=1152907192';
@@ -36,15 +31,9 @@ export const guests = new Promise(ok =>
     header: true,
     complete: ok,
   }),
-)
-  .then(parseData)
-  .then(d => {
-    console.log('data', d);
-    return d;
-  });
+).then(parseData);
 
-export default Promise.all([food, guests]).then(
-  ([food, guest]) => ({
-    food, guest
-  })
-)
+export default Promise.all([food, guests]).then(([food, guest]) => ({
+  food,
+  guest,
+}));

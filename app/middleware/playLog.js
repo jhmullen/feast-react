@@ -8,7 +8,6 @@ const logToast = Toaster.create({
 const starter = /starter/;
 
 export const showAction = (cardData, state, action) => {
-  console.log(state);
   switch (action.type) {
     case 'BUY_FOOD':
       return `Opponent bought ${
