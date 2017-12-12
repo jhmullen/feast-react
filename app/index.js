@@ -6,11 +6,12 @@ import { applyMiddleware, createStore } from 'redux';
 import feastApp from './reducers';
 import io from 'socket.io-client';
 import socketLogger from './middleware/socketLogger';
+import playLog from './middleware/playLog'
 
 const socket = io();
 socket.on('connect', () => console.log('connected'));
 
-let store = createStore(feastApp, applyMiddleware(socketLogger(socket)));
+let store = createStore(feastApp, applyMiddleware(socketLogger(socket), playLog));
 
 socket.on('action', action => {
   console.log('got action', action);
