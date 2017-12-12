@@ -22,7 +22,7 @@ class Aura extends Component {
       <div id="aura">
         <div id="aura-bg" className={isOver ? "fade" : null}>
           Aura<br/>
-          <DeckOps deck={aura} position={Position.TOP} deckname="aura" dragType="guestCard"/>
+          <DeckOps deck={aura} position={Position.LEFT_BOTTOM} deckname="aura" dragType="guestCard"/>
         </div>
         <div id="counter">{`${aura.length} in aura`}</div>
       </div>
