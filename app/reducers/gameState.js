@@ -1,49 +1,53 @@
-import { setAt } from '../array';
+import { setAt, updateAt } from '../array';
 import { pick } from '../object';
 
-export const baseState = {
+export const blankPlayer = {
   mana: 100,
   hand: [],
-  foodDeck: [],
-  guestDeck: [],
-  myDeck: [],
+  deck: [],
   discard: [],
   party: [[], [], [], [], [], [], []],
   partyPool: [],
-  guestDiscard: [],
-  trash: [],
-  aura: [],
   prestige: 0,
 };
 
-export const discardHand = state => ({
-  ...state,
+export const baseState = {
+  foodDeck: [],
+  guestDeck: [],
+  guestDiscard: [],
+  trash: [],
+  aura: [],
+  players: {},
+};
+
+export const discardHand = player => ({
+  ...player,
   hand: [],
-  discard: [...state.discard, ...state.hand],
+  discard: [...player.discard, ...player.hand],
 });
 
 /**
  * move discard to deck if deck is empty
  */
-const replenish = state =>
-  state.myDeck.length
-    ? state
+const replenish = player =>
+  player.myDeck.length
+    ? player
     : {
-        ...state,
-        myDeck: state.discard.sort(() => Math.random() - 0.5),
+        ...player,
+        myDeck: player.discard.sort(() => Math.random() - 0.5),
         discard: [],
       };
 
-export const drawCard = state => {
-  state = replenish(state);
-  const deck = state.myDeck;
+export const drawCard = player => {
+  player = replenish(player);
+  const deck = player.myDeck;
 
   let card = deck[deck.length - 1];
   let deckLeft = deck.slice(0, deck.length - 1);
 
-  const hand = card ? state.hand.concat(card) : state.hand;
+  const hand = card ? player.hand.concat(card) : player.hand;
 
-  return replenish(Object.assign({}, state, { hand, myDeck: deckLeft }));
+  return replenish(Object.assign({}, player, { hand, myDeck: deckLeft }));
 };
 
 /**
@@ -51,14 +55,14 @@ export const drawCard = state => {
  * or deck.
  * naively recursive; like, how many cards are you drawing?
  */
-export const drawCards = (howMany, state) => {
-  const available = state.discard.length + state.myDeck.length;
+export const drawCards = (howMany, player) => {
+  const available = player.discard.length + player.myDeck.length;
 
   if (available < 1 || howMany < 1) {
-    return state;
+    return player;
   }
 
-  return drawCards(howMany - 1, drawCard(state));
+  return drawCards(howMany - 1, drawCard(player));
 };
 
 /**
@@ -67,8 +71,6 @@ export const drawCards = (howMany, state) => {
 const commonStateKeys = [
   'foodDeck',
   'guestDeck',
-  'party',
-  'partyPool',
   'guestDiscard',
   'trash',
   'aura',
@@ -82,10 +84,12 @@ const commonStateKeys = [
 const playerStateKeys = [
   'mana',
   'hand',
+  'party',
+  'partyPool',
   'myDeck',
   'discard',
-  'prestige'
-]
+  'prestige',
+];
 
 /**
  * if incoming action isn't me,
@@ -105,6 +109,79 @@ export const routeForOtherPlayer = reducer => (state = baseState, action) => {
   return selfView;
 };
 
+const reducePlayer = (state, player, action) => {
+  const { party } = player;
+  switch (action.type) {
+    case 'APPLY_MANA':
+      return { mana: player.mana + action.num };
+    case 'BUY_FOOD':
+      discard = player.discard.concat(card);
+      return {
+        ...player,
+        discard,
+        mana: state.mana - cost,
+      };
+
+    case 'ADD_GUEST':
+      const newCard = state.guestDeck.find(c => c && c.id == action.id);
+      const oldCard = player.partyPool.find(c => c && c.id == action.id);
+
+      const newParty = oldCard
+        ? updateAt(
+            action.spot,
+            guests => [...guests, oldCard],
+            party.map(table => table.filter(({ id }) => id !== action.id)),
+          )
+        : party;
+
+      return {
+        ...player,
+        party: newParty,
+        partyPool: [...state.partyPool, newCard],
+        mana: state.mana - newCard.cost,
+      };
+    case 'END_TURN':
+      const prestigeEarned = party.reduce(
+        (acc, table) =>
+          acc +
+          table.reduce((tableTotal, { prestige }) => tableTotal + prestige, 0),
+        0,
+      );
+
+      return drawCards(
+        4,
+        discardHand({
+          ...player,
+          prestige: Math.max(0, prestigeEarned + state.prestige),
+        }),
+      );
+
+    case 'MOVE_PARTY':
+      const clamp = num => Math.max(0, Math.min(party.length));
+      const start = clamp(0 - action.num);
+      const end = clamp(party.length - action.num);
+      const movedParty = party.slice(start, end);
+      return {
+        ...player,
+        party: movedParty,
+        partyPool: movedParty.reduce((acc, table) => [...acc, ...table], []),
+      };
+    default:
+      return player;
+  }
+};
+
+export const reduceForPlayer = (state, action) => ({
+  ...state,
+  players: {
+    [action.playerId]: reducePlayer(
+      state,
+      state.players[action.playerId],
+      action,
+    ),
+  },
+});
+
 export const gameState = routeForOtherPlayer((state = baseState, action) => {
   let card;
   let {
@@ -121,81 +198,54 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
   } = state;
   switch (action.type) {
     case 'APPLY_MANA':
-      return Object.assign({}, state, { mana: state.mana + action.num });
+      return reduceForPlayer(state, action);
     case 'BUY_FOOD':
       card = state.foodDeck.find(c => c.id == action.id);
 
       const cost = card.cost;
 
-      if (state.mana < cost) {
+      if (state.players[action.playerId].mana < cost) {
         return state;
       }
 
       foodDeck = state.foodDeck.filter(c => c.id != action.id);
-      discard = state.discard.concat(card);
-      return Object.assign({}, state, {
-        foodDeck,
-        discard,
-        mana: state.mana - cost,
-      });
+      return reduceForPlayer(
+        {
+          ...state,
+          foodDeck,
+        },
+        action,
+      );
     case 'ADD_GUEST':
       const newCard = state.guestDeck.find(c => c && c.id == action.id);
-      const oldCard = state.partyPool.find(c => c && c.id == action.id);
+      if (state.players[action.playerId].mana < newCard.cost) {
+        return state;
+      }
       const disCard = state.guestDiscard.find(c => c && c.id == action.id);
       const aurCard = state.aura.find(c => c && c.id == action.id);
+      // need ES7 do-expressions stat!
+      let newState = state;
       if (newCard) {
-        if (state.mana < newCard.cost) {
-          return state;
-        }
         guestDeck = state.guestDeck.filter(c => c.id != action.id);
-        return Object.assign({}, state, {
-          party: setAt(action.spot, [...party[action.spot], newCard], party),
+        newState = Object.assign({}, state, {
           guestDeck,
-          partyPool: [...state.partyPool, newCard],
-          mana: state.mana - newCard.cost,
         });
       } else if (oldCard) {
-        for (let i = 0; i < 7; i++) {
-          if (party[i])
-            party[i] = state.party[i].filter(c => c && c.id != action.id);
-        }
-        party[action.spot].push(oldCard);
-        return Object.assign({}, state, { party, guestDeck, partyPool });
+        newState = Object.assign({}, state, { party, guestDeck, partyPool });
       } else if (disCard) {
         guestDiscard = state.guestDiscard.filter(c => c.id != action.id);
-        return Object.assign({}, state, {
-          party: setAt(action.spot, [...party[action.spot], disCard], party),
+        newState = Object.assign({}, state, {
           guestDiscard,
-          partyPool: [...state.partyPool, disCard],
         });
       } else if (aurCard) {
         aura = state.aura.filter(c => c.id != action.id);
-        return Object.assign({}, state, {
-          party: setAt(action.spot, [...party[action.spot], aurCard], party),
+        newState = Object.assign({}, state, {
           aura,
-          partyPool: [...state.partyPool, aurCard],
         });
-      } else {
-        return state;
       }
+      return reduceForPlayer(newState, action);
     case 'END_TURN':
-      const prestigeEarned = party.reduce(
-        (acc, table) =>
-          acc +
-          table.reduce((tableTotal, { prestige }) => tableTotal + prestige, 0),
-        0,
-      );
-      return drawCards(
-        4,
-        discardHand(
-          Object.assign({}, state, {
-            party,
-            guestDiscard,
-            partyPool,
-            prestige: Math.max(0, prestigeEarned + state.prestige),
-          }),
-        ),
-      );
+      return reduceForPlayer(state, action);
     case 'MOVE_PARTY':
       const partyObj = {};
       partyObj.party = [[], [], [], [], [], [], []];
@@ -205,16 +255,9 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
         const newSpot = i + action.num;
         if (newSpot < 0) {
           partyObj.guestDiscard = partyObj.guestDiscard.concat(state.party[i]);
-          partyObj.partyPool = partyObj.partyPool.filter(c => !state.party[i].includes(c));
-        }
-        else if (newSpot >= 7) {
-          partyObj.party[6] = partyObj.party[6].concat(state.party[i]);
-        }
-        else {
-          partyObj.party[newSpot] = state.party[i];
         }
       }
-      return Object.assign({}, state, partyObj);
+      return reduceForPlayer(Object.assign({}, state, partyObj), action);
     case 'MOVE_GUEST':
       card = state.party.find(c => c && c.id == action.id);
       party[action.spot].push(card);
@@ -231,7 +274,7 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
         let dCard = state[loc].find(c => c.id == action.id);
         if (dCard) {
           dgObj[loc] = state[loc].filter(c => c.id != action.id);
-          if (loc =='partyPool') {
+          if (loc == 'partyPool') {
             dgObj.party = [];
             for (let i = 0; i < 7; i++) {
               dgObj.party[i] = state.party[i].filter(c => c.id != action.id);
@@ -270,11 +313,7 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
       return Object.assign({}, state, obj);
     case 'SET_AURA':
       const aObj = {};
-      for (let loc of [
-        'guestDeck',
-        'guestDiscard',
-        'partyPool',
-      ]) {
+      for (let loc of ['guestDeck', 'guestDiscard', 'partyPool']) {
         let aCard = state[loc].find(c => c.id == action.id);
         if (aCard) {
           aObj[loc] = state[loc].filter(c => c.id != action.id);

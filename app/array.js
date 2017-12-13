@@ -4,3 +4,5 @@ export const setAt = (idx, val, array) => [
   val,
   ...array.slice(idx+1),
 ]
+
+export const updateAt = (idx, fn, array) => setAt(idx, fn(array[idx]), array)
