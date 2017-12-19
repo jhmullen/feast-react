@@ -142,7 +142,6 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
       const newCard = state.guestDeck.find(c => c && c.id == action.id);
       const oldCard = state.partyPool.find(c => c && c.id == action.id);
       const disCard = state.guestDiscard.find(c => c && c.id == action.id);
-      const aurCard = state.aura.find(c => c && c.id == action.id);
       if (newCard) {
         if (state.mana < newCard.cost) {
           return state;
@@ -167,13 +166,6 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
           party: setAt(action.spot, [...party[action.spot], disCard], party),
           guestDiscard,
           partyPool: [...state.partyPool, disCard],
-        });
-      } else if (aurCard) {
-        aura = state.aura.filter(c => c.id != action.id);
-        return Object.assign({}, state, {
-          party: setAt(action.spot, [...party[action.spot], aurCard], party),
-          aura,
-          partyPool: [...state.partyPool, aurCard],
         });
       } else {
         return state;
@@ -227,7 +219,7 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
       return Object.assign({}, state, dfhObj);
     case 'DISCARD_GUEST':
       const dgObj = {};
-      for (let loc of ['aura', 'guestDeck', 'partyPool']) {
+      for (let loc of ['guestDeck', 'partyPool']) {
         let dCard = state[loc].find(c => c.id == action.id);
         if (dCard) {
           dgObj[loc] = state[loc].filter(c => c.id != action.id);
@@ -271,9 +263,9 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
     case 'SET_AURA':
       const aObj = {};
       for (let loc of [
-        'guestDeck',
-        'guestDiscard',
-        'partyPool',
+        'myDeck',
+        'hand',
+        'foodDeck'
       ]) {
         let aCard = state[loc].find(c => c.id == action.id);
         if (aCard) {
@@ -299,7 +291,7 @@ export const gameState = routeForOtherPlayer((state = baseState, action) => {
       return Object.assign({}, state, shuffleobj);
     case 'PLAY_CARD':
       const playObj = {};
-      for (let loc of ['hand', 'myDeck', 'foodDeck']) {
+      for (let loc of ['hand', 'myDeck', 'foodDeck', 'aura']) {
         let pCard = state[loc].find(c => c.id == action.id);
         if (pCard) {
           playObj[loc] = state[loc].filter(c => c.id != action.id);
