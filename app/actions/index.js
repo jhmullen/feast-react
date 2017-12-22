@@ -122,3 +122,8 @@ export const setMyDeck = myDeck => {
     myDeck: myDeck
   };
 };
+
+export const pickPlayer = id => ({
+  type: "PICK_PLAYER",
+  id
+});

@@ -1,12 +1,17 @@
 import * as rawActions from "../actions";
 import {
   gameState as reduce,
-  baseState,
+  baseState as basestState,
   blankPlayer,
   discardHand,
   drawCard,
   drawCards
 } from "./gameState";
+
+const baseState = {
+  ...basestState,
+  playerId: 1
+};
 
 const card = {
   id: 0,

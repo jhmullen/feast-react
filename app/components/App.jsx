@@ -9,11 +9,12 @@ import Hand from "./Hand";
 import Party from "./Party";
 import Trash from "./Trash";
 import Aura from "./Aura";
+import PickPlayer from "./PickPlayer";
 import FoodDeck from "./FoodDeck";
 import GuestDeck from "./GuestDeck";
 import { DragDropContextProvider } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { setPrestige, setMana } from "../actions";
+import { pickPlayer, setPrestige, setMana } from "../actions";
 import { Toaster, Position, Intent, NumericInput } from "@blueprintjs/core";
 
 import "./App.css";
@@ -25,6 +26,10 @@ const prestigeToast = Toaster.create({
 
 class App extends Component {
   componentWillUpdate(nextProps) {
+    if (!this.props.gameState.playerId) {
+      return;
+    }
+
     const { players, playerId } = this.props.gameState;
     const player = players[playerId];
     const { players: nextPlayers } = nextProps.gameState;
@@ -51,6 +56,10 @@ class App extends Component {
   }
 
   render() {
+    if (!this.props.gameState.playerId) {
+      return <PickPlayer pickPlayer={this.props.pickPlayer} />;
+    }
+
     const { players, playerId } = this.props.gameState;
     const player = players[playerId];
 
@@ -103,6 +112,7 @@ class App extends Component {
 const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
+  pickPlayer: id => dispatch(pickPlayer(id)),
   setMana: num => dispatch(setMana(num)),
   setPrestige: num => dispatch(setPrestige(num))
 });

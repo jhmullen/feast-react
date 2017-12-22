@@ -7,21 +7,29 @@ import { starting } from "../cardData";
 
 import "./MyDeck.css";
 
+const OPENING_HAND_SIZE = 4;
+
 class MyDeck extends Component {
+  getPlayer() {
+    return this.props.gameState.players[this.props.gameState.playerId];
+  }
+
   componentDidMount() {
-    const OPENING_HAND_SIZE = 4;
-    starting.then(cards => {
-      this.props.setMyDeck(cards.sort(() => Math.random() - 0.5));
-      for (let c = 0; c < OPENING_HAND_SIZE; c++) {
-        this.props.drawCard();
-      }
-    });
+    const { myDeck } = this.getPlayer();
+
+    if (!myDeck.length) {
+      starting.then(cards => {
+        this.props.setMyDeck(cards.sort(() => Math.random() - 0.5));
+        for (let c = 0; c < OPENING_HAND_SIZE; c++) {
+          this.props.drawCard();
+        }
+      });
+    }
   }
 
   onClick(e) {
-    const { myDeck } = this.props.gameState.players[
-      this.props.gameState.playerId
-    ];
+    const { myDeck } = this.getPlayer();
+
     if (myDeck.length > 0) {
       this.props.drawCard();
     }

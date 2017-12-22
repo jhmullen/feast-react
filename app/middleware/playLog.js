@@ -34,7 +34,7 @@ export const showAction = (cardData, state, action) => {
  * but Toast APIs are all stateless :)
  */
 export const playLog = store => next => action => {
-  if (action.playerId !== store.getState().gameState.playerId) {
+  if (action.playerId) {
     cardData.then(cardData => {
       const actionMsg = showAction(
         cardData,
