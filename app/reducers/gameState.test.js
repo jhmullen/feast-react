@@ -1,16 +1,37 @@
-import { addGuest, buyFood, endTurn } from '../actions';
+import * as rawActions from "../actions";
 import {
   gameState as reduce,
   baseState,
+  blankPlayer,
   discardHand,
   drawCard,
-  drawCards,
-} from './gameState';
+  drawCards
+} from "./gameState";
 
 const card = {
   id: 0,
-  cost: 2,
+  cost: 2
 };
+
+/**
+ * for convenience, make all actions act like one player
+ * for purposes of testing these reducers
+ */
+const { addGuest, buyFood, endTurn } = Object.entries(rawActions)
+  .map(([k, fn]) => [
+    k,
+    (...args) => ({
+      ...fn(...args),
+      playerId: 1
+    })
+  ])
+  .reduce(
+    (acc, [k, v]) => ({
+      ...acc,
+      [k]: v
+    }),
+    {}
+  );
 
 /**
  * convenience; make a bunch of cards
@@ -25,76 +46,76 @@ const idRange = (min, max) => {
   return out;
 };
 
-describe('discardHand', () => {
-  test('no cards', () => expect(discardHand(baseState)).toEqual(baseState));
-  test('one', () =>
+describe("discardHand", () => {
+  test("no cards", () => expect(discardHand(blankPlayer)).toEqual(blankPlayer));
+  test("one", () =>
     expect(
       discardHand({
-        ...baseState,
-        hand: [{ id: 0 }],
-      }),
+        ...blankPlayer,
+        hand: [{ id: 0 }]
+      })
     ).toMatchObject({
       hand: [],
-      discard: [{ id: 0 }],
+      discard: [{ id: 0 }]
     }));
-  test('order maintained', () =>
+  test("order maintained", () =>
     expect(
       discardHand({
-        ...baseState,
+        ...blankPlayer,
         hand: [{ id: 0 }, { id: 1 }],
-        discard: [{ id: 3 }],
-      }),
+        discard: [{ id: 3 }]
+      })
     ).toMatchObject({
       hand: [],
-      discard: [{ id: 3 }, { id: 0 }, { id: 1 }],
+      discard: [{ id: 3 }, { id: 0 }, { id: 1 }]
     }));
 });
 
-describe('drawCard', () => {
-  test('empty deck', () => expect(drawCard(baseState)).toEqual(baseState));
-  test('empty hand', () =>
+describe("drawCard", () => {
+  test("empty deck", () => expect(drawCard(blankPlayer)).toEqual(blankPlayer));
+  test("empty hand", () =>
     expect(
       drawCard({
-        ...baseState,
-        myDeck: [{ id: 0 }],
-      }),
-    ).toMatchObject({ ...baseState, myDeck: [], hand: [{ id: 0 }] }));
-  test('hand and deck retained', () =>
+        ...blankPlayer,
+        myDeck: [{ id: 0 }]
+      })
+    ).toMatchObject({ ...blankPlayer, myDeck: [], hand: [{ id: 0 }] }));
+  test("hand and deck retained", () =>
     expect(
       drawCard({
-        ...baseState,
+        ...blankPlayer,
         hand: [{ id: 0 }, { id: 1 }],
-        myDeck: [{ id: 2 }, { id: 3 }],
-      }),
+        myDeck: [{ id: 2 }, { id: 3 }]
+      })
     ).toMatchObject({
       hand: [{ id: 0 }, { id: 1 }, { id: 3 }],
-      myDeck: [{ id: 2 }],
+      myDeck: [{ id: 2 }]
     }));
 });
 
-describe('drawCards', () => {
-  test('one', () =>
+describe("drawCards", () => {
+  test("one", () =>
     expect(
       drawCards(1, {
-        ...baseState,
-        myDeck: [{ id: 0 }],
-      }),
+        ...blankPlayer,
+        myDeck: [{ id: 0 }]
+      })
     ).toMatchObject({
       hand: [{ id: 0 }],
-      myDeck: [],
+      myDeck: []
     }));
-  test('cycles discard', () =>
+  test("cycles discard", () =>
     expect(
       drawCards(1, {
-        ...baseState,
-        discard: [{ id: 0 }],
-      }),
+        ...blankPlayer,
+        discard: [{ id: 0 }]
+      })
     ).toMatchObject({
       discard: [],
-      hand: [{ id: 0 }],
+      hand: [{ id: 0 }]
     }));
 
-  test('cuts short. draws deck first. retains hand.', () => {
+  test("cuts short. draws deck first. retains hand.", () => {
     const discarded = [1, 2, 3, 4, 5].map(id => ({ id }));
     const inDeck = [6, 7, 8, 9, 10].map(id => ({ id }));
     const inHand = [11, 12, 13, 14].map(id => ({ id }));
@@ -104,174 +125,260 @@ describe('drawCards', () => {
         ...baseState,
         discard: discarded,
         myDeck: inDeck,
-        hand: inHand,
-      }),
+        hand: inHand
+      })
     ).toMatchObject({
-      hand: [...inHand, ...inDeck.reverse(), ...discarded.reverse()],
+      hand: [...inHand, ...inDeck.reverse(), ...discarded.reverse()]
     });
   });
 });
 
-describe('BUY_FOOD', () => {
-  test('insufficient mana is no-op', () => {
+describe("BUY_FOOD", () => {
+  test("insufficient mana is no-op", () => {
     const state = {
       ...baseState,
-      mana: 1,
       foodDeck: [card],
+      players: {
+        1: {
+          ...blankPlayer,
+          mana: 1
+        }
+      }
     };
     expect(reduce(state, buyFood(0))).toEqual(state);
   });
 
-  test('buy deducts mana', () => {
+  test("buy deducts mana", () => {
     const state = {
       ...baseState,
-      mana: 2,
       foodDeck: [card],
+      players: {
+        1: {
+          ...blankPlayer,
+          mana: 2
+        }
+      }
     };
 
     expect(reduce(state, buyFood(0))).toMatchObject({
-      mana: 0,
       foodDeck: [],
-      discard: [card],
+      players: {
+        1: {
+          mana: 0,
+          discard: [card]
+        }
+      }
     });
   });
 });
 
-describe('END_TURN', () => {
-  describe('prestige', () => {
-    test('none', () => expect(reduce(baseState, endTurn())).toEqual(baseState));
-    test('one table', () =>
+describe("END_TURN", () => {
+  describe("prestige", () => {
+    test("none", () =>
       expect(
         reduce(
           {
             ...baseState,
-            party: [
-              [
-                {
-                  prestige: 1,
-                },
-              ],
-            ],
+            players: {
+              1: blankPlayer
+            }
           },
-          endTurn(),
-        ),
-      ).toMatchObject({ prestige: 1 }));
-    test('accumulates', () =>
+          endTurn()
+        )
+      ).toEqual({
+        ...baseState,
+        players: {
+          1: blankPlayer
+        }
+      }));
+    test("one table", () =>
       expect(
         reduce(
           {
             ...baseState,
-            prestige: 1,
-            party: [
-              [
-                {
-                  prestige: 1,
-                },
-              ],
-            ],
+            players: {
+              1: {
+                ...blankPlayer,
+                party: [
+                  [
+                    {
+                      prestige: 1
+                    }
+                  ]
+                ]
+              }
+            }
           },
-          endTurn(),
-        ),
-      ).toMatchObject({ prestige: 2 }));
+          endTurn()
+        )
+      ).toMatchObject({ players: { 1: { prestige: 1 } } }));
 
-    test('min prestige is zero', () =>
+    test("accumulates", () =>
       expect(
         reduce(
           {
             ...baseState,
-            prestige: 1,
-            party: [
-              [
-                {
-                  prestige: 1,
-                },
-              ],
-              [],
-              [{ prestige: -3 }],
-            ],
+            players: {
+              1: {
+                ...blankPlayer,
+                prestige: 1,
+                party: [
+                  [
+                    {
+                      prestige: 1
+                    }
+                  ]
+                ]
+              }
+            }
           },
-          endTurn(),
-        ),
-      ).toMatchObject({ prestige: 0 }));
-    test('two tables', () =>
-      expect(
-        reduce(
-          {
-            ...baseState,
-            party: [
-              [
-                {
-                  prestige: 1,
-                },
-              ],
-              [],
-              [{ prestige: 2 }],
-            ],
-          },
-          endTurn(),
-        ),
-      ).toMatchObject({ prestige: 3 }));
+          endTurn()
+        )
+      ).toMatchObject({ players: { 1: { prestige: 2 } } }));
 
-    describe('replenishes hand', () => {
-      test('draw a full hand', () =>
+    test("min prestige is zero", () =>
+      expect(
+        reduce(
+          {
+            ...baseState,
+            players: {
+              1: {
+                ...blankPlayer,
+                prestige: 1,
+                party: [
+                  [
+                    {
+                      prestige: 1
+                    }
+                  ],
+                  [],
+                  [{ prestige: -3 }]
+                ]
+              }
+            }
+          },
+          endTurn()
+        )
+      ).toMatchObject({ players: { 1: { prestige: 0 } } }));
+
+    test("two tables", () =>
+      expect(
+        reduce(
+          {
+            ...baseState,
+            players: {
+              1: {
+                ...blankPlayer,
+                party: [
+                  [
+                    {
+                      prestige: 1
+                    }
+                  ],
+                  [],
+                  [{ prestige: 2 }]
+                ]
+              }
+            }
+          },
+          endTurn()
+        )
+      ).toMatchObject({ players: { 1: { prestige: 3 } } }));
+
+    describe("replenishes hand", () => {
+      test("draw a full hand", () =>
         expect(
           reduce(
             {
               ...baseState,
-              myDeck: idRange(0, 10),
+              players: {
+                1: {
+                  ...blankPlayer,
+                  myDeck: idRange(0, 10)
+                }
+              }
             },
-            endTurn(),
-          ),
+            endTurn()
+          )
         ).toMatchObject({
-          hand: idRange(6, 10).reverse(),
-          myDeck: idRange(0, 6),
+          players: {
+            1: {
+              hand: idRange(6, 10).reverse(),
+              myDeck: idRange(0, 6)
+            }
+          }
         }));
-      test('card travels hand -> discard -> deck -> hand if necessary, maintaining order', () => {
+
+      test("card travels hand -> discard -> deck -> hand if necessary, maintaining order", () => {
         const state = reduce(
           {
             ...baseState,
-            myDeck: idRange(0, 2),
-            discard: idRange(2, 3),
-            hand: idRange(3, 4),
+            players: {
+              1: {
+                ...blankPlayer,
+                myDeck: idRange(0, 2),
+                discard: idRange(2, 3),
+                hand: idRange(3, 4)
+              }
+            }
           },
-          endTurn(),
+          endTurn()
         );
 
-        expect(state.myDeck).toHaveLength(0);
-        expect(state.discard).toHaveLength(0);
+        expect(state.players[1].myDeck).toHaveLength(0);
+        expect(state.players[1].discard).toHaveLength(0);
         // shuffling makes the test assertion slightly delicate :)
         // deck drawn first, from top
-        expect(state.hand.slice(0, 2)).toEqual([{ id: 1 }, { id: 0 }]);
+        expect(state.players[1].hand.slice(0, 2)).toEqual([
+          { id: 1 },
+          { id: 0 }
+        ]);
         // discard drawn in _some_ order,
         // _with_ what was in hand
         expect(
-          state.hand.slice(2, 5).sort((a, b) => (a.id < b.id ? -1 : 1)),
+          state.players[1].hand
+            .slice(2, 5)
+            .sort((a, b) => (a.id < b.id ? -1 : 1))
         ).toEqual([{ id: 2 }, { id: 3 }]);
       });
     });
   });
 });
 
-describe('ADD_GUEST', () => {
-  test('insufficient mana is no-op', () => {
+describe("ADD_GUEST", () => {
+  test("insufficient mana is no-op", () => {
     const state = {
       ...baseState,
-      mana: 1,
       guestDeck: [card],
+      players: {
+        1: {
+          ...blankPlayer,
+          mana: 1
+        }
+      }
     };
     expect(reduce(state, addGuest(0, 1))).toEqual(state);
   });
 
-  test('buy deducts mana', () => {
+  test("buy deducts mana", () => {
     const state = {
       ...baseState,
-      mana: 2,
       guestDeck: [card],
+      players: {
+        1: {
+          ...blankPlayer,
+          mana: 2
+        }
+      }
     };
 
     expect(reduce(state, addGuest(0, 1))).toMatchObject({
-      mana: 0,
       guestDeck: [],
+      players: {
+        1: {
+          mana: 0
+        }
+      }
     });
   });
 });

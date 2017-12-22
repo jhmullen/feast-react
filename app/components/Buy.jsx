@@ -8,7 +8,6 @@ import { Toaster, Position, Intent } from "@blueprintjs/core";
 import "./Buy.css";
 
 class Buy extends Component {
-
   handleBuy(card) {
     this.props.buyFood(card.id);
     const buyToast = Toaster.create({

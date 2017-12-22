@@ -8,7 +8,6 @@ import { Toaster, Button, Position, Intent } from "@blueprintjs/core";
 import "./Party.css";
 
 class Party extends Component {
-
   endTurn() {
     this.props.endTurn();
   }
@@ -22,7 +21,9 @@ class Party extends Component {
   }
 
   render() {
-    const { party } = this.props.gameState;
+    const { party } = this.props.gameState.players[
+      this.props.gameState.playerId
+    ];
     const partyList = [];
     for (let p = 0; p < party.length; p++) {
       if (party[p].length > 0) {
@@ -31,11 +32,12 @@ class Party extends Component {
         for (let g = 0; g < guests.length; g++) {
           guestList.push(
             <div key={guests[g].id} className="stacker">
-              <GuestCard 
-                key={g.id} 
-                dragType="guestCard" 
+              <GuestCard
+                key={g.id}
+                dragType="guestCard"
                 position={Position.TOP}
-                {...guests[g]} />
+                {...guests[g]}
+              />
             </div>
           );
           guestList.push(
@@ -77,18 +79,9 @@ class Party extends Component {
     return (
       <div id="party">
         <div style={{ position: "absolute", left: "5px", top: "-35px" }}>
-          <Button 
-            iconName="cross"
-            onClick={this.endTurn.bind(this)}
-          />
-          <Button 
-            iconName="arrow-left"
-            onClick={this.moveLeft.bind(this)}
-          />
-          <Button 
-            iconName="arrow-right"
-            onClick={this.moveRight.bind(this)}
-          />
+          <Button iconName="cross" onClick={this.endTurn.bind(this)} />
+          <Button iconName="arrow-left" onClick={this.moveLeft.bind(this)} />
+          <Button iconName="arrow-right" onClick={this.moveRight.bind(this)} />
         </div>
         <div className="party-container">{tableSpots}</div>
         <div className="party-container">{partyList}</div>

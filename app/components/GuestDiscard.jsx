@@ -8,7 +8,6 @@ import DeckOps from "./DeckOps";
 import "./GuestDiscard.css";
 
 class GuestDiscard extends Component {
-
   handleDiscard(card) {
     this.props.discardGuest(card.id);
     const castToast = Toaster.create({
@@ -29,10 +28,15 @@ class GuestDiscard extends Component {
 
     return connectDropTarget(
       <div>
-        <div id="image-bg" style={{display:"block"}} >
-          <DeckOps deck={guestDiscard} position={Position.LEFT_TOP} deckname="guestDiscard" dragType="guestCard"/>
+        <div id="image-bg" style={{ display: "block" }}>
+          <DeckOps
+            deck={guestDiscard}
+            position={Position.LEFT_TOP}
+            deckname="guestDiscard"
+            dragType="guestCard"
+          />
         </div>
-        <div id="counter">{`${guestDiscard.length} in discard`}</div>        
+        <div id="counter">{`${guestDiscard.length} in discard`}</div>
       </div>
     );
   }
@@ -66,9 +70,9 @@ const mapDispatchToProps = dispatch => ({
   discardGuest: id => dispatch(discardGuest(id))
 });
 
-GuestDiscard = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
-  GuestDiscard
-);
+GuestDiscard = connect(mapStateToProps, mapDispatchToProps, null, {
+  withRef: true
+})(GuestDiscard);
 
 export default DropTarget(
   props => {

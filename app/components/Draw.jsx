@@ -5,7 +5,6 @@ import GuestDeck from "./GuestDeck";
 import "./Draw.css";
 
 export default class Draw extends Component {
-
   render() {
     return (
       <div id="draw">

@@ -16,8 +16,8 @@ export const shuffle = deckname => {
   return {
     type: "SHUFFLE",
     deckname: deckname
-  }
-}
+  };
+};
 
 export const trashCard = id => {
   return {
@@ -34,19 +34,19 @@ export const addGuest = (id, spot) => {
   };
 };
 
-export const discardGuest = (id) => {
+export const discardGuest = id => {
   return {
     type: "DISCARD_GUEST",
     id: id
   };
 };
 
-export const moveParty = (num) => {
+export const moveParty = num => {
   return {
     type: "MOVE_PARTY",
     num: num
-  }
-}
+  };
+};
 
 export const endTurn = () => {
   return {

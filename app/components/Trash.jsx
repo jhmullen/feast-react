@@ -8,7 +8,6 @@ import { Toaster, Position, Intent } from "@blueprintjs/core";
 import "./Trash.css";
 
 class Trash extends Component {
-
   handleTrash(card) {
     this.props.trashCard(card.id);
     const castToast = Toaster.create({

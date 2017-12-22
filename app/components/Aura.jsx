@@ -8,7 +8,6 @@ import DeckOps from "./DeckOps";
 import "./Aura.css";
 
 class Aura extends Component {
-
   handleAura(card) {
     this.props.setAura(card.id);
   }
@@ -21,8 +20,13 @@ class Aura extends Component {
     return connectDropTarget(
       <div id="aura">
         <div id="aura-bg" className={isOver ? "fade" : null}>
-          Aura<br/>
-          <DeckOps deck={aura} position={Position.TOP} deckname="aura" dragType="handCard"/>
+          Aura<br />
+          <DeckOps
+            deck={aura}
+            position={Position.TOP}
+            deckname="aura"
+            dragType="handCard"
+          />
         </div>
         <div id="counter">{`${aura.length} in aura`}</div>
       </div>

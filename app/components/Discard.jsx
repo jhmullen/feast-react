@@ -2,13 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { DropTarget } from "react-dnd";
 import { discardFromHand } from "../actions";
-import { Position, Toaster, Intent} from "@blueprintjs/core";
+import { Position, Toaster, Intent } from "@blueprintjs/core";
 import DeckOps from "./DeckOps";
 
 import "./Discard.css";
 
 class Discard extends Component {
-
   handleDiscard(card) {
     this.props.discardFromHand(card.id);
     const discardToast = Toaster.create({
@@ -23,14 +22,21 @@ class Discard extends Component {
   }
 
   render() {
-    const { discard } = this.props.gameState;
+    const { discard } = this.props.gameState.players[
+      this.props.gameState.playerId
+    ];
 
     const { isOver, canDrop, connectDropTarget } = this.props;
 
     return connectDropTarget(
       <div id="discard">
         <div id="image-bg">
-          <DeckOps deck={discard} position={Position.TOP_LEFT} deckname="discard" dragType="handCard"/>
+          <DeckOps
+            deck={discard}
+            position={Position.TOP_LEFT}
+            deckname="discard"
+            dragType="handCard"
+          />
         </div>
         <div id="counter">{`${discard.length} in discard`}</div>
       </div>

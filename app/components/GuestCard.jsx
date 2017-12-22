@@ -7,44 +7,51 @@ import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 import "./GuestCard.css";
 
 class GuestCard extends Component {
-
   render() {
-    const { isDragging, connectDragSource, position, compact } = this.props;
+    const {
+      gameState,
+      isDragging,
+      connectDragSource,
+      position,
+      compact
+    } = this.props;
+    const { mana } = gameState.players[gameState.playerId];
 
     return connectDragSource(
       <div>
         <Popover
-            interactionKind={PopoverInteractionKind.HOVER}
-            popoverClassName="pt-popover-content-sizing"
-            position={position}
-            hoverOpenDelay={800}
-            hoverCloseDelay={100}
+          interactionKind={PopoverInteractionKind.HOVER}
+          popoverClassName="pt-popover-content-sizing"
+          position={position}
+          hoverOpenDelay={800}
+          hoverCloseDelay={100}
         >
-        { compact 
-          ?
-          <div id="guest-compact">
+          {compact ? (
+            <div id="guest-compact">
               <div id="name">{this.props.name}</div>
-          </div>
-          :
-          <div id="guestcard">
-            <div className="cost">
-              <span>{`${this.props.cost}c/${this.props.appetite}a/${
-                this.props.prestige
-              }p`}</span>
-              <span>{this.props.gameState.mana < this.props.cost ? "X" : ""}</span>
             </div>
-            <div id="name">{this.props.name}</div>
-            <div id="desc" style={{ marginTop: "10px" }}>
-              {this.props.desc}
+          ) : (
+            <div id="guestcard">
+              <div className="cost">
+                <span>{`${this.props.cost}c/${this.props.appetite}a/${
+                  this.props.prestige
+                }p`}</span>
+                <span>{mana < this.props.cost ? "X" : ""}</span>
+              </div>
+              <div id="name">{this.props.name}</div>
+              <div id="desc" style={{ marginTop: "10px" }}>
+                {this.props.desc}
+              </div>
             </div>
-          </div>
-        }
+          )}
           <div id="guestcard-big">
             <div className="cost">
               <span>{`${this.props.cost}c/${this.props.appetite}a/${
                 this.props.prestige
               }p`}</span>
-              <span>{this.props.gameState.mana < this.props.cost ? "X" : ""}</span>
+              <span>
+                {this.props.gameState.mana < this.props.cost ? "X" : ""}
+              </span>
             </div>
             <div id="name">{this.props.name}</div>
             <div id="desc" style={{ marginTop: "10px" }}>

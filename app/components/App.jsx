@@ -24,15 +24,21 @@ const prestigeToast = Toaster.create({
 });
 
 class App extends Component {
-
   componentWillUpdate(nextProps) {
-    if (this.props.gameState.prestige != nextProps.gameState.prestige) {
-      const diff = nextProps.gameState.prestige - this.props.gameState.prestige;
+    const { players, playerId } = this.props.gameState;
+    const player = players[playerId];
+    const { players: nextPlayers } = nextProps.gameState;
+    const nextPlayer = nextPlayers[playerId];
+
+    if (player.prestige != nextPlayer.prestige) {
+      const diff = nextPlayer.prestige - player.prestige;
       prestigeToast.show({
-        message: `You ${diff > 0 ? "Earned" : "Lost"} ${Math.abs(diff)} Prestige Point${Math.abs(diff) != 1 ? "s" : ""}!`,
+        message: `You ${diff > 0 ? "Earned" : "Lost"} ${Math.abs(
+          diff
+        )} Prestige Point${Math.abs(diff) != 1 ? "s" : ""}!`,
         intent: diff > 0 ? Intent.SUCCESS : Intent.DANGER,
         timeout: 1500
-      }); 
+      });
     }
   }
 
@@ -45,6 +51,9 @@ class App extends Component {
   }
 
   render() {
+    const { players, playerId } = this.props.gameState;
+    const player = players[playerId];
+
     return (
       <DragDropContextProvider backend={HTML5Backend}>
         <div id="board">
@@ -56,15 +65,25 @@ class App extends Component {
             <Party />
           </div>
           <div id="hand-row">
-            <div style={{display: "flex", width: "500px", justifyContent: "space-between", position:"absolute", top: "-40px", right: "10px", fontSize: "16px"}}>
+            <div
+              style={{
+                display: "flex",
+                width: "500px",
+                justifyContent: "space-between",
+                position: "absolute",
+                top: "-40px",
+                right: "10px",
+                fontSize: "16px"
+              }}
+            >
               <div>Mana: </div>
-              <NumericInput 
-                value={this.props.gameState.mana} 
+              <NumericInput
+                value={this.props.gameState.mana}
                 onValueChange={this.setMana.bind(this)}
               />
               <div>Prestige: </div>
-              <NumericInput 
-                value={this.props.gameState.prestige} 
+              <NumericInput
+                value={this.props.gameState.prestige}
                 onValueChange={this.setPrestige.bind(this)}
               />
             </div>
