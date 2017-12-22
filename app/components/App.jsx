@@ -73,7 +73,7 @@ class App extends Component {
             <Hand />
             <Cast dragType="handCard" />
             <Trash dragType={["handCard", "guestCard", "buyCard"]} />
-            <Aura dragType="guestCard" />
+            <Aura dragType={["handCard", "buyCard"]} />
           </div>
         </div>
       </DragDropContextProvider>

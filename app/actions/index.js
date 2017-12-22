@@ -41,14 +41,6 @@ export const discardGuest = (id) => {
   };
 };
 
-export const moveGuest = (id, spot) => {
-  return {
-    type: "MOVE_GUEST",
-    id: id,
-    spot: spot
-  };
-};
-
 export const moveParty = (num) => {
   return {
     type: "MOVE_PARTY",

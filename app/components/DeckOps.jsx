@@ -18,7 +18,7 @@ class DeckOps extends Component {
     const { position, deck, deckname, dragType } = this.props;
 
     let cardList = [];
-    if (["myDeck", "foodDeck", "discard"].includes(deckname)) {
+    if (["myDeck", "foodDeck", "discard", "aura"].includes(deckname)) {
       cardList = deck.map(c => 
         <FoodCard 
           key={c.id} 

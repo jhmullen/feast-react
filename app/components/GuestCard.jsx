@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { DragSource } from "react-dnd";
 import { connect } from "react-redux";
-import { applyMana, moveGuest } from "../actions";
+import { applyMana } from "../actions";
 import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 
 import "./GuestCard.css";
@@ -73,8 +73,7 @@ function collect(connect, monitor) {
 const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
-  applyMana: num => dispatch(applyMana(num)),
-  moveGuest: (id, spot) => dispatch(moveGuest(id, spot))
+  applyMana: num => dispatch(applyMana(num))
 });
 
 GuestCard = connect(mapStateToProps, mapDispatchToProps, null, {
