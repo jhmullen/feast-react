@@ -1,4 +1,4 @@
-import { setAt, updateAt } from '../array';
+import { pad, setAt, updateAt } from '../array';
 import { pick } from '../object';
 
 export const blankPlayer = {
@@ -216,10 +216,10 @@ const reducePlayer = (state, player, action) => {
       );
 
     case 'MOVE_PARTY':
-      const clamp = num => Math.max(0, Math.min(party.length));
+      const clamp = num => Math.max(0, Math.min(party.length, num));
       const start = clamp(0 - action.num);
       const end = clamp(party.length - action.num);
-      const movedParty = party.slice(start, end);
+      const movedParty = pad(7, [], party.slice(start, end));
       return {
         ...player,
         party: movedParty,
