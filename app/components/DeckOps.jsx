@@ -1,16 +1,20 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { applyMana, shuffle } from "../actions";
-import { Button, Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
+import {
+  Button,
+  Popover,
+  PopoverInteractionKind,
+  Position
+} from "@blueprintjs/core";
 import FoodCard from "./FoodCard.jsx";
 import GuestCard from "./GuestCard.jsx";
 
 import "./DeckOps.css";
 
 class DeckOps extends Component {
-
   shuffleDeck() {
-    const {deckname} = this.props;
+    const { deckname } = this.props;
     this.props.shuffle(deckname);
   }
 
@@ -19,28 +23,27 @@ class DeckOps extends Component {
 
     let cardList = [];
     if (["myDeck", "foodDeck", "discard", "aura"].includes(deckname)) {
-      cardList = deck.map(c => 
-        <FoodCard 
-          key={c.id} 
+      cardList = deck.map(c => (
+        <FoodCard
+          key={c.id}
           compact={true}
-          className="hand-item" 
-          dragType={dragType} 
+          className="hand-item"
+          dragType={dragType}
           position={Position.RIGHT}
-          {...c} 
+          {...c}
         />
-      );
-    }
-    else {
-      cardList = deck.map(c => 
-        <GuestCard 
-          key={c.id} 
+      ));
+    } else {
+      cardList = deck.map(c => (
+        <GuestCard
+          key={c.id}
           compact={true}
-          className="hand-item" 
-          dragType={dragType} 
+          className="hand-item"
+          dragType={dragType}
           position={Position.RIGHT}
-          {...c} 
+          {...c}
         />
-      );
+      ));
     }
 
     return (
@@ -50,11 +53,10 @@ class DeckOps extends Component {
           popoverClassName="pt-popover-content-sizing"
           position={position}
         >
-          <Button iconName="layers"></Button>
-          <div id="deckops-popover">
-            {cardList}
-          </div>
-        </Popover><br/>
+          <Button iconName="layers" />
+          <div id="deckops-popover">{cardList}</div>
+        </Popover>
+        <br />
         <Button iconName="refresh" onClick={this.shuffleDeck.bind(this)} />
       </div>
     );

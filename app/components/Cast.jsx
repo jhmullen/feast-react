@@ -8,7 +8,6 @@ import { Toaster, Position, Intent } from "@blueprintjs/core";
 import "./Cast.css";
 
 class Cast extends Component {
-
   handleCast(card) {
     this.props.applyMana(card.food_mod);
     this.props.playCard(card.id);
@@ -24,7 +23,9 @@ class Cast extends Component {
   }
 
   render() {
-    const { mana } = this.props.gameState;
+    const { mana } = this.props.gameState.players[
+      this.props.gameState.playerId
+    ];
 
     const { isOver, canDrop, connectDropTarget } = this.props;
 

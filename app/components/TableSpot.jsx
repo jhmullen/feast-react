@@ -7,7 +7,6 @@ import { Icon } from "@blueprintjs/core";
 import "./TableSpot.css";
 
 class TableSpot extends Component {
-
   handleInvite(guest) {
     this.props.addGuest(guest.id, this.props.spotNum);
   }
@@ -16,7 +15,11 @@ class TableSpot extends Component {
     const { spotNum } = this.props;
     const { isOver, canDrop, connectDropTarget } = this.props;
 
-    return connectDropTarget(<div id="tablespot"><Icon style={{color: "black"}} iconName="add" /> {spotNum + 1}</div>);
+    return connectDropTarget(
+      <div id="tablespot">
+        <Icon style={{ color: "black" }} iconName="add" /> {spotNum + 1}
+      </div>
+    );
   }
 }
 

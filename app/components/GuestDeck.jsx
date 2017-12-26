@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import GuestCard from './GuestCard';
-import { setGuestDeck } from '../actions';
-import DeckOps from './DeckOps';
-import GuestDiscard from './GuestDiscard';
-import { Position } from '@blueprintjs/core';
-import Papa from 'papaparse';
-import { guests } from '../cardData';
-import './GuestDeck.css';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import GuestCard from "./GuestCard";
+import { setGuestDeck } from "../actions";
+import DeckOps from "./DeckOps";
+import GuestDiscard from "./GuestDiscard";
+import { Position } from "@blueprintjs/core";
+import Papa from "papaparse";
+import { guests } from "../cardData";
+import "./GuestDeck.css";
 
 class GuestDeck extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      faceup: [],
+      faceup: []
     };
   }
 
   componentDidMount() {
     guests.then(cards =>
-      this.props.setGuestDeck(cards.sort(() => Math.random() - 0.5)),
+      this.props.setGuestDeck(cards.sort(() => Math.random() - 0.5))
     );
   }
 
@@ -43,7 +43,7 @@ class GuestDeck extends Component {
     return (
       <div id="guestdeck">
         <div>
-          <div id="image-bg" style={{ display: 'block', marginRight: '10px' }}>
+          <div id="image-bg" style={{ display: "block", marginRight: "10px" }}>
             <DeckOps
               deck={guestDeck}
               position={Position.LEFT_TOP}
@@ -63,9 +63,9 @@ class GuestDeck extends Component {
 const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
-  setGuestDeck: guestDeck => dispatch(setGuestDeck(guestDeck)),
+  setGuestDeck: guestDeck => dispatch(setGuestDeck(guestDeck))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps, null, {
-  withRef: true,
+  withRef: true
 })(GuestDeck);

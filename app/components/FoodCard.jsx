@@ -1,13 +1,19 @@
-import React, { Component } from 'react';
-import { DragSource } from 'react-dnd';
+import React, { Component } from "react";
+import { DragSource } from "react-dnd";
 import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 
-import './FoodCard.css';
+import "./FoodCard.css";
 
 class FoodCard extends Component {
-
   render() {
-    const { isDragging, connectDragSource, mana, cost, position, compact} = this.props;
+    const {
+      isDragging,
+      connectDragSource,
+      mana,
+      cost,
+      position,
+      compact
+    } = this.props;
 
     const canAfford = mana >= cost;
 
@@ -20,35 +26,34 @@ class FoodCard extends Component {
           hoverOpenDelay={800}
           hoverCloseDelay={100}
         >
-          { compact 
-            ?
+          {compact ? (
             <div id="food-compact">
               <div id="name">{this.props.name}</div>
             </div>
-            :
+          ) : (
             <div id="foodcard">
               <div className="cost">
                 <span>{this.props.cost}</span>
-                <span>{canAfford ? '' : 'X'}</span>
+                <span>{canAfford ? "" : "X"}</span>
               </div>
               <div id="name">{this.props.name}</div>
-              <div id="desc" style={{ marginTop: '10px' }}>
+              <div id="desc" style={{ marginTop: "10px" }}>
                 {this.props.desc}
               </div>
             </div>
-          }
+          )}
           <div id="foodcard-big">
             <div className="cost">
               <span>{this.props.cost}</span>
-              <span>{canAfford ? '' : 'X'}</span>
+              <span>{canAfford ? "" : "X"}</span>
             </div>
             <div id="name">{this.props.name}</div>
-            <div id="desc" style={{ marginTop: '10px' }}>
+            <div id="desc" style={{ marginTop: "10px" }}>
               {this.props.desc}
             </div>
           </div>
         </Popover>
-      </div>,
+      </div>
     );
   }
 }
@@ -56,13 +61,13 @@ class FoodCard extends Component {
 const cardSource = {
   beginDrag(props) {
     return props;
-  },
+  }
 };
 
 function collect(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging(),
+    isDragging: monitor.isDragging()
   };
 }
 
@@ -71,5 +76,5 @@ export default DragSource(
     return props.dragType;
   },
   cardSource,
-  collect,
+  collect
 )(FoodCard);

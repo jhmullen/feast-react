@@ -7,24 +7,21 @@ import FoodCard from "./FoodCard.jsx";
 import "./Hand.css";
 
 class Hand extends Component {
-
   render() {
-    const { hand } = this.props.gameState;
+    const { hand } = this.props.gameState.players[
+      this.props.gameState.playerId
+    ];
     const handList = hand.map(c => (
-      <FoodCard 
-        key={c.id} 
-        className="hand-item" 
-        dragType="handCard" 
+      <FoodCard
+        key={c.id}
+        className="hand-item"
+        dragType="handCard"
         position={Position.TOP}
-        {...c} 
+        {...c}
       />
     ));
 
-    return (
-      <div id="hand-container">
-        {handList}
-      </div>
-    );
+    return <div id="hand-container">{handList}</div>;
   }
 }
 

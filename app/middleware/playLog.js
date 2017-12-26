@@ -1,25 +1,25 @@
-import { Toaster, Position, Intent, NumericInput } from '@blueprintjs/core';
-import cardData from '../cardData';
+import { Toaster, Position, Intent, NumericInput } from "@blueprintjs/core";
+import cardData from "../cardData";
 
 const logToast = Toaster.create({
-  position: Position.TOP_CENTER,
+  position: Position.TOP_CENTER
 });
 
 const starter = /starter/;
 
 export const showAction = (cardData, state, action) => {
   switch (action.type) {
-    case 'BUY_FOOD':
+    case "BUY_FOOD":
       return `Opponent bought ${
         cardData.food.find(({ id }) => id === action.id).name
       }!`;
-    case 'ADD_GUEST':
+    case "ADD_GUEST":
       return `Opponent bought ${
         cardData.guest.find(({ id }) => id === action.id).name
       }!`;
-    case 'PLAY_CARD':
+    case "PLAY_CARD":
       const foodName = starter.test(action.id)
-        ? 'Starter'
+        ? "Starter"
         : cardData.food.find(({ id }) => id === action.id).name;
 
       return `Opponent played ${foodName}`;
@@ -34,18 +34,18 @@ export const showAction = (cardData, state, action) => {
  * but Toast APIs are all stateless :)
  */
 export const playLog = store => next => action => {
-  if (action.otherPlayer) {
+  if (action.playerId) {
     cardData.then(cardData => {
       const actionMsg = showAction(
         cardData,
         store.getState().gameState,
-        action,
+        action
       );
       if (actionMsg) {
         logToast.show({
           message: actionMsg,
           intent: Intent.DANGER,
-          timeout: 1000,
+          timeout: 1000
         });
       }
     });
