@@ -1,4 +1,4 @@
-import { setAt } from "./array";
+import { setAt, shiftBy } from "./array";
 
 describe("setAt", () => {
   test("first", () => expect(setAt(0, 0, [1, 2, 3])).toEqual([0, 2, 3]));
@@ -7,3 +7,10 @@ describe("setAt", () => {
   test("overrun is ok", () =>
     expect(setAt(3, 0, [1, 2, 3])).toEqual([1, 2, 3, 0]));
 });
+
+describe('shiftBy', () => {
+  test('noop', () => expect(
+    shiftBy(0, 1, [0,0])
+  ).toEqual([0,0]))
+
+})

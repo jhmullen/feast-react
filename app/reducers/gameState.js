@@ -71,7 +71,16 @@ type Action =
   | {| type: 'SET_MANA', num: number |}
   | {| type: 'SET_HAND', hand: Card[] |}
   | {| type: 'SET_MY_DECK', myDeck: Card[] |}
-  | {| type: 'SHUFFLE', deckname: 'myDeck' |}
+  | {|
+      type: 'SHUFFLE',
+      deckname:
+        | 'myDeck'
+        | 'aura'
+        | 'discard'
+        | 'foodDeck'
+        | 'guestDeck'
+        | 'guestDiscard',
+    |}
   | {|
       type: 'SET_FOOD_DECK',
       foodDeck: Card[],
@@ -328,18 +337,22 @@ const reducePlayer = (state, player, action: Action) => {
 
       const foundCard = newCard || oldCard || disCard;
 
-      const newParty = foundCard
-        ? updateAt(
-            action.spot,
-            guests => [...guests, foundCard],
-            party.map(table => table.filter(({ id }) => id !== id)),
-          )
-        : party;
+      const filteredParty: Card[][] = party.map(table =>
+        table.filter(card => card.id !== id),
+      );
+
+      const newTable: Card[] = foundCard
+        ? [...filteredParty[action.spot], foundCard]
+        : filteredParty[action.spot];
+
+      const newParty: Card[][] = foundCard
+        ? setAt(action.spot, newTable, filteredParty)
+        : filteredParty;
 
       return {
         ...player,
         party: newParty,
-        partyPool: [...player.partyPool, foundCard],
+        partyPool: newParty.reduce((acc, table) => [...acc, ...table], []),
         mana: player.mana - foundCard.cost,
       };
     case 'END_TURN':
@@ -378,9 +391,15 @@ const reducePlayer = (state, player, action: Action) => {
       return Object.assign({}, player, { myDeck: action.myDeck });
     case 'SHUFFLE':
       const shuffleobj = {};
+
+      if (!(action.deckname === 'myDeck' || action.deckname === 'discard')) {
+        return player;
+      }
+
       shuffleobj[action.deckname] = player[action.deckname].sort(
         () => Math.random() - 0.5,
       );
+
       return Object.assign({}, player, shuffleobj);
     case 'DISCARD_FROM_HAND':
       return moveCardToPlayer(state, action.id, action.playerId, 'discard');
@@ -472,6 +491,25 @@ export const gameState = routeForPlayer((state = baseState, action: Action) => {
       return { ...state, ...moveCard(state, action.id) };
     case 'PLAY_CARD':
       return { ...state, ...moveCard(state, action.id) };
+    case 'SHUFFLE':
+      const shuffleobj = {};
+
+      if (
+        !(
+          action.deckname === 'aura' ||
+          action.deckname === 'foodDeck' ||
+          action.deckname === 'guestDeck' ||
+          action.deckname === 'guestDiscard'
+        )
+      ) {
+        return state;
+      }
+
+      shuffleobj[action.deckname] = state[action.deckname].sort(
+        () => Math.random() - 0.5,
+      );
+
+      return Object.assign({}, state, shuffleobj);
     default:
       return state;
   }
