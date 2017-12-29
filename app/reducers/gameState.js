@@ -1,5 +1,101 @@
+// @flow
 import { pad, setAt, updateAt } from '../array';
 import { pick } from '../object';
+
+type Card = {
+  cost: number,
+  id: string,
+  prestige: number,
+};
+
+type Player = {
+  discard: Card[],
+  hand: Card[],
+  mana: number,
+  myDeck: Card[],
+  party: Card[][],
+  partyPool: Card[],
+  prestige: number,
+};
+
+type State = {
+  playerId: string,
+  players: {
+    [string]: Player,
+  },
+  foodDeck: Card[],
+  guestDeck: Card[],
+  guestDiscard: Card[],
+  aura: Card[],
+  trash: Card[],
+};
+
+type Action =
+  | {|
+      type: 'APPLY_MANA',
+      num: number,
+    |}
+  | {|
+      type: 'BUY_FOOD',
+      id: string,
+      playerId: string,
+    |}
+  | {|
+      type: 'PICK_PLAYER',
+      id: string,
+    |}
+  | {|
+      type: 'ADD_GUEST',
+      id: string,
+      spot: number,
+      playerId: string,
+    |}
+  | {| type: 'END_TURN' |}
+  | {|
+      type: 'MOVE_PARTY',
+      num: number,
+      playerId: string,
+    |}
+  | {|
+      type: 'DISCARD_GUEST',
+      id: string,
+    |}
+  | {|
+      type: 'TRASH_CARD',
+      id: string,
+    |}
+  | {|
+      type: 'SET_AURA',
+      id: string,
+    |}
+  | {| type: 'SET_MANA', num: number |}
+  | {| type: 'SET_HAND', hand: Card[] |}
+  | {| type: 'SET_MY_DECK', myDeck: Card[] |}
+  | {| type: 'SHUFFLE', deckname: 'myDeck' |}
+  | {|
+      type: 'SET_FOOD_DECK',
+      foodDeck: Card[],
+    |}
+  | {|
+      type: 'SET_GUEST_DECK',
+      guestDeck: Card[],
+    |}
+  | {|
+      type: 'DISCARD_FROM_HAND',
+      id: string,
+      playerId: string,
+    |}
+  | {|
+      type: 'PLAY_CARD',
+      id: string,
+      playerId: string,
+    |}
+  | {|
+      type: 'DRAW_CARD',
+    |}
+  | {| type: 'SET_PRESTIGE', num: number |};
+
+type Reducer = (state: State, act: Action) => State;
 
 export const blankPlayer = {
   mana: 100,
@@ -11,10 +107,11 @@ export const blankPlayer = {
   prestige: 0,
 };
 
-export const baseState = {
+export const baseState: State = {
+  playerId: '',
   players: {
-    1: blankPlayer,
-    2: blankPlayer,
+    '1': blankPlayer,
+    '2': blankPlayer,
   },
   foodDeck: [],
   guestDeck: [],
@@ -23,7 +120,7 @@ export const baseState = {
   aura: [],
 };
 
-export const discardHand = player => ({
+export const discardHand = (player: Player) => ({
   ...player,
   hand: [],
   discard: [...player.discard, ...player.hand],
@@ -34,13 +131,30 @@ export const discardHand = player => ({
  * XXX: for now, valid target piles are 'hand', 'myDeck', 'discard',
  * but not 'party', which requires more info about targeting.
  */
-const moveCardToPlayer = (state, cardId, playerId, target) => {
-  const player = {
-    ...state.players[playerId],
+const moveCardToPlayer = (
+  state: State,
+  cardId: string,
+  playerId: string,
+  target?: 'hand' | 'myDeck' | 'discard',
+): Player => {
+  const player = state.players[playerId];
+
+  const card = ['hand', 'myDeck', 'discard'].reduce((acc, loc) => {
+    if (acc) {
+      return acc;
+    }
+
+    return player[loc].find(c => c.id === cardId);
+  }, null);
+
+  if (!card) {
+    return player;
+  }
+
+  const sanitizedParty = {
+    ...player,
     // party is special due to being a list of lists
-    party: state.players[playerId].party.map(table =>
-      table.filter(c => c.id !== cardId),
-    ),
+    party: player.party.map(table => table.filter(c => c.id !== cardId)),
   };
 
   const sanitized = ['hand', 'myDeck', 'discard'].reduce(
@@ -48,7 +162,7 @@ const moveCardToPlayer = (state, cardId, playerId, target) => {
       ...player_,
       [loc]: player_[loc].filter(c => c.id !== cardId),
     }),
-    player,
+    sanitizedParty,
   );
 
   if (!target) {
@@ -58,15 +172,26 @@ const moveCardToPlayer = (state, cardId, playerId, target) => {
   return {
     ...sanitized,
     partyPool: sanitized.party.reduce((a, b) => a.concat(b), []),
-    [target]: sanitized[target].concat(cardId),
+    [target]: sanitized[target].concat(card),
   };
 };
 
 /**
  * move card from anywhere on the board to a shared target pile
  */
-const moveCard = (state, id, target) => {
-  const newState = { players: state.players };
+const moveCard = (
+  state,
+  id,
+  target?: 'foodDeck' | 'guestDeck' | 'guestDiscard' | 'aura' | 'trash',
+) => {
+  const newState: State = {
+    ...state,
+    players: state.players,
+    foodDeck: [],
+    guestDeck: [],
+    guestDiscard: [],
+    aura: [],
+  };
   for (let loc of ['foodDeck', 'guestDeck', 'guestDiscard', 'aura']) {
     let sourceCard = state[loc].find(c => c.id == id);
     if (sourceCard) {
@@ -96,7 +221,7 @@ const replenish = player =>
         discard: [],
       };
 
-export const drawCard = player => {
+export const drawCard = (player: Player) => {
   player = replenish(player);
   const deck = player.myDeck;
 
@@ -113,7 +238,7 @@ export const drawCard = player => {
  * or deck.
  * naively recursive; like, how many cards are you drawing?
  */
-export const drawCards = (howMany, player) => {
+export const drawCards = (howMany: number, player: Player) => {
   const available = player.discard.length + player.myDeck.length;
 
   if (available < 1 || howMany < 1) {
@@ -128,12 +253,18 @@ export const drawCards = (howMany, player) => {
  * discard anything that isn't shared.
  * so, eg, ignore .hand if the other player drew a card.
  */
-export const routeForPlayer = reducer => (state = baseState, baseAction) => {
-  const playerId = baseAction.playerId || state.playerId;
-  const action = {
+export const routeForPlayer = (reducer: Reducer) => (
+  state: State = baseState,
+  baseAction: Action,
+) => {
+  const playerId: string = baseAction.playerId || state.playerId;
+
+  // force-cast to Action since spreading union types
+  // currently confuses the compiler
+  const action = (({
     ...baseAction,
     playerId,
-  };
+  }: any): Action);
 
   return {
     ...reducer(state, action),
@@ -154,13 +285,19 @@ export const routeForPlayer = reducer => (state = baseState, baseAction) => {
  * perhaps unwise and better restructured as functions called
  * by the reducer.
  */
-const reducePlayer = (state, player, action) => {
+const reducePlayer = (state, player, action: Action) => {
   const { party } = player;
+  let id = null;
   switch (action.type) {
     case 'APPLY_MANA':
       return { ...player, mana: player.mana + action.num };
     case 'BUY_FOOD':
-      const card = state.foodDeck.find(c => c.id == action.id);
+      id = action.id;
+      const card = state.foodDeck.find(c => c.id == id);
+
+      if (!card) {
+        return state;
+      }
 
       if (card.cost > player.mana) {
         return player;
@@ -175,9 +312,15 @@ const reducePlayer = (state, player, action) => {
     case 'DRAW_CARD':
       return drawCard(player);
     case 'ADD_GUEST':
-      const newCard = state.guestDeck.find(c => c && c.id == action.id);
-      const oldCard = player.partyPool.find(c => c && c.id == action.id);
-      const disCard = state.guestDiscard.find(c => c && c.id == action.id);
+      id = action.id;
+      const newCard = state.guestDeck.find(c => c && c.id == id);
+
+      if (!newCard) {
+        return state;
+      }
+
+      const oldCard = player.partyPool.find(c => c && c.id == id);
+      const disCard = state.guestDiscard.find(c => c && c.id == id);
 
       if (newCard.cost > player.mana) {
         return player;
@@ -189,7 +332,7 @@ const reducePlayer = (state, player, action) => {
         ? updateAt(
             action.spot,
             guests => [...guests, foundCard],
-            party.map(table => table.filter(({ id }) => id !== action.id)),
+            party.map(table => table.filter(({ id }) => id !== id)),
           )
         : party;
 
@@ -248,20 +391,11 @@ const reducePlayer = (state, player, action) => {
   }
 };
 
-export const gameState = routeForPlayer((state = baseState, action) => {
+export const gameState = routeForPlayer((state = baseState, action: Action) => {
   let card;
-  let {
-    hand,
-    foodDeck,
-    partyPool,
-    guestDeck,
-    guestDiscard,
-    party,
-    myDeck,
-    aura,
-    trash,
-    discard,
-  } = state;
+  let { foodDeck, guestDeck, guestDiscard, aura } = state;
+  // for extracting .id from actions that have it
+  let id = null;
   switch (action.type) {
     case 'PICK_PLAYER':
       return {
@@ -269,7 +403,12 @@ export const gameState = routeForPlayer((state = baseState, action) => {
         playerId: action.id,
       };
     case 'BUY_FOOD':
-      card = state.foodDeck.find(c => c.id == action.id);
+      id = action.id;
+      card = state.foodDeck.find(c => c.id == id);
+
+      if (!card) {
+        return state;
+      }
 
       const cost = card.cost;
 
@@ -277,26 +416,32 @@ export const gameState = routeForPlayer((state = baseState, action) => {
         return state;
       }
 
-      foodDeck = state.foodDeck.filter(c => c.id != action.id);
+      foodDeck = state.foodDeck.filter(c => c.id != id);
       return {
         ...state,
         foodDeck,
       };
     case 'ADD_GUEST':
-      const newCard = state.guestDeck.find(c => c && c.id == action.id);
+      id = action.id;
+      const newCard = state.guestDeck.find(c => c && c.id == id);
+
+      if (!newCard) {
+        return state;
+      }
+
       if (state.players[action.playerId].mana < newCard.cost) {
         return state;
       }
-      const disCard = state.guestDiscard.find(c => c && c.id == action.id);
+      const disCard = state.guestDiscard.find(c => c && c.id == id);
       // need ES7 do-expressions stat!
       let newState = state;
       if (newCard) {
-        guestDeck = state.guestDeck.filter(c => c.id != action.id);
+        guestDeck = state.guestDeck.filter(c => c.id != id);
         newState = Object.assign({}, state, {
           guestDeck,
         });
       } else if (disCard) {
-        guestDiscard = state.guestDiscard.filter(c => c.id != action.id);
+        guestDiscard = state.guestDiscard.filter(c => c.id != id);
         newState = Object.assign({}, state, {
           guestDiscard,
         });
