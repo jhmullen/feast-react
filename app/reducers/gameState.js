@@ -2,6 +2,11 @@
 import { pad, setAt, updateAt } from '../array';
 import { pick } from '../object';
 
+/**
+ * how many party tables are there?
+ */
+const NUM_TABLES = 7;
+
 type Card = {
   cost: number,
   id: string,
@@ -258,6 +263,51 @@ export const drawCards = (howMany: number, player: Player) => {
 };
 
 /**
+ * called twice by state and player reducers :|
+ * is a sign that having a separate player reducer probably wasn't super smart
+ */
+export const moveParty = (
+  player: Player,
+  shiftBy: number,
+): { discarded: Card[], party: Card[][] } => {
+  if (shiftBy === 0) {
+    return {
+      discarded: [],
+      party: player.party,
+    };
+  }
+
+  const padding = pad(Math.abs(shiftBy), [], []);
+  const left: Card[][] = shiftBy > 0 ? padding : [];
+  const right: Card[][] = shiftBy < 0 ? padding : [];
+
+  const allTables = [...left, ...player.party, ...right];
+
+  // XXX moving right has no defined behavior for guests pushed off the edge, does it?
+  // do they just stack up on the highest table?
+  if (shiftBy > 0) {
+    return {
+      discarded: [],
+      party: allTables.slice(0, NUM_TABLES),
+    };
+  }
+
+  const discarded = allTables
+    .slice(0, Math.abs(shiftBy))
+    .reduce((a, b) => a.concat(b), []);
+
+  const party = allTables.slice(
+    Math.abs(shiftBy),
+    NUM_TABLES + Math.abs(shiftBy),
+  );
+
+  return {
+    discarded,
+    party,
+  };
+};
+
+/**
  * if incoming action isn't me,
  * discard anything that isn't shared.
  * so, eg, ignore .hand if the other player drew a card.
@@ -372,14 +422,12 @@ const reducePlayer = (state, player, action: Action) => {
       );
 
     case 'MOVE_PARTY':
-      const clamp = num => Math.max(0, Math.min(party.length, num));
-      const start = clamp(0 - action.num);
-      const end = clamp(party.length - action.num);
-      const movedParty = pad(7, [], party.slice(start, end));
+      const result = moveParty(player, action.num);
+
       return {
         ...player,
-        party: movedParty,
-        partyPool: movedParty.reduce((acc, table) => [...acc, ...table], []),
+        party: result.party,
+        partyPool: result.party.reduce((acc, table) => [...acc, ...table], []),
       };
     case 'SET_PRESTIGE':
       return Object.assign({}, player, { prestige: action.num });
@@ -467,11 +515,11 @@ export const gameState = routeForPlayer((state = baseState, action: Action) => {
       }
       return newState;
     case 'MOVE_PARTY':
+      const result = moveParty(state.players[action.playerId], action.num);
+
       return {
         ...state,
-        guestDiscard: state.guestDiscard.concat(
-          state.players[action.playerId].party[0],
-        ),
+        guestDiscard: state.guestDiscard.concat(result.discarded),
       };
     case 'DISCARD_GUEST':
       return Object.assign(
