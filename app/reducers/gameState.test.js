@@ -7,6 +7,7 @@ import {
   drawCard,
   drawCards,
   moveParty,
+  moveCard,
 } from './gameState';
 import { setAt } from '../array';
 
@@ -448,4 +449,52 @@ describe('MOVE_PARTY', () => {
       ],
       party: blankPlayer.party,
     }));
+});
+
+describe('moveCard', () => {
+  test('retains neutral decks', () => {
+    expect(
+      moveCard(
+        {
+          ...baseState,
+          foodDeck: [{ cost: 0, id: 1 }, { cost: 0, id: 2 }],
+        },
+        2,
+        'guestDeck',
+      ),
+    ).toMatchObject({
+      foodDeck: [{ cost: 0, id: 1 }],
+      guestDeck: [{ cost: 0, id: 2 }],
+    });
+  });
+
+  test("retains decks that don't contain the goddamn target card", () =>
+    expect(
+      moveCard(
+        {
+          ...baseState,
+          foodDeck: [{ cost: 0, id: 1 }],
+          guestDeck: [{ cost: 0, id: 2 }],
+        },
+        2,
+        'aura',
+      ),
+    ).toMatchObject({
+      foodDeck: [{ cost: 0, id: 1 }],
+      aura: [{ cost: 0, id: 2 }],
+    }));
+
+  test('no target', () => {
+    expect(
+      moveCard(
+        {
+          ...baseState,
+          foodDeck: [{ cost: 0, id: 1 }, { cost: 0, id: 2 }],
+        },
+        2,
+      ),
+    ).toMatchObject({
+      foodDeck: [{ cost: 0, id: 1 }],
+    });
+  });
 });

@@ -193,26 +193,28 @@ const moveCardToPlayer = (
 /**
  * move card from anywhere on the board to a shared target pile
  */
-const moveCard = (
-  state,
-  id,
+export const moveCard = (
+  state: State,
+  id: string,
   target?: 'foodDeck' | 'guestDeck' | 'guestDiscard' | 'aura' | 'trash',
 ) => {
   const newState: State = {
     ...state,
-    players: state.players,
     foodDeck: [],
     guestDeck: [],
     guestDiscard: [],
     aura: [],
   };
+
+  let sourceCard = null
+
   for (let loc of ['foodDeck', 'guestDeck', 'guestDiscard', 'aura']) {
-    let sourceCard = state[loc].find(c => c.id == id);
-    if (sourceCard) {
-      newState[loc] = state[loc].filter(c => c.id != id);
-      if (target && !state[target].find(c => c.id == id))
-        newState[target] = state[target].concat(sourceCard);
-    }
+    newState[loc] = state[loc].filter(c => c.id != id);
+    sourceCard = state[loc].find(c => c.id == id) || sourceCard;
+  }
+
+  if (sourceCard && target && !newState[target].find(c => c.id == id)) {
+    newState[target] = newState[target].concat(sourceCard);
   }
 
   Object.entries(newState.players).forEach(
