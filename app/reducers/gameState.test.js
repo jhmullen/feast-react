@@ -8,6 +8,7 @@ import {
   drawCards,
   moveParty,
   moveCard,
+  moveCardToPlayer,
 } from './gameState';
 import { setAt } from '../array';
 
@@ -451,6 +452,45 @@ describe('MOVE_PARTY', () => {
     }));
 });
 
+describe('moveCardToPlayer', () => {
+  test('nonplayer to player', () =>
+    expect(
+      moveCardToPlayer(
+        {
+          ...baseState,
+          aura: [{ cost: 0, id: 2 }],
+        },
+        2,
+        '1',
+        'hand',
+      ),
+    ).toMatchObject({
+      hand: [{ cost: 0, id: 2 }],
+    }));
+
+  test('within player', () =>
+    expect(
+      moveCardToPlayer(
+        {
+          ...baseState,
+          players: {
+            ...baseState.players,
+            ['1']: {
+              ...blankPlayer,
+              hand: [{ cost: 0, id: 4 }, { cost: 0, id: 5 }],
+            },
+          },
+        },
+        4,
+        '1',
+        'myDeck',
+      ),
+    ).toMatchObject({
+      myDeck: [{ cost: 0, id: 4 }],
+      hand: [{ cost: 0, id: 5 }],
+    }));
+});
+
 describe('moveCard', () => {
   test('retains neutral decks', () => {
     expect(
@@ -467,6 +507,31 @@ describe('moveCard', () => {
       guestDeck: [{ cost: 0, id: 2 }],
     });
   });
+
+  test('can move from player to nonplayer', () =>
+    expect(
+      moveCard(
+        {
+          ...baseState,
+          players: {
+            ...baseState.players,
+            ['1']: {
+              ...blankPlayer,
+              hand: [
+                {
+                  cost: 0,
+                  id: 4,
+                },
+              ],
+            },
+          },
+        },
+        4,
+        'aura',
+      ),
+    ).toMatchObject({
+      aura: [{ cost: 0, id: 4 }],
+    }));
 
   test("retains decks that don't contain the goddamn target card", () =>
     expect(

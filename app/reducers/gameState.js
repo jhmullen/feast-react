@@ -140,12 +140,41 @@ export const discardHand = (player: Player) => ({
   discard: [...player.discard, ...player.hand],
 });
 
+const stateDecks = ['foodDeck', 'guestDeck', 'guestDiscard', 'aura'];
+const playerDecks = ['hand', 'myDeck', 'discard'];
+
+/**
+ * this should really just be a lookup in our card DB,
+ * which is currently asynchronous
+ */
+const findCard = (state: State, id) => {
+  let card;
+
+  for (let loc of stateDecks) {
+    card = state[loc].find(c => c.id === id);
+    if (card) {
+      return card;
+    }
+  }
+
+  for (let playerId: string of Object.keys(state.players)) {
+    for (let loc of playerDecks) {
+      card = state.players[playerId][loc].find(c => c.id === id);
+      if (card) {
+        return card;
+      }
+    }
+  }
+
+  return null;
+};
+
 /**
  * move card from anywhere on the board to a target player's pile.
  * XXX: for now, valid target piles are 'hand', 'myDeck', 'discard',
  * but not 'party', which requires more info about targeting.
  */
-const moveCardToPlayer = (
+export const moveCardToPlayer = (
   state: State,
   cardId: string,
   playerId: string,
@@ -153,13 +182,7 @@ const moveCardToPlayer = (
 ): Player => {
   const player = state.players[playerId];
 
-  const card = ['hand', 'myDeck', 'discard'].reduce((acc, loc) => {
-    if (acc) {
-      return acc;
-    }
-
-    return player[loc].find(c => c.id === cardId);
-  }, null);
+  const card = findCard(state, cardId);
 
   if (!card) {
     return player;
@@ -171,7 +194,7 @@ const moveCardToPlayer = (
     party: player.party.map(table => table.filter(c => c.id !== cardId)),
   };
 
-  const sanitized = ['hand', 'myDeck', 'discard'].reduce(
+  const sanitized = playerDecks.reduce(
     (player_, loc) => ({
       ...player_,
       [loc]: player_[loc].filter(c => c.id !== cardId),
@@ -198,29 +221,29 @@ export const moveCard = (
   id: string,
   target?: 'foodDeck' | 'guestDeck' | 'guestDiscard' | 'aura' | 'trash',
 ) => {
+  const sourceCard = findCard(state, id);
+
   const newState: State = {
     ...state,
+    players: state.players,
     foodDeck: [],
     guestDeck: [],
     guestDiscard: [],
     aura: [],
   };
 
-  let sourceCard = null
-
-  for (let loc of ['foodDeck', 'guestDeck', 'guestDiscard', 'aura']) {
+  for (let loc of stateDecks) {
     newState[loc] = state[loc].filter(c => c.id != id);
-    sourceCard = state[loc].find(c => c.id == id) || sourceCard;
-  }
-
-  if (sourceCard && target && !newState[target].find(c => c.id == id)) {
-    newState[target] = newState[target].concat(sourceCard);
   }
 
   Object.entries(newState.players).forEach(
     ([playerId, player]) =>
       (newState.players[playerId] = moveCardToPlayer(state, id, playerId)),
   );
+
+  if (sourceCard && target && !newState[target].find(c => c.id == id)) {
+    newState[target] = newState[target].concat(sourceCard);
+  }
 
   return newState;
 };
