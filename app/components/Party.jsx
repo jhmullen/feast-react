@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { applyMana, endTurn, moveParty } from '../actions';
-import GuestCard from './GuestCard.jsx';
-import TableSpot from './TableSpot.jsx';
-import { Toaster, Button, Position, Intent } from '@blueprintjs/core';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { applyMana, endTurn, moveParty } from "../actions";
+import GuestCard from "./GuestCard.jsx";
+import TableSpot from "./TableSpot.jsx";
+import { Toaster, Button, Position, Intent } from "@blueprintjs/core";
 
-import './Party.css';
+import "./Party.css";
 
 class Party extends Component {
   endTurn() {
@@ -24,6 +24,7 @@ class Party extends Component {
     const { party } = this.props.gameState.players[
       this.props.gameState.playerId
     ];
+
     const partyList = [];
     for (let p = 0; p < party.length; p++) {
       if (party[p].length > 0) {
@@ -38,7 +39,7 @@ class Party extends Component {
                 position={Position.TOP}
                 {...guests[g]}
               />
-            </div>,
+            </div>
           );
           guestList.push(
             <div key={`spacehack-${g}`}>
@@ -46,23 +47,23 @@ class Party extends Component {
               <br />
               <br />
               <br />
-            </div>,
+            </div>
           );
         }
         partyList.push(
           <div
             key={`table-${p}`}
             className="hand-item"
-            style={{ width: '80px' }}
+            style={{ width: "80px" }}
           >
             {guestList}
-          </div>,
+          </div>
         );
       } else {
         partyList.push(
           <div key={`table-${p}`} className="hand-item">
             <div className="placeholder">Drag a guest above</div>
-          </div>,
+          </div>
         );
       }
     }
@@ -78,7 +79,7 @@ class Party extends Component {
 
     return (
       <div id="party">
-        <div style={{ position: 'absolute', left: '5px', top: '-35px' }}>
+        <div style={{ position: "absolute", left: "5px", top: "-35px" }}>
           <Button iconName="cross" onClick={this.endTurn.bind(this)} />
           <Button iconName="arrow-left" onClick={this.moveLeft.bind(this)} />
           <Button iconName="arrow-right" onClick={this.moveRight.bind(this)} />
@@ -95,9 +96,9 @@ const mapStateToProps = state => ({ gameState: state.gameState });
 const mapDispatchToProps = dispatch => ({
   applyMana: num => dispatch(applyMana(num)),
   endTurn: () => dispatch(endTurn()),
-  moveParty: num => dispatch(moveParty(num)),
+  moveParty: num => dispatch(moveParty(num))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps, null, {
-  withRef: true,
+  withRef: true
 })(Party);

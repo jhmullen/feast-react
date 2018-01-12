@@ -12,8 +12,8 @@ import {
 export const PickPlayer = ({ pickPlayer }) => (
   <div>
     Which player are you?
-    <Button onClick={() => pickPlayer(1)}>1</Button>
-    <Button onClick={() => pickPlayer(2)}>2</Button>
+    <Button onClick={() => pickPlayer("1")}>1</Button>
+    <Button onClick={() => pickPlayer("2")}>2</Button>
   </div>
 );
 
