@@ -87,12 +87,12 @@ class App extends Component {
             >
               <div>Mana: </div>
               <NumericInput
-                value={this.props.gameState.mana}
+                value={player && player.mana}
                 onValueChange={this.setMana.bind(this)}
               />
               <div>Prestige: </div>
               <NumericInput
-                value={this.props.gameState.prestige}
+                value={player && player.prestige}
                 onValueChange={this.setPrestige.bind(this)}
               />
             </div>

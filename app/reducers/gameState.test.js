@@ -5,12 +5,16 @@ import {
   blankPlayer,
   discardHand,
   drawCard,
-  drawCards
+  drawCards,
+  moveParty,
+  moveCard,
+  moveCardToPlayer
 } from "./gameState";
+import { pad, setAt } from "../array";
 
 const baseState = {
   ...basestState,
-  playerId: 1
+  playerId: "1"
 };
 
 const card = {
@@ -27,7 +31,7 @@ const { addGuest, buyFood, endTurn } = Object.entries(rawActions)
     k,
     (...args) => ({
       ...fn(...args),
-      playerId: 1
+      playerId: "1"
     })
   ])
   .reduce(
@@ -382,6 +386,298 @@ describe("ADD_GUEST", () => {
       players: {
         1: {
           mana: 0
+        }
+      }
+    });
+  });
+});
+
+describe("MOVE_PARTY", () => {
+  const player = {
+    ...blankPlayer,
+    party: setAt(
+      3,
+      {
+        cost: 0
+      },
+      blankPlayer.party
+    )
+  };
+
+  test("right", () =>
+    expect(moveParty(player, 1)).toEqual({
+      discarded: [],
+      party: setAt(
+        4,
+        {
+          cost: 0
+        },
+        blankPlayer.party
+      )
+    }));
+
+  test("left", () =>
+    expect(moveParty(player, -1)).toEqual({
+      discarded: [],
+      party: setAt(
+        2,
+        {
+          cost: 0
+        },
+        blankPlayer.party
+      )
+    }));
+  test("sheds guests", () =>
+    expect(
+      moveParty(
+        {
+          ...blankPlayer,
+          party: setAt(
+            0,
+            {
+              cost: 0
+            },
+            blankPlayer.party
+          )
+        },
+        -1
+      )
+    ).toEqual({
+      discarded: [
+        {
+          cost: 0
+        }
+      ],
+      party: blankPlayer.party
+    }));
+
+  // moving party right just stacks guests onto the last table,
+  // rather than pushing them off the edge
+  test("right limit", () =>
+    expect(
+      reduce(
+        {
+          ...baseState,
+          players: {
+            ...baseState.players,
+            ["1"]: {
+              ...blankPlayer,
+              party: [
+                ...pad(5, [], []),
+                [
+                  {
+                    id: "movedguest"
+                  }
+                ],
+                [
+                  {
+                    id: "existingguest"
+                  }
+                ]
+              ]
+            }
+          }
+        },
+        {
+          type: "MOVE_PARTY",
+          num: 1,
+          playerId: "1"
+        }
+      )
+    ).toMatchObject({
+      players: {
+        "1": {
+          party: [
+            ...pad(6, [], []),
+            // note that it's old guest, new guest
+            // in order
+            [
+              {
+                id: "existingguest"
+              },
+              {
+                id: "movedguest"
+              }
+            ]
+          ]
+        }
+      }
+    }));
+});
+
+describe("moveCardToPlayer", () => {
+  test("nonplayer to player", () =>
+    expect(
+      moveCardToPlayer(
+        {
+          ...baseState,
+          aura: [{ cost: 0, id: 2 }]
+        },
+        2,
+        "1",
+        "hand"
+      )
+    ).toMatchObject({
+      hand: [{ cost: 0, id: 2 }]
+    }));
+
+  test("within player", () =>
+    expect(
+      moveCardToPlayer(
+        {
+          ...baseState,
+          players: {
+            ...baseState.players,
+            ["1"]: {
+              ...blankPlayer,
+              hand: [{ cost: 0, id: 4 }, { cost: 0, id: 5 }]
+            }
+          }
+        },
+        4,
+        "1",
+        "myDeck"
+      )
+    ).toMatchObject({
+      myDeck: [{ cost: 0, id: 4 }],
+      hand: [{ cost: 0, id: 5 }]
+    }));
+
+  test("discard", () =>
+    expect(
+      moveCardToPlayer(
+        {
+          ...baseState,
+          players: {
+            ...baseState.players,
+            1: {
+              ...blankPlayer,
+              hand: [{ cost: 0, id: 4 }, { cost: 0, id: 5 }],
+              discard: [{ id: 0 }]
+            }
+          }
+        },
+        4,
+        "1",
+        "discard"
+      )
+    ).toMatchObject({
+      discard: [{ id: 0 }, { cost: 0, id: 4 }],
+      hand: [{ cost: 0, id: 5 }]
+    }));
+});
+
+describe("moveCard", () => {
+  test("retains neutral decks", () => {
+    expect(
+      moveCard(
+        {
+          ...baseState,
+          foodDeck: [{ cost: 0, id: 1 }, { cost: 0, id: 2 }]
+        },
+        2,
+        "guestDeck"
+      )
+    ).toMatchObject({
+      foodDeck: [{ cost: 0, id: 1 }],
+      guestDeck: [{ cost: 0, id: 2 }]
+    });
+  });
+
+  test("can move from player to nonplayer", () =>
+    expect(
+      moveCard(
+        {
+          ...baseState,
+          players: {
+            ...baseState.players,
+            ["1"]: {
+              ...blankPlayer,
+              hand: [
+                {
+                  cost: 0,
+                  id: 4
+                }
+              ]
+            }
+          }
+        },
+        4,
+        "aura"
+      )
+    ).toMatchObject({
+      aura: [{ cost: 0, id: 4 }]
+    }));
+
+  test("retains decks that don't contain the goddamn target card", () =>
+    expect(
+      moveCard(
+        {
+          ...baseState,
+          foodDeck: [{ cost: 0, id: 1 }],
+          guestDeck: [{ cost: 0, id: 2 }]
+        },
+        2,
+        "aura"
+      )
+    ).toMatchObject({
+      foodDeck: [{ cost: 0, id: 1 }],
+      aura: [{ cost: 0, id: 2 }]
+    }));
+
+  test("no target", () => {
+    expect(
+      moveCard(
+        {
+          ...baseState,
+          foodDeck: [{ cost: 0, id: 1 }, { cost: 0, id: 2 }]
+        },
+        2
+      )
+    ).toMatchObject({
+      foodDeck: [{ cost: 0, id: 1 }]
+    });
+  });
+});
+
+describe("PLAY_CARD", () => {
+  test("playing ends up in discard", () => {
+    expect(
+      reduce(
+        {
+          ...baseState,
+          players: {
+            ...baseState.players,
+            1: {
+              ...baseState.players["1"],
+              hand: [{ id: 2 }],
+              discard: [
+                {
+                  id: 0
+                }
+              ],
+              mana: 100
+            }
+          }
+        },
+        {
+          playerId: "1",
+          type: "PLAY_CARD",
+          id: 2
+        }
+      )
+    ).toMatchObject({
+      players: {
+        ["1"]: {
+          hand: [],
+          discard: [
+            {
+              id: 0
+            },
+            {
+              id: 2
+            }
+          ]
         }
       }
     });
