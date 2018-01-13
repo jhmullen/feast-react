@@ -50,7 +50,7 @@ class GuestCard extends Component {
                 this.props.prestige
               }p`}</span>
               <span>
-                {this.props.gameState.mana < this.props.cost ? "X" : ""}
+                {mana < this.props.cost ? "X" : ""}
               </span>
             </div>
             <div id="name">{this.props.name}</div>
