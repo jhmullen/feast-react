@@ -308,26 +308,33 @@ export const moveParty = (
 
   const allTables = [...left, ...player.party, ...right];
 
-  // XXX moving right has no defined behavior for guests pushed off the edge, does it?
-  // do they just stack up on the highest table?
-  if (shiftBy > 0) {
-    return {
-      discarded: [],
-      party: allTables.slice(0, NUM_TABLES)
-    };
-  }
-
-  const discarded = allTables
+  const pushedLeft = allTables
     .slice(0, Math.abs(shiftBy))
     .reduce((a, b) => a.concat(b), []);
 
+  // XXX guests aren't pushed off the _right_ side
+  // by a positive move. rather they stack up.
+  if (shiftBy > 0) {
+    const pushedRight = allTables
+      .slice(NUM_TABLES)
+      .reduce((a, b) => a.concat(b), []);
+
+    return {
+      discarded: [],
+      party: updateAt(
+        NUM_TABLES - 1,
+        old => [...pushedRight, ...old],
+        allTables.slice(0, NUM_TABLES)
+      )
+    };
+  }
   const party = allTables.slice(
     Math.abs(shiftBy),
     NUM_TABLES + Math.abs(shiftBy)
   );
 
   return {
-    discarded,
+    discarded: pushedLeft,
     party
   };
 };

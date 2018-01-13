@@ -10,7 +10,7 @@ import {
   moveCard,
   moveCardToPlayer
 } from "./gameState";
-import { setAt } from "../array";
+import { pad, setAt } from "../array";
 
 const baseState = {
   ...basestState,
@@ -449,6 +449,59 @@ describe("MOVE_PARTY", () => {
         }
       ],
       party: blankPlayer.party
+    }));
+
+  // moving party right just stacks guests onto the last table,
+  // rather than pushing them off the edge
+  test("right limit", () =>
+    expect(
+      reduce(
+        {
+          ...baseState,
+          players: {
+            ...baseState.players,
+            ["1"]: {
+              ...blankPlayer,
+              party: [
+                ...pad(5, [], []),
+                [
+                  {
+                    id: "movedguest"
+                  }
+                ],
+                [
+                  {
+                    id: "existingguest"
+                  }
+                ]
+              ]
+            }
+          }
+        },
+        {
+          type: "MOVE_PARTY",
+          num: 1,
+          playerId: "1"
+        }
+      )
+    ).toMatchObject({
+      players: {
+        "1": {
+          party: [
+            ...pad(6, [], []),
+            // note that it's old guest, new guest
+            // in order
+            [
+              {
+                id: "existingguest"
+              },
+              {
+                id: "movedguest"
+              }
+            ]
+          ]
+        }
+      }
     }));
 });
 
