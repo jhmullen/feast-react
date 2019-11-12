@@ -25,18 +25,20 @@ const prestigeToast = Toaster.create({
 });
 
 class App extends Component {
-  componentWillUpdate(nextProps) {
+  
+  componentDidUpdate(prevProps) {
+    
     if (!this.props.gameState.playerId) {
       return;
     }
 
     const { players, playerId } = this.props.gameState;
     const player = players[playerId];
-    const { players: nextPlayers } = nextProps.gameState;
-    const nextPlayer = nextPlayers[playerId];
+    const { players: prevPlayers } = prevProps.gameState;
+    const prevPlayer = prevPlayers[playerId];
 
-    if (player.prestige != nextPlayer.prestige) {
-      const diff = nextPlayer.prestige - player.prestige;
+    if (player.prestige != prevPlayer.prestige) {
+      const diff = player.prestige - prevPlayer.prestige;
       prestigeToast.show({
         message: `You ${diff > 0 ? "Earned" : "Lost"} ${Math.abs(
           diff

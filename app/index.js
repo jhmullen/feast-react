@@ -16,6 +16,8 @@ let store = createStore(
   applyMiddleware(socketLogger(socket), playLog),
 );
 
+// Listens to socket actions, i.e., events that the other player emits.
+// Upon other player action, call our OWN redux update to keep us up to date.
 socket.on('action', action => {
   console.log('got action', action);
   store.dispatch(action);
