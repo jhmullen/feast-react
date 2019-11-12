@@ -267,6 +267,7 @@ export const gameState = routeForPlayer((state = baseState, action) => {
       return {
         ...state,
         playerId: action.id,
+        opponentId: action.id === 1 ? 2 : 1
       };
     case 'BUY_FOOD':
       card = state.foodDeck.find(c => c.id == action.id);

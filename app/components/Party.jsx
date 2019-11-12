@@ -21,10 +21,14 @@ class Party extends Component {
   }
 
   render() {
+    
     const { party } = this.props.gameState.players[
-      this.props.gameState.playerId
+      this.props.opponent ? this.props.gameState.opponentId : this.props.gameState.playerId
     ];
-    const partyList = [];
+
+    const show = !this.props.opponent;
+
+    const partyList = [];    
     for (let p = 0; p < party.length; p++) {
       if (party[p].length > 0) {
         const guests = party[p];
@@ -61,7 +65,7 @@ class Party extends Component {
       } else {
         partyList.push(
           <div key={`table-${p}`} className="hand-item">
-            <div className="placeholder">Drag a guest above</div>
+            <div className="placeholder">{show && "Drag a guest above"}</div>
           </div>,
         );
       }
@@ -77,13 +81,13 @@ class Party extends Component {
     }
 
     return (
-      <div id="party">
-        <div style={{ position: 'absolute', left: '5px', top: '-35px' }}>
+      <div id={`party${show ? "" : "-opponent"}`}>
+        {show && <div style={{ position: 'absolute', left: '5px', top: '-35px' }}>
           <Button iconName="cross" onClick={this.endTurn.bind(this)} />
           <Button iconName="arrow-left" onClick={this.moveLeft.bind(this)} />
           <Button iconName="arrow-right" onClick={this.moveRight.bind(this)} />
-        </div>
-        <div className="party-container">{tableSpots}</div>
+        </div>}
+        {show && <div className="party-container">{tableSpots}</div>}
         <div className="party-container">{partyList}</div>
       </div>
     );

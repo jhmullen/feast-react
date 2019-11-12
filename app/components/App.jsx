@@ -72,6 +72,9 @@ class App extends Component {
             <FoodDeck />
             <GuestDeck />
           </div>
+          <div id="party-row-opponent">
+            <Party opponent={true} />
+          </div>
           <div id="party-row">
             <Party />
           </div>

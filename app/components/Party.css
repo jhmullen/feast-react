@@ -8,6 +8,16 @@
   padding: 5px;
 }
 
+#party-opponent {
+  width: 750px;
+  height: 140px;
+  margin: 5px auto;
+  background-color: grey;
+  text-align: center;
+  display: block;
+  padding: 5px;
+}
+
 .placeholder {
   width: 80px;
   height: 118px;
