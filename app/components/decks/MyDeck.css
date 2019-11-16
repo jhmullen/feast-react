@@ -6,7 +6,7 @@
 }
 
 #image-bg {
-  background-image: url("../../static/cardback.png");
+  background-image: url("../../../static/cardback.png");
   text-align: center;
   width: 80px;
   height: 118px;

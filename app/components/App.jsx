@@ -1,21 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import MyDeck from "./MyDeck";
-import Discard from "./Discard";
-import Cast from "./Cast";
-import Draw from "./Draw";
-import Buy from "./Buy";
-import Hand from "./Hand";
-import Party from "./Party";
-import Trash from "./Trash";
-import Aura from "./Aura";
+
 import PickPlayer from "./PickPlayer";
-import FoodDeck from "./FoodDeck";
-import GuestDeck from "./GuestDeck";
+
+import Party from "./zones/Party";
+import Playboard from "./zones/Playboard";
+
+import FoodDeck from "./decks/FoodDeck";
+import GuestDeck from "./decks/GuestDeck";
+
 import { DragDropContextProvider } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { pickPlayer, setPrestige, setMana } from "../actions";
 import { Toaster, Position, Intent, NumericInput } from "@blueprintjs/core";
+
+import { pickPlayer, setPrestige, setMana } from "../actions";
 
 import "./App.css";
 
@@ -78,35 +76,20 @@ class App extends Component {
           <div id="party-row">
             <Party />
           </div>
+          <div>
+            <div>Mana: </div>
+            <NumericInput
+              value={this.props.gameState.mana}
+              onValueChange={this.setMana.bind(this)}
+            />
+            <div>Prestige: </div>
+            <NumericInput
+              value={this.props.gameState.prestige}
+              onValueChange={this.setPrestige.bind(this)}
+            />
+          </div>
           <div id="hand-row">
-            <div
-              style={{
-                display: "flex",
-                width: "500px",
-                justifyContent: "space-between",
-                position: "absolute",
-                top: "-40px",
-                right: "10px",
-                fontSize: "16px"
-              }}
-            >
-              <div>Mana: </div>
-              <NumericInput
-                value={this.props.gameState.mana}
-                onValueChange={this.setMana.bind(this)}
-              />
-              <div>Prestige: </div>
-              <NumericInput
-                value={this.props.gameState.prestige}
-                onValueChange={this.setPrestige.bind(this)}
-              />
-            </div>
-            <MyDeck />
-            <Discard dragType="handCard" />
-            <Hand />
-            <Cast dragType="handCard" />
-            <Trash dragType={["handCard", "guestCard", "buyCard"]} />
-            <Aura dragType={["handCard", "buyCard"]} />
+            <Playboard />
           </div>
         </div>
       </DragDropContextProvider>

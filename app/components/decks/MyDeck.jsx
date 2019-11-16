@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { setMyDeck, drawCard } from "../actions";
-import DeckOps from "./DeckOps";
+import { setMyDeck, drawCard } from "../../actions";
+import DeckOps from "../ops/DeckOps";
 import { Button, Position } from "@blueprintjs/core";
-import { starting } from "../cardData";
+import { starting } from "../../cardData";
 
 import "./MyDeck.css";
 

@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { applyMana, shuffle } from "../actions";
+import { applyMana, shuffle } from "../../actions";
 import {
   Button,
   Popover,
   PopoverInteractionKind,
   Position
 } from "@blueprintjs/core";
-import FoodCard from "./FoodCard.jsx";
-import GuestCard from "./GuestCard.jsx";
+import FoodCard from "../cards/FoodCard.jsx";
+import GuestCard from "../cards/GuestCard.jsx";
 
 import "./DeckOps.css";
 

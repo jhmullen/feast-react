@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import GuestCard from "./GuestCard";
-import { setGuestDeck } from "../actions";
-import DeckOps from "./DeckOps";
-import GuestDiscard from "./GuestDiscard";
+import GuestCard from "../cards/GuestCard";
+import { setGuestDeck } from "../../actions";
+import DeckOps from "../ops/DeckOps";
+import GuestDiscard from "../decks/GuestDiscard";
 import { Position } from "@blueprintjs/core";
 import Papa from "papaparse";
-import { guests } from "../cardData";
+import { guests } from "../../cardData";
 import "./GuestDeck.css";
 
 class GuestDeck extends Component {

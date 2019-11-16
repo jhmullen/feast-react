@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { applyMana, endTurn, moveParty } from '../actions';
-import GuestCard from './GuestCard.jsx';
+import { applyMana, endTurn, moveParty } from '../../actions';
+import GuestCard from '../cards/GuestCard.jsx';
 import TableSpot from './TableSpot.jsx';
 import { Toaster, Button, Position, Intent } from '@blueprintjs/core';
 

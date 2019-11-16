@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import FoodCard from "./FoodCard";
-import { setFaceupFood, setFoodDeck } from "../actions";
+import FoodCard from "../cards/FoodCard";
+import { setFaceupFood, setFoodDeck } from "../../actions";
 import { Position, Button } from "@blueprintjs/core";
 import Papa from "papaparse";
-import Buy from "./Buy";
-import DeckOps from "./DeckOps";
-import { food } from "../cardData";
+import Buy from "../casters/Buy";
+import DeckOps from "../ops/DeckOps";
+import { food } from "../../cardData";
 import "./FoodDeck.css";
 
 class FoodDeck extends Component {

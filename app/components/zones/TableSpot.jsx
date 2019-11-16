@@ -1,46 +1,35 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { applyMana, addGuest } from "../../actions";
 import { DropTarget } from "react-dnd";
-import { setAura } from "../actions";
-import { Toaster, Position, Intent } from "@blueprintjs/core";
-import DeckOps from "./DeckOps";
+import { Icon } from "@blueprintjs/core";
 
-import "./Aura.css";
+import "./TableSpot.css";
 
-class Aura extends Component {
-  handleAura(card) {
-    this.props.setAura(card.id);
+class TableSpot extends Component {
+  handleInvite(guest) {
+    this.props.addGuest(guest.id, this.props.spotNum);
   }
 
   render() {
-    const { aura } = this.props.gameState;
-
+    const { spotNum } = this.props;
     const { isOver, canDrop, connectDropTarget } = this.props;
 
     return connectDropTarget(
-      <div id="aura">
-        <div id="aura-bg" className={isOver ? "fade" : null}>
-          Aura<br />
-          <DeckOps
-            deck={aura}
-            position={Position.TOP}
-            deckname="aura"
-            dragType="handCard"
-          />
-        </div>
-        <div id="counter">{`${aura.length} in aura`}</div>
+      <div id="tablespot">
+        <Icon style={{ color: "black" }} iconName="add" /> {spotNum + 1}
       </div>
     );
   }
 }
 
-const auraTarget = {
+const tableTarget = {
   drop(props, monitor, component) {
     if (monitor.didDrop()) {
       return;
     }
     const item = monitor.getItem();
-    component.getWrappedInstance().handleAura(item);
+    component.getWrappedInstance().handleInvite(item);
     return item;
   }
 };
@@ -58,17 +47,18 @@ function collect(connect, monitor) {
 const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
-  setAura: id => dispatch(setAura(id))
+  applyMana: num => dispatch(applyMana(num)),
+  addGuest: (id, spot) => dispatch(addGuest(id, spot))
 });
 
-Aura = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
-  Aura
-);
+TableSpot = connect(mapStateToProps, mapDispatchToProps, null, {
+  withRef: true
+})(TableSpot);
 
 export default DropTarget(
   props => {
     return props.dragType;
   },
-  auraTarget,
+  tableTarget,
   collect
-)(Aura);
+)(TableSpot);

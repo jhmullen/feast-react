@@ -2,45 +2,48 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { findDOMNode } from "react-dom";
 import { DropTarget } from "react-dnd";
-import { applyMana, buyFood } from "../actions";
+import { applyMana, setHand, trashCard } from "../../actions";
 import { Toaster, Position, Intent } from "@blueprintjs/core";
 
-import "./Buy.css";
+import "./Trash.css";
 
-class Buy extends Component {
-  handleBuy(card) {
-    this.props.buyFood(card.id);
-    const buyToast = Toaster.create({
-      className: "buyToast",
+class Trash extends Component {
+  handleTrash(card) {
+    this.props.trashCard(card.id);
+    const castToast = Toaster.create({
+      className: "castToast",
       position: Position.TOP_CENTER
     });
-    buyToast.show({
-      message: `You Bought ${card.name}!`,
-      intent: Intent.SUCCESS,
+    castToast.show({
+      message: `You Trashed ${card.name}!`,
+      intent: Intent.WARNING,
       timeout: 1500
     });
   }
 
   render() {
+    const { trash } = this.props.gameState;
+
     const { isOver, canDrop, connectDropTarget } = this.props;
 
     return connectDropTarget(
-      <div id="buy">
-        <div id="buy-bg" className={isOver ? "fade" : null}>
-          Buy
+      <div id="trash">
+        <div id="trash-bg" className={isOver ? "fade" : null}>
+          Trash
         </div>
+        <div id="counter">{`${trash.length} in trash`}</div>
       </div>
     );
   }
 }
 
-const buyTarget = {
+const trashTarget = {
   drop(props, monitor, component) {
     if (monitor.didDrop()) {
       return;
     }
     const item = monitor.getItem();
-    component.getWrappedInstance().handleBuy(item);
+    component.getWrappedInstance().handleTrash(item);
     return item;
   }
 };
@@ -59,17 +62,17 @@ const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
   applyMana: num => dispatch(applyMana(num)),
-  buyFood: id => dispatch(buyFood(id))
+  trashCard: id => dispatch(trashCard(id))
 });
 
-Buy = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
-  Buy
+Trash = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
+  Trash
 );
 
 export default DropTarget(
   props => {
     return props.dragType;
   },
-  buyTarget,
+  trashTarget,
   collect
-)(Buy);
+)(Trash);

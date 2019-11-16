@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { applyMana } from "../actions";
+import { applyMana } from "../../actions";
 import { Position } from "@blueprintjs/core";
-import FoodCard from "./FoodCard.jsx";
+import FoodCard from "../cards/FoodCard.jsx";
 
 import "./Hand.css";
 

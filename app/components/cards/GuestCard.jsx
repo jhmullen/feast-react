@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { DragSource } from "react-dnd";
 import { connect } from "react-redux";
-import { applyMana } from "../actions";
+import { applyMana } from "../../actions";
 import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 
 import "./GuestCard.css";

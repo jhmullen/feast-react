@@ -1,52 +1,54 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { findDOMNode } from "react-dom";
 import { DropTarget } from "react-dnd";
-import { applyMana, setHand, playCard } from "../actions";
+import { applyMana, discardGuest } from "../../actions";
 import { Toaster, Position, Intent } from "@blueprintjs/core";
+import DeckOps from "../ops/DeckOps";
 
-import "./Cast.css";
+import "./GuestDiscard.css";
 
-class Cast extends Component {
-  handleCast(card) {
-    this.props.applyMana(card.food_mod);
-    this.props.playCard(card.id);
+class GuestDiscard extends Component {
+  handleDiscard(card) {
+    this.props.discardGuest(card.id);
     const castToast = Toaster.create({
       className: "castToast",
       position: Position.TOP_CENTER
     });
     castToast.show({
-      message: `You Cast ${card.name}!`,
-      intent: Intent.SUCCESS,
+      message: `You Discarded ${card.name}!`,
+      intent: Intent.WARNING,
       timeout: 1500
     });
   }
 
   render() {
-    const { mana } = this.props.gameState.players[
-      this.props.gameState.playerId
-    ];
+    const { guestDiscard } = this.props.gameState;
 
     const { isOver, canDrop, connectDropTarget } = this.props;
 
     return connectDropTarget(
-      <div id="cast">
-        <div id="cast-bg" className={isOver ? "fade" : null}>
-          Cast
+      <div>
+        <div id="image-bg" style={{ display: "block" }}>
+          <DeckOps
+            deck={guestDiscard}
+            position={Position.LEFT_TOP}
+            deckname="guestDiscard"
+            dragType="guestCard"
+          />
         </div>
-        <div id="counter">{`${mana} mana`}</div>
+        <div id="counter">{`${guestDiscard.length} in discard`}</div>
       </div>
     );
   }
 }
 
-const castTarget = {
+const guestDiscardTarget = {
   drop(props, monitor, component) {
     if (monitor.didDrop()) {
       return;
     }
     const item = monitor.getItem();
-    component.getWrappedInstance().handleCast(item);
+    component.getWrappedInstance().handleDiscard(item);
     return item;
   }
 };
@@ -65,17 +67,17 @@ const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
   applyMana: num => dispatch(applyMana(num)),
-  playCard: id => dispatch(playCard(id))
+  discardGuest: id => dispatch(discardGuest(id))
 });
 
-Cast = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
-  Cast
-);
+GuestDiscard = connect(mapStateToProps, mapDispatchToProps, null, {
+  withRef: true
+})(GuestDiscard);
 
 export default DropTarget(
   props => {
     return props.dragType;
   },
-  castTarget,
+  guestDiscardTarget,
   collect
-)(Cast);
+)(GuestDiscard);

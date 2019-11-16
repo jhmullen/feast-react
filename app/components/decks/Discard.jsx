@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { DropTarget } from "react-dnd";
-import { discardFromHand } from "../actions";
+import { discardFromHand } from "../../actions";
 import { Position, Toaster, Intent } from "@blueprintjs/core";
-import DeckOps from "./DeckOps";
+import DeckOps from "../ops/DeckOps";
 
 import "./Discard.css";
 
