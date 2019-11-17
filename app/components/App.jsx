@@ -66,6 +66,9 @@ class App extends Component {
     return (
       <DragDropContextProvider backend={HTML5Backend}>
         <div id="board">
+          <div id="hand-row-opponent">
+            {/*<Playboard opponent={true}/>*/}
+          </div>
           <div>
             <FoodDeck />
             <GuestDeck />

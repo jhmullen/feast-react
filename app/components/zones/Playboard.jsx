@@ -12,9 +12,11 @@ import "./Playboard.css";
 class Playboard extends Component {
 
   render() {
+
+    const {opponent} = this.props;
     
     return (
-      <div id="playboard">
+      <div id={`playboard`}>
         <MyDeck {...this.props} />
         <Discard dragType="handCard" {...this.props}/>
         <Hand {...this.props}/>

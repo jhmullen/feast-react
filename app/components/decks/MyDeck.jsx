@@ -10,8 +10,11 @@ import "./MyDeck.css";
 const OPENING_HAND_SIZE = 4;
 
 class MyDeck extends Component {
+  
   getPlayer() {
-    return this.props.gameState.players[this.props.gameState.playerId];
+    return this.props.gameState.players[
+      this.props.opponent ? this.props.gameState.opponentId : this.props.gameState.playerId
+    ];
   }
 
   componentDidMount() {
@@ -36,9 +39,7 @@ class MyDeck extends Component {
   }
 
   render() {
-    const { myDeck } = this.props.gameState.players[
-      this.props.gameState.playerId
-    ];
+    const { myDeck } = this.getPlayer();
 
     return (
       <div id="deck">
