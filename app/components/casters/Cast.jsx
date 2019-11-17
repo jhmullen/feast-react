@@ -8,6 +8,7 @@ import { Toaster, Position, Intent } from "@blueprintjs/core";
 import "./Cast.css";
 
 class Cast extends Component {
+  
   handleCast(card) {
     this.props.applyMana(card.food_mod);
     this.props.playCard(card.id);

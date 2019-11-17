@@ -1,0 +1,18 @@
+.score-panel {
+  width: 160px;
+  outline: 1px solid black;
+  position: absolute;
+  font-size: 16px;
+  padding: 5px;
+  background-color: white;
+}
+
+.sp-player {
+  bottom: 150px;
+  right: 10px;
+}
+
+.sp-opponent {
+  top: 10px;
+  right: 10px;
+}

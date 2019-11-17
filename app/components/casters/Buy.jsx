@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { findDOMNode } from "react-dom";
 import { DropTarget } from "react-dnd";
 import { applyMana, buyFood } from "../../actions";
 import { Toaster, Position, Intent } from "@blueprintjs/core";

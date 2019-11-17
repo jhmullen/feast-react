@@ -9,11 +9,13 @@ import Playboard from "./zones/Playboard";
 import FoodDeck from "./decks/FoodDeck";
 import GuestDeck from "./decks/GuestDeck";
 
+import ScorePanel from "./panels/ScorePanel";
+
 import { DragDropContextProvider } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { Toaster, Position, Intent, NumericInput } from "@blueprintjs/core";
+import { Toaster, Position, Intent } from "@blueprintjs/core";
 
-import { pickPlayer, setPrestige, setMana } from "../actions";
+import { pickPlayer } from "../actions";
 
 import "./App.css";
 
@@ -47,14 +49,6 @@ class App extends Component {
     }
   }
 
-  setPrestige(num) {
-    this.props.setPrestige(num);
-  }
-
-  setMana(num) {
-    this.props.setMana(num);
-  }
-
   render() {
     if (!this.props.gameState.playerId) {
       return <PickPlayer pickPlayer={this.props.pickPlayer} />;
@@ -69,6 +63,7 @@ class App extends Component {
           <div id="hand-row-opponent">
             {/*<Playboard opponent={true}/>*/}
           </div>
+          <ScorePanel opponent={true} />
           <div>
             <FoodDeck />
             <GuestDeck />
@@ -79,18 +74,7 @@ class App extends Component {
           <div id="party-row">
             <Party />
           </div>
-          <div>
-            <div>Mana: </div>
-            <NumericInput
-              value={this.props.gameState.mana}
-              onValueChange={this.setMana.bind(this)}
-            />
-            <div>Prestige: </div>
-            <NumericInput
-              value={this.props.gameState.prestige}
-              onValueChange={this.setPrestige.bind(this)}
-            />
-          </div>
+          <ScorePanel />
           <div id="hand-row">
             <Playboard />
           </div>
@@ -103,9 +87,7 @@ class App extends Component {
 const mapStateToProps = state => ({ gameState: state.gameState });
 
 const mapDispatchToProps = dispatch => ({
-  pickPlayer: id => dispatch(pickPlayer(id)),
-  setMana: num => dispatch(setMana(num)),
-  setPrestige: num => dispatch(setPrestige(num))
+  pickPlayer: id => dispatch(pickPlayer(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -5,7 +5,7 @@ const logToast = Toaster.create({
   position: Position.TOP_CENTER
 });
 
-const starter = /starter/;
+const isStarter = id => id.includes("opening-");
 
 export const showAction = (cardData, state, action) => {
   switch (action.type) {
@@ -18,11 +18,11 @@ export const showAction = (cardData, state, action) => {
         cardData.guest.find(({ id }) => id === action.id).name
       }!`;
     case "PLAY_CARD":
-      const foodName = starter.test(action.id)
-        ? "Starter"
+      const foodName = isStarter(action.id)
+        ? cardData.starting.find(({ id }) => id === action.id).name
         : cardData.food.find(({ id }) => id === action.id).name;
 
-      return `Opponent played ${foodName}`;
+      return `Opponent played ${foodName}!`;
     default:
       return null;
   }
@@ -44,8 +44,8 @@ export const playLog = store => next => action => {
       if (actionMsg) {
         logToast.show({
           message: actionMsg,
-          intent: Intent.DANGER,
-          timeout: 1000
+          intent: Intent.WARNING,
+          timeout: 2000
         });
       }
     });
