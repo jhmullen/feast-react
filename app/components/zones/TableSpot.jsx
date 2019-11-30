@@ -29,7 +29,7 @@ const tableTarget = {
       return;
     }
     const item = monitor.getItem();
-    component.getWrappedInstance().handleInvite(item);
+    component.handleInvite(item);
     return item;
   }
 };
@@ -52,7 +52,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 TableSpot = connect(mapStateToProps, mapDispatchToProps, null, {
-  withRef: true
+  forwardRef: true
 })(TableSpot);
 
 export default DropTarget(

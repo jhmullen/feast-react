@@ -39,7 +39,7 @@ const buyTarget = {
       return;
     }
     const item = monitor.getItem();
-    component.getWrappedInstance().handleBuy(item);
+    component.handleBuy(item);
     return item;
   }
 };
@@ -61,7 +61,7 @@ const mapDispatchToProps = dispatch => ({
   buyFood: id => dispatch(buyFood(id))
 });
 
-Buy = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
+Buy = connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(
   Buy
 );
 

@@ -43,7 +43,7 @@ const trashTarget = {
       return;
     }
     const item = monitor.getItem();
-    component.getWrappedInstance().handleTrash(item);
+    component.handleTrash(item);
     return item;
   }
 };
@@ -65,7 +65,7 @@ const mapDispatchToProps = dispatch => ({
   trashCard: id => dispatch(trashCard(id))
 });
 
-Trash = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
+Trash = connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(
   Trash
 );
 

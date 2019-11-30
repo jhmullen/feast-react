@@ -40,7 +40,7 @@ const auraTarget = {
       return;
     }
     const item = monitor.getItem();
-    component.getWrappedInstance().handleAura(item);
+    component.handleAura(item);
     return item;
   }
 };
@@ -61,7 +61,7 @@ const mapDispatchToProps = dispatch => ({
   setAura: id => dispatch(setAura(id))
 });
 
-Aura = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
+Aura = connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(
   Aura
 );
 

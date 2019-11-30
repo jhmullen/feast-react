@@ -50,7 +50,7 @@ const discardTarget = {
       return;
     }
     const item = monitor.getItem();
-    component.getWrappedInstance().handleDiscard(item);
+    component.handleDiscard(item);
     return item;
   }
 };
@@ -72,7 +72,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 Discard = connect(mapStateToProps, mapDispatchToProps, null, {
-  withRef: true
+  forwardRef: true
 })(Discard);
 
 export default DropTarget(

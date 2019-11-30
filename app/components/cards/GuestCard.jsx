@@ -84,7 +84,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 GuestCard = connect(mapStateToProps, mapDispatchToProps, null, {
-  withRef: true
+  forwardRef: true
 })(GuestCard);
 
 export default DragSource(

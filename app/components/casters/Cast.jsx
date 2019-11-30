@@ -47,7 +47,7 @@ const castTarget = {
       return;
     }
     const item = monitor.getItem();
-    component.getWrappedInstance().handleCast(item);
+    component.handleCast(item);
     return item;
   }
 };
@@ -69,7 +69,7 @@ const mapDispatchToProps = dispatch => ({
   playCard: id => dispatch(playCard(id))
 });
 
-Cast = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
+Cast = connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(
   Cast
 );
 

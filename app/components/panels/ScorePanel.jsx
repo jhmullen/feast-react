@@ -96,7 +96,7 @@ const mapDispatchToProps = dispatch => ({
   setPrestige: num => dispatch(setPrestige(num))
 });
 
-ScorePanel = connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
+ScorePanel = connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(
   ScorePanel
 );
 
