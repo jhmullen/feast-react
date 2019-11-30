@@ -11,7 +11,7 @@ import GuestDeck from "./decks/GuestDeck";
 
 import ScorePanel from "./panels/ScorePanel";
 
-import { DragDropContextProvider } from "react-dnd";
+import { DndProvider } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { Toaster, Position, Intent } from "@blueprintjs/core";
 
@@ -58,7 +58,7 @@ class App extends Component {
     const player = players[playerId];
 
     return (
-      <DragDropContextProvider backend={HTML5Backend}>
+      <DndProvider backend={HTML5Backend}>
         <div id="board">
           <div id="hand-row-opponent">
             {/*<Playboard opponent={true}/>*/}
@@ -79,7 +79,7 @@ class App extends Component {
             <Playboard />
           </div>
         </div>
-      </DragDropContextProvider>
+      </DndProvider>
     );
   }
 }
