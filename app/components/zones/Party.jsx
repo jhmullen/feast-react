@@ -83,9 +83,9 @@ class Party extends Component {
     return (
       <div id={`party${show ? "" : "-opponent"}`}>
         {show && <div style={{ position: 'absolute', left: '5px', top: '-35px' }}>
-          <Button iconName="cross" onClick={this.endTurn.bind(this)} />
-          <Button iconName="arrow-left" onClick={this.moveLeft.bind(this)} />
-          <Button iconName="arrow-right" onClick={this.moveRight.bind(this)} />
+          <Button icon="cross" onClick={this.endTurn.bind(this)} />
+          <Button icon="arrow-left" onClick={this.moveLeft.bind(this)} />
+          <Button icon="arrow-right" onClick={this.moveRight.bind(this)} />
         </div>}
         {show && <div className="party-container">{tableSpots}</div>}
         <div className="party-container">{partyList}</div>

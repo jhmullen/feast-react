@@ -17,7 +17,7 @@ class TableSpot extends Component {
 
     return connectDropTarget(
       <div id="tablespot">
-        <Icon style={{ color: "black" }} iconName="add" /> {spotNum + 1}
+        <Icon style={{ color: "black" }} icon="add" /> {spotNum + 1}
       </div>
     );
   }

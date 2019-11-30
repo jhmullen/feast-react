@@ -53,11 +53,11 @@ class DeckOps extends Component {
           popoverClassName="pt-popover-content-sizing"
           position={position}
         >
-          <Button iconName="layers" />
+          <Button icon="layers" />
           <div id="deckops-popover">{cardList}</div>
         </Popover>
         <br />
-        <Button iconName="refresh" onClick={this.shuffleDeck.bind(this)} />
+        <Button icon="refresh" onClick={this.shuffleDeck.bind(this)} />
       </div>
     );
   }

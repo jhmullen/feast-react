@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/jhmullen/feast-react#readme",
   "dependencies": {
-    "@blueprintjs/core": "^1.40.0",
+    "@blueprintjs/core": "^3.22.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-plugin-transform-es2015-spread": "^6.22.0",
