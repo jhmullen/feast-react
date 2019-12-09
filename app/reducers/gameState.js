@@ -1,6 +1,9 @@
 import { pad, setAt, updateAt } from '../array';
 import { pick } from '../object';
 
+/** 
+ * Each Player keeps track of his own decks, mana, and prestige
+ */
 export const blankPlayer = {
   mana: 100,
   hand: [],
@@ -11,6 +14,10 @@ export const blankPlayer = {
   prestige: 0,
 };
 
+/**
+ * A shared state contains each player (and all their personal deck info) 
+ * alongside the shared decks.
+ */
 export const baseState = {
   players: {
     1: blankPlayer,
@@ -129,17 +136,27 @@ export const drawCards = (howMany, player) => {
  * so, eg, ignore .hand if the other player drew a card.
  */
 export const routeForPlayer = reducer => (state = baseState, baseAction) => {
+  // Find out which player is making this action. If playerId came in via the action, 
+  // then this is a remote action coming from socket.emit. Otherwise, assume it's "me" 
+  // and use the state id (set locally in PICK_PLAYER)
   const playerId = baseAction.playerId || state.playerId;
+  // Load an action with the routing for which player did it. This is something of a no-op
+  // For a remote action (playerId is already in there) but locally, we must use it
   const action = {
     ...baseAction,
     playerId,
   };
 
+  // Remember, this is just a reducer, so it needs to return a new state.
   return {
+    // First, run the reducer we were given, but now with the ROUTED action.
     ...reducer(state, action),
+    // After that has been run, we need to update our individual players Array and their view of the world.
     players: playerId
       ? {
           ...state.players,
+          // playerId is the player that made this action, extracted above from either the baseAction
+          // or the state (me). call reducePlayer with the gameState, that players State, and the (routed) action
           [playerId]: reducePlayer(state, state.players[playerId], action),
         }
       : state.players,
@@ -248,6 +265,13 @@ const reducePlayer = (state, player, action) => {
   }
 };
 
+/** 
+ * Normally a reducer is given a state and an action, goes through case statements, 
+ * and returns a new state. However, actions may come in either from the local state (normally)
+ * or from the socket (other player). Wrap reducer in a function that figures out WHO is doing
+ * the action. Pass that function this reducer. That function then adds a playerId to the action,
+ * calls this reducer, THEN updates player state separately.
+ */
 export const gameState = routeForPlayer((state = baseState, action) => {
   let card;
   let {

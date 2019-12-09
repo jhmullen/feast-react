@@ -18,8 +18,8 @@ let store = createStore(
 
 // Listens to socket actions, i.e., events that the other player emits.
 // Upon other player action, call our OWN redux update to keep us up to date.
+// A routed playerId has been added to the action from socketLogger.
 socket.on('action', action => {
-  console.log('got action', action);
   store.dispatch(action);
 });
 
